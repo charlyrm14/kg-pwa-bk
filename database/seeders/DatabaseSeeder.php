@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Gender;
+use App\Models\Hobby;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,6 +17,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            GenderSeeder::class,
+            HobbySeeder::class,
         ]);
     }
 }
