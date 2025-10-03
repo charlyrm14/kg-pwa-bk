@@ -28,11 +28,7 @@ class StoreUserRequest extends FormRequest
             'last_name' => ['required', 'string', 'min:3', 'max:30'],
             'mother_last_name' => ['nullable', 'string', 'min:3','max:30'],
             'email' => ['required', 'email', 'max:50', 'unique:users,email'],
-            'role_id' => ['required', 'integer', 'exists:roles,id'],
-            'birthdate' => ['nullable', 'date_format:Y-m-d'],
-            'phone_number' => ['nullable', 'integer', 'digits:10'],
-            'address' => ['nullable', 'string', 'max:300'],
-            'gender_id' => ['required', 'integer', 'exists:genders,id']
+            'role_id' => ['required', 'integer', 'exists:roles,id']
         ];
     }
 

@@ -22,12 +22,9 @@ class NewUserResource extends JsonResource
             'email' => $this->email,
             'uuid' => $this->uuid,
             'student_code' => $this->student_code,
-            'role_name' => $this->whenLoaded('role', function() {
+            'role' => $this->whenLoaded('role', function() {
                 return $this->role->name;
             }),
-            'profile' => $this->whenLoaded('profile', function() {
-                return new UserProfileResource($this->profile);
-            })
         ];
     }
 }
