@@ -26,7 +26,7 @@ class Gender extends Model
      * @return HasMany A relationship method named `userProfiles` is being returned, which defines a
      * one-to-many relationship between the current model and the `UserProfile` model.
      */
-    public function userProfiles(): HasMany
+    public function profile(): HasMany
     {
         return $this->hasMany(UserProfile::class);
     }
