@@ -15,6 +15,6 @@ class RoleSeeder extends Seeder
     {
         Role::updateOrCreate(['slug' => 'admin'], ['name' => 'Admin', 'slug' => 'admin']);
         Role::updateOrCreate(['slug' => 'teacher'], ['name' => 'Teacher', 'slug' => 'teacher']);
-        Role::updateOrCreate(['slug' => 'student'], ['name' => 'Admin', 'slug' => 'student']);
+        Role::updateOrCreate(['slug' => 'student'], ['name' => 'Student', 'slug' => 'student']);
     }
 }

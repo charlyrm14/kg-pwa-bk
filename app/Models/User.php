@@ -3,12 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+#[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -63,5 +67,15 @@ class User extends Authenticatable
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * The function "userProfile" returns a HasOne relationship with the UserProfile model in PHP.
+     * 
+     * @return HasOne A HasOne relationship is being returned, linking the current model to the UserProfile
+     */
+    public function profile(): HasOne
+    {
+        return $this->hasOne(UserProfile::class);
     }
 }
