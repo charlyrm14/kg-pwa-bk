@@ -15,6 +15,7 @@ class UserProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'about_me' => $this->about_me,
             'birthdate' => $this->birthdate,
             'phone_number' => $this->phone_number,
             'address' => $this->address,
