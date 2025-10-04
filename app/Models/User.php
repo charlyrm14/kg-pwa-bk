@@ -15,6 +15,8 @@ use Illuminate\Notifications\Notifiable;
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
+    public $plainPassword;
+    
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
@@ -30,6 +32,7 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'password',
+        'force_password_change',
         'uuid',
         'student_code',
         'role_id'

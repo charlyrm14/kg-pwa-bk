@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('force_password_change')->default(true);
             $table->uuid('uuid')->unique();
             $table->string('student_code')->unique()->nullable();
             $table->foreignId('role_id')->constrained()->onDelete('cascade');

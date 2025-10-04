@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\User\UserCredentialsMail;
 
 class UserObserver
 {
@@ -18,6 +20,8 @@ class UserObserver
 
         $user->password = Hash::make($plainPassword);
         $user->uuid = (string) Str::uuid();
+        
+        $user->plainPassword = $plainPassword;
     }
 
     /**
@@ -25,8 +29,12 @@ class UserObserver
      */
     public function created(User $user): void
     {
+        $plainPassword = $user->plainPassword;
+
         $user->student_code = UserService::generateStudentCode($user->role_id, $user->id);
         $user->save();
+
+        Mail::to($user->email)->send(new UserCredentialsMail($user, $plainPassword));
     }
 
     /**
