@@ -129,4 +129,37 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Delete the specified user from storage
+     * 
+     * @param string uuid The UUID of the user whose hobbies are updated
+     * 
+     * @return JsonResponse a JSON response indicating success or failure of a user deleted
+     */
+    public function delete(string $uuid): JsonResponse
+    {
+        try {
+
+            $user = User::getByUuid($uuid);
+
+            if(!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $user->delete();
+
+            return response()->json([
+                'message' => 'User deleted successfully',
+            ], 200);
+            
+        } catch (\Throwable $e) {
+            
+            Log::error('Error deleting user: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error deleting user',
+            ], 500);
+        }
+    }
 }

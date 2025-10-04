@@ -9,6 +9,7 @@ Route::prefix('v1/')->group(function () {
         Route::post('', 'store');
         Route::put('{uuid}/profile', 'updateProfileInfo');
         Route::put('{uuid}/hobbies', 'updateHobbies');
+        Route::delete('{uuid}', 'delete');
     });
 
 });
