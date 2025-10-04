@@ -13,6 +13,7 @@ class UserProfile extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'about_me',
         'birthdate',
         'lada',
         'phone_number',
