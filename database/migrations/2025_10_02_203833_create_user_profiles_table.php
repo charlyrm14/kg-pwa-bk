@@ -17,8 +17,8 @@ return new class extends Migration
             $table->tinyInteger('lada')->nullable();
             $table->string('phone_number', 20)->nullable();
             $table->string('address')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('gender_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->unique();
+            $table->foreignId('gender_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

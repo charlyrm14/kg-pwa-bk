@@ -81,4 +81,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserProfile::class);
     }
+
+    /**
+     * The function "getByUuid" retrieves a User object based on a given UUID.
+     * 
+     * @param string uuid The parameter "uuid" is a string that represents the unique identifier of a
+     * user. It is used to search for and retrieve a specific user from the database.
+     * 
+     * @return User|null The method `getByUuid` returns an instance of the `User` class if a user with
+     * the specified UUID is found in the database. If no user is found with that UUID, it returns
+     * `null`.
+     */
+    public static function getByUuid(string $uuid): ?User
+    {
+        return static::firstWhere('uuid', $uuid);
+    }
 }

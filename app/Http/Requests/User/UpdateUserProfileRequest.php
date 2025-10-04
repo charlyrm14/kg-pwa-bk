@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Requests\User;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
+
+class UpdateUserProfileRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'birthdate' => ['nullable', 'date_format:Y-m-d'],
+            'phone_number' => ['nullable', 'integer', 'digits:10'],
+            'address' => ['nullable', 'string', 'min:8', 'max:255'],
+            'gender_id' => ['nullable', 'integer', 'exists:genders,id']
+        ];
+    }
+
+    /**
+     * This function throws an exception with a JSON response containing validation errors.
+     *
+     * @param Validator validator The  parameter is an instance of the Validator class, which
+     * is responsible for validating input data against a set of rules. It contains the validation
+     * errors that occurred during the validation process.
+     */
+    public function failedValidation(Validator $validator)
+    {
+        $response = array(
+            'message' => 'Validation errors',
+            'errors' => $validator->errors(),
+        );
+
+        throw new HttpResponseException(response()->json($response, 422));
+    }
+}
