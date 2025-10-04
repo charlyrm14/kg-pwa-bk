@@ -7,6 +7,8 @@ use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -80,6 +82,19 @@ class User extends Authenticatable
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
+    }
+
+    /**
+     * The function `hobbies()` returns a HasMany relationship for a user's hobbies.
+     * 
+     * @return HasMany The `hobbies()` function is returning a relationship method `HasMany` which
+     * defines a one-to-many relationship between the current model and the `UserHobby` model. This
+     * means that a user can have multiple hobbies associated with them.
+     */
+    public function hobbies(): BelongsToMany
+    {
+        return $this->belongsToMany(Hobby::class, 'user_hobbies', 'user_id', 'hobby_id')
+            ->withTimestamps();
     }
 
     /**
