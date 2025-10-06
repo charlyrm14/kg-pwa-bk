@@ -10,6 +10,7 @@ use App\Models\{
 use App\Http\Requests\User\{
     StoreUserRequest,
     UpdateUserHobbiesRequest,
+    UpdateUserInfoRequest,
     UpdateUserProfileRequest
 };
 use Illuminate\Support\Facades\{
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\{
 use App\Http\Resources\User\{
     NewUserResource,
     UpdateUserHobbiesResource,
+    UpdateUserInfoResource,
     UpdateUserProfileResource
 };
 use Illuminate\Http\JsonResponse;
@@ -47,6 +49,41 @@ class UserController extends Controller
             
             return response()->json([
                 'message' => 'Error creating user',
+            ], 500);
+        }
+    }
+
+    /**
+     * Update the basic information from a specific user in storage
+     * 
+     * @param UpdateUserInfoRequest request The validated request object containing information data.
+     * @param string uuid The UUID of the user whose information is to be updated.
+     * 
+     * @return JsonResponse A JSON response indicating success or failure of user information updated.
+     */
+    public function update(UpdateUserInfoRequest $request, string $uuid)
+    {
+        try {
+
+            $user = User::getByUuid($uuid);
+
+            if(!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $user->update($request->validated());
+
+            return response()->json([
+                'message' => 'User information updated successfully',
+                'data' => new UpdateUserInfoResource($user)
+            ], 200);
+
+        } catch(\Throwable $e) {
+
+            Log::error('Error updating user basic info: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error updating user basic info',
             ], 500);
         }
     }
