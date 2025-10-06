@@ -1,7 +1,10 @@
 <?php
 
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{
+    UserController,
+    ContentController
+};
 
 Route::prefix('v1/')->group(function () {
 
@@ -13,4 +16,7 @@ Route::prefix('v1/')->group(function () {
         Route::delete('{uuid}', 'delete');
     });
 
+    Route::prefix('contents/')->controller(ContentController::class)->group(function() {
+        Route::post('', 'store');
+    });
 });

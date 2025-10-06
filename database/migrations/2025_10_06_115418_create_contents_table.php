@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('name');
             $table->string('slug')->nullable()->unique();
             $table->text('content');
             $table->foreignId('content_type_id')->constrained()->onDelete('cascade');
             $table->foreignId('content_status_id')->constrained()->onDelete('cascade');
             $table->foreignId('author_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->date('published_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
