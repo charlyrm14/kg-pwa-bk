@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             GenderSeeder::class,
             HobbySeeder::class,
+            ContentTypeSeeder::class,
+            ContentStatusSeeder::class
         ]);
     }
 }
