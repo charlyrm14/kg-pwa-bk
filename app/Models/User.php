@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use PhpParser\Builder\Class_;
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
@@ -95,6 +96,18 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Hobby::class, 'user_hobbies', 'user_id', 'hobby_id')
             ->withTimestamps();
+    }
+
+    /**
+     * The function `contents()` returns a relationship where a model has many contents.
+     * 
+     * @return HasMany The code snippet is a PHP function named `contents` that returns a relationship
+     * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
+     * has a one-to-many relationship with the `Content` model.
+     */
+    public function contents(): HasMany
+    {
+        return $this->hasMany(Content::class, 'id', 'author_id');
     }
 
     /**
