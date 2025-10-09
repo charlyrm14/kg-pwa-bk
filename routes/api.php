@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     UserController,
-    ContentController
+    ContentController,
+    SwimCategoryController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -19,4 +20,9 @@ Route::prefix('v1/')->group(function () {
     Route::prefix('contents/')->controller(ContentController::class)->group(function() {
         Route::post('', 'store');
     });
+
+    Route::prefix('swim-categories/')->controller(SwimCategoryController::class)->group(function() {
+        Route::get('', 'index');
+    });
+
 });

@@ -32,6 +32,17 @@ class ContentType extends Model
         return $this->hasMany(Content::class, 'id', 'content_type_id');
     }
 
+    /**
+     * This PHP function retrieves a ContentType object based on a given slug value.
+     * 
+     * @param string slug The `slug` parameter in the `getBySlug` function is a string that represents
+     * a unique identifier for a specific content type. This function retrieves a `ContentType` object
+     * based on the provided slug value.
+     * 
+     * @return ?ContentType The `getBySlug` function is returning an instance of `ContentType` that
+     * matches the provided `` value. If no matching `ContentType` is found, it will return
+     * `null`.
+     */
     public static function getBySlug(string $slug): ?ContentType
     {
         return static::firstWhere('slug', $slug);
