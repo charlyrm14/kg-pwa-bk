@@ -24,7 +24,9 @@ class DatabaseSeeder extends Seeder
             SwimCategorySkillSeeder::class,
             ProgressStatusSeeder::class,
             ChatTypeSeeder::class,
-            SenderTypeSeeder::class
+            SenderTypeSeeder::class,
+            AttendanceStatusSeeder::class,
+            DaySeeder::class
         ]);
     }
 }
