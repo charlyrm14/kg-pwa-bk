@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services\Content\Interfaces;
 
 use App\Models\Content;
-use Illuminate\Database\Eloquent\Collection;
 
 interface ContentStrategy 
 {

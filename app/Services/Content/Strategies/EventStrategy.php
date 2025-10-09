@@ -6,7 +6,6 @@ namespace App\Services\Content\Strategies;
 
 use App\Models\Content;
 use App\Services\Content\Interfaces\ContentStrategy;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
 class EventStrategy implements ContentStrategy

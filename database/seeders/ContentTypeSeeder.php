@@ -16,6 +16,6 @@ class ContentTypeSeeder extends Seeder
         ContentType::updateOrCreate(['slug' => 'news'], ['name' => 'News', 'slug' => 'news']);
         ContentType::updateOrCreate(['slug' => 'events'], ['name' => 'Events', 'slug' => 'events']);
         ContentType::updateOrCreate(['slug' => 'tips'], ['name' => 'Tips', 'slug' => 'tips']);
-        ContentType::updateOrCreate(['slug' => 'nutrition'], ['name' => 'Nutrition', 'slug' => 'nutrition']);
+        ContentType::updateOrCreate(['slug' => 'nutricion'], ['name' => 'Nutricion', 'slug' => 'nutricion']);
     }
 }
