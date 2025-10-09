@@ -56,6 +56,8 @@ return [
     
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
+    'openrouter_key' => env('OPENROUTER_KEY', 'api_key'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

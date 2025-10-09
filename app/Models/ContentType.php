@@ -31,4 +31,9 @@ class ContentType extends Model
     {
         return $this->hasMany(Content::class, 'id', 'content_type_id');
     }
+
+    public static function getBySlug(string $slug): ?ContentType
+    {
+        return static::firstWhere('slug', $slug);
+    }
 }

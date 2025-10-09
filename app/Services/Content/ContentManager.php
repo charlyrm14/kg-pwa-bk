@@ -7,7 +7,10 @@ namespace App\Services\Content;
 use App\Models\Content;
 use InvalidArgumentException;
 use App\Services\Content\Strategies\{
-    EventStrategy
+    NewsStrategy,
+    EventStrategy,
+    NutritionStrategy,
+    TipsStrategy
 };
 use App\Services\Content\Interfaces\ContentStrategy;
 
@@ -19,7 +22,10 @@ class ContentManager {
 
         /** @var ContentStrategy $strategy */
         $strategy = match ($type) {
+            'news' => new NewsStrategy(),
             'events' => new EventStrategy(),
+            'tips' => new TipsStrategy(),
+            'nutricion' => new NutritionStrategy(),
             default => throw new InvalidArgumentException("Unsupported content type {$type}")
         };
 
