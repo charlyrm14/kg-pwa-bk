@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Content\{
@@ -9,6 +11,7 @@ use App\Http\Resources\Content\{
     NewContentResource
 };
 use App\Services\Content\ContentManager;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 class ContentController extends Controller
@@ -23,7 +26,7 @@ class ContentController extends Controller
      * @param StoreContentRequest request The validated request object containing content data.
      * @return JsonResponse A JSON response indicating success or failure of user creation.
      */
-    public function store(StoreContentRequest $request)
+    public function store(StoreContentRequest $request): JsonResponse
     {
         try {
             

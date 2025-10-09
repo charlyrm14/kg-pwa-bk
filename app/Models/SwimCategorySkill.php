@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SwimCategorySkill extends Model
 {
@@ -16,4 +17,15 @@ class SwimCategorySkill extends Model
         'skill_id',
         'percentage'
     ];
+
+    /**
+     * The function returns a BelongsTo relationship with the Skill model in PHP.
+     * 
+     * @return BelongsTo The `skill()` function is returning a BelongsTo relationship with the `Skill`
+     * model.
+     */
+    public function skill(): BelongsTo
+    {
+        return $this->belongsTo(Skill::class);
+    }
 }
