@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
             DaySeeder::class,
             AchievementFrequencySeeder::class,
             AchievementStatusSeeder::class,
-            AchievementSeeder::class
+            AchievementSeeder::class,
+            NotificationTypeSeeder::class
         ]);
     }
 }
