@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
             AchievementStatusSeeder::class,
             AchievementSeeder::class,
             NotificationTypeSeeder::class,
-            PaymentTypeSeeder::class
+            PaymentTypeSeeder::class,
+            PeriodTypeSeeder::class
         ]);
     }
 }
