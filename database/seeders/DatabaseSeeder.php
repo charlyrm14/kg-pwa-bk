@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             SwimCategorySeeder::class,
             SkillSeeder::class,
             SwimCategorySeeder::class,
-            SwimCategorySkillSeeder::class
+            SwimCategorySkillSeeder::class,
+            ProgressStatusSeeder::class
         ]);
     }
 }
