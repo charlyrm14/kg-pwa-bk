@@ -26,7 +26,10 @@ class DatabaseSeeder extends Seeder
             ChatTypeSeeder::class,
             SenderTypeSeeder::class,
             AttendanceStatusSeeder::class,
-            DaySeeder::class
+            DaySeeder::class,
+            AchievementFrequencySeeder::class,
+            AchievementStatusSeeder::class,
+            AchievementSeeder::class
         ]);
     }
 }
