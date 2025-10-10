@@ -13,28 +13,12 @@ class ProgressStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        ProgressStatus::updateOrCreate([
-            'slug' => 'en-progreso'
-        ], [
-            'name' => 'En progreso', 
-            'slug' => 'en-progreso',
-            'description' => 'Nivel en progreso'
-        ]);
+        $progress = [
+            ['id' => 1, 'name' => 'IN PROGRESS', 'slug' => 'IN-PROGRESS', 'description' => 'Nivel en progreso'],
+            ['id' => 2, 'name' => 'PENDING', 'slug' => 'PENDING', 'description' => 'Nivel pendiente de completar'],
+            ['id' => 3, 'name' => 'COMPLETED', 'slug' => 'COMPLETED', 'description' => 'Nivel Completado']
+        ];
 
-        ProgressStatus::updateOrCreate([
-            'slug' => 'pendiente'
-        ], [
-            'name' => 'Pendiente', 
-            'slug' => 'pendiente',
-            'description' => 'Nivel pendiente'
-        ]);
-
-        ProgressStatus::updateOrCreate([
-            'slug' => 'completado'
-        ], [
-            'name' => 'Completado', 
-            'slug' => 'completado',
-            'description' => 'Nivel completado'
-        ]);
+        ProgressStatus::upsert($progress, ['id'], ['name', 'slug', 'description']);
     }
 }

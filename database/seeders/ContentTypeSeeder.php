@@ -13,9 +13,13 @@ class ContentTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        ContentType::updateOrCreate(['slug' => 'news'], ['name' => 'News', 'slug' => 'news']);
-        ContentType::updateOrCreate(['slug' => 'events'], ['name' => 'Events', 'slug' => 'events']);
-        ContentType::updateOrCreate(['slug' => 'tips'], ['name' => 'Tips', 'slug' => 'tips']);
-        ContentType::updateOrCreate(['slug' => 'nutricion'], ['name' => 'Nutricion', 'slug' => 'nutricion']);
+        $contentType = [
+            ['id' => 1, 'name' => 'NEWS', 'slug' => 'NEWS'],
+            ['id' => 2, 'name' => 'EVENTS', 'slug' => 'EVENTS'],
+            ['id' => 3, 'name' => 'TIPS', 'slug' => 'TIPS'],
+            ['id' => 4, 'name' => 'NUTRITION', 'slug' => 'NUTRITION']
+        ];
+        
+        ContentType::upsert($contentType, ['id'], ['name', 'slug']);
     }
 }
