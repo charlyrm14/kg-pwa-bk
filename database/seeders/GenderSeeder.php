@@ -13,7 +13,11 @@ class GenderSeeder extends Seeder
      */
     public function run(): void
     {
-        Gender::updateOrCreate(['slug' => 'masculino'], ['name' => 'Masculino', 'slug' => 'masculino']);
-        Gender::updateOrCreate(['slug' => 'femenino'], ['name' => 'Femenino', 'slug' => 'femenino']);
+        $gender = [
+            ['id' => 1, 'name' => 'MASCULINO', 'slug' => 'MASCULINO'],
+            ['id' => 2, 'name' => 'FEMENINO', 'slug' => 'FEMENINO']
+        ];
+
+        Gender::upsert($gender, ['id'], ['name', 'slug']);
     }
 }

@@ -13,24 +13,24 @@ class SkillSeeder extends Seeder
      */
     public function run(): void
     {
-        Skill::updateOrCreate(['description' => 'Flota como una foca feliz'], ['description' => 'Flota como una foca feliz']);
-        Skill::updateOrCreate(['description' => 'Manos al agua sin miedo'], ['description' => 'Manos al agua sin miedo']);
-        Skill::updateOrCreate(['description' => 'Respira y relájate'], ['description' => 'Respira y relájate']);
+        $skills = [
+            ['id' => 1, 'description' => 'Flota como una foca feliz'],
+            ['id' => 2, 'description' => 'Manos al agua sin miedo'],
+            ['id' => 3, 'description' => 'Respira y relájate'],
+            ['id' => 4, 'description' => 'Patadas firmes y seguras'],
+            ['id' => 5, 'description' => 'Brazos lentos pero fuertes'],
+            ['id' => 6, 'description' => 'Avanza sin prisa, sin pausa'],
+            ['id' => 7, 'description' => 'Desliza como una sombra'],
+            ['id' => 8, 'description' => 'Controla cada brazada'],
+            ['id' => 9, 'description' => 'Coordinación perfecta'],
+            ['id' => 10, 'description' => 'Velocidad bajo control'],
+            ['id' => 11, 'description' => 'Potencia en cada vuelta'],
+            ['id' => 12, 'description' => 'Resistencia como un pro'],
+            ['id' => 13, 'description' => 'Nada como un depredador'],
+            ['id' => 14, 'description' => 'Dominio total del agua'],
+            ['id' => 15, 'description' => 'Estrategia y potencia']
+        ];
 
-        Skill::updateOrCreate(['description' => 'Patadas firmes y seguras'], ['description' => 'Patadas firmes y seguras']);
-        Skill::updateOrCreate(['description' => 'Brazos lentos pero fuertes'], ['description' => 'Brazos lentos pero fuertes']);
-        Skill::updateOrCreate(['description' => 'Avanza sin prisa, sin pausa'], ['description' => 'Avanza sin prisa, sin pausa']);
-
-        Skill::updateOrCreate(['description' => 'Desliza como una sombra'], ['description' => 'Desliza como una sombra']);
-        Skill::updateOrCreate(['description' => 'Controla cada brazada'], ['description' => 'Controla cada brazada']);
-        Skill::updateOrCreate(['description' => 'Coordinación perfecta'], ['description' => 'Coordinación perfecta']);
-
-        Skill::updateOrCreate(['description' => 'Velocidad bajo control'], ['description' => 'Velocidad bajo control']);
-        Skill::updateOrCreate(['description' => 'Potencia en cada vuelta'], ['description' => 'Potencia en cada vuelta']);
-        Skill::updateOrCreate(['description' => 'Resistencia como un pro'], ['description' => 'Resistencia como un pro']);
-
-        Skill::updateOrCreate(['description' => 'Nada como un depredador'], ['description' => 'Nada como un depredador']);
-        Skill::updateOrCreate(['description' => 'Dominio total del agua'], ['description' => 'Dominio total del agua']);
-        Skill::updateOrCreate(['description' => 'Estrategia y potencia'], ['description' => 'Estrategia y potencia']);
+        Skill::upsert($skills, ['id'], ['description']);
     }
 }
