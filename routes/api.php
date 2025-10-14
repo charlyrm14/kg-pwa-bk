@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     UserController,
     ContentController,
+    StudentProgressController,
     SwimCategoryController
 };
 
@@ -23,6 +24,10 @@ Route::prefix('v1/')->group(function () {
 
     Route::prefix('swim-categories/')->controller(SwimCategoryController::class)->group(function() {
         Route::get('', 'index');
+    });
+
+    Route::prefix('student-progress/')->controller(StudentProgressController::class)->group(function() {
+        Route::post('', 'assignProgress');
     });
 
 });
