@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('progress_status_id')->constrained()->onDelete('cascade');
             $table->tinyInteger('progress_percentage');
             $table->date('start_date');
-            $table->date('end_date');
+            $table->date('end_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

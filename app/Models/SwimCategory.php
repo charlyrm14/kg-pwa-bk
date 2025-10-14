@@ -35,4 +35,25 @@ class SwimCategory extends Model
     {
         return $this->hasMany(SwimCategorySkill::class);
     }
+
+    /**
+     * The function `nextSwimCategory` retrieves the next swim category based on the provided category
+     * ID.
+     * 
+     * @param int categoryId The `nextSwimCategory` function takes an integer parameter ``,
+     * which represents the ID of a swim category. The function retrieves the next swim category with
+     * an ID greater than the provided `` from the database and returns it. If there is no
+     * next swim category, it returns `null
+     * 
+     * @return ? SwimCategory The `nextSwimCategory` function is returning the next `SwimCategory`
+     * after the one with the provided ``. It queries the database for a `SwimCategory` with
+     * an `id` greater than the provided ``, orders the results by `id` in ascending order,
+     * and returns the first result found.
+     */
+    public static function nextSwimCategory(int $categoryId): ? SwimCategory
+    {
+        return static::where('id', '>', $categoryId)
+            ->orderBy('id', 'asc')
+            ->first();
+    }
 }
