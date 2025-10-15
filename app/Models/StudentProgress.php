@@ -97,7 +97,7 @@ class StudentProgress extends Model
         return static::where([
             ['user_id', $userId],
             ['swim_category_id', $categoryId]
-        ]) ->sum('progress_percentage');
+        ])->sum('progress_percentage');
     }
 
     /**
