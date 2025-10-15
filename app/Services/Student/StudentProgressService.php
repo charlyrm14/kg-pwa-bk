@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Student;
 
 use Carbon\Carbon;
-use App\Models\{ StudentProgress, SwimCategory };
+use App\Models\{ StudentProgress, SwimCategory, User};
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +14,81 @@ class StudentProgressService
     private const STATUS_ACTIVE = 1;
     private const STATUS_COMPLETED = 2;
     private const MAX_PROGRESS = 100;
+
+    /**
+     * This PHP function retrieves and formats data related to the current level progress of a user in
+     * a swim category.
+     * 
+     * @param User user The `currentLevelData` function takes a `User` object as a parameter. It
+     * retrieves the current level data for the user based on their student progress. The function
+     * calculates the total progress for the current level, retrieves the completion date of the
+     * current level, and loads the skills associated with the current
+     * 
+     * @return ?array An array containing the following data is being returned:
+     */
+    public function currentLevelData(User $user): ?array
+    {
+        $currentLevelId = $user->studentProgress->max('swim_category_id');
+        
+        $category = SwimCategory::with('categorySkills.skill')->firstWhere('id', $currentLevelId);
+
+        $totalProgressCurrentLevel = $user->studentProgress->where('swim_category_id', $currentLevelId)->sum('progress_percentage');
+
+        $completedLevelDate = $user->studentProgress
+            ->where('swim_category_id', $currentLevelId)
+            ->whereNotNull('end_date')->first();
+
+        return [
+            'category_name' => optional($category)->name,
+            'category_description' => optional($category)->description,
+            'total_progress' => $totalProgressCurrentLevel,
+            'total_progress_formatted' => "{$totalProgressCurrentLevel}%",
+            'completed_level_date' => optional($completedLevelDate)->end_date,
+            'category_skills' => $category ? $category->categorySkills->map(function($item) {
+                return [
+                    'percentage' => $item->percentage,
+                    'skill' => $item->skill->description
+                ];
+            }) : null
+        ];
+    }
+
+    /**
+     * This PHP function retrieves data for the next level of a user's swim category progression.
+     * 
+     * @param User user The `nextLevelData` function takes a `User` object as a parameter. It retrieves
+     * the current level ID of the user's student progress, then determines the next swim category
+     * based on the current level ID using the `nextSwimCategory` method from the `SwimCategory` model.
+     * 
+     * @return ?array An array is being returned with the following keys and values:
+     * - 'category_name': The name of the next swim category (or null if not found)
+     * - 'category_description': The description of the next swim category (or null if not found)
+     * - 'total_progress': null
+     * - 'total_progress_formatted': null
+     * - 'completed_level_date': null
+     * - 'category_skills': null
+     */
+    public function nextLevelData(User $user): ?array
+    {   
+        $currentLevelId = $user->studentProgress->max('swim_category_id');
+
+        $nextCategory = $currentLevelId 
+            ? SwimCategory::nextSwimCategory($currentLevelId)
+            : SwimCategory::firstWhere('id', 1);
+
+        $nextCategory->load('categorySkills.skill');
+
+        return [
+            'category_name' => optional($nextCategory)->name,
+            'category_description' => optional($nextCategory)->description,
+            'category_skills' => $nextCategory->categorySkills->map(function($item) {
+                return [
+                    'percentage' => $item->percentage,
+                    'skill' => $item->skill->description
+                ];
+            })
+        ];
+    }
 
     /**
      * The function `validateAssignment` checks if a student can be assigned to a specific category

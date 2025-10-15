@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Student\ProgressRequest;
-use App\Http\Resources\Student\StudentProgressResource;
+use App\Http\Resources\Student\{
+    LogStudentProgressResource,
+    StudentProgressResource
+};
 use App\Models\{
     User,
     StudentProgress,
@@ -21,6 +24,49 @@ class StudentProgressController extends Controller
     public function __construct(
         protected StudentProgressService $studentService
     ){}
+
+    /**
+     * This PHP function retrieves and returns progress data for a user identified by their UUID.
+     * 
+     * @param string uuid The `dataProgress` function takes a UUID (Universally Unique Identifier) as a
+     * parameter. This UUID is used to retrieve a user's data and progress information. If the user
+     * with the provided UUID is found, their progress data is fetched, including their current level,
+     * next level, and progression history
+     * 
+     * @return JsonResponse A JsonResponse is being returned. If the user is not found, a JSON response
+     * with a message 'User not found' and status code 404 is returned. If there is an error during the
+     * process, a JSON response with an error message 'Error to get progress user data' and status code
+     * 500 is returned. Otherwise, a JSON response with the user's progress data in the 'data'
+     */
+    public function dataProgress(string $uuid): JsonResponse
+    {
+        try {
+            $user = User::getByUuid($uuid);
+
+            if(!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $user->load('studentProgress');
+
+            $currentLevel = $this->studentService->currentLevelData($user);
+            $nextLevel = $this->studentService->nextLevelData($user);
+            $progression = $user->progressionByCategory();
+            
+            $user->current_level = $currentLevel;
+            $user->next_level = $nextLevel;
+            $user->progression_history = $progression;
+            
+            return response()->json([
+                'data' => new LogStudentProgressResource($user)
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to get progress user data: " . $e->getMessage());
+            return response()->json(["error" => 'Error to get progress user data'], 500);
+        }
+    }
 
     /**
      * The function `assignProgress` registers and validates progress for a student in a swim category,

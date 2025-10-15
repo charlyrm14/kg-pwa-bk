@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use PhpParser\Builder\Class_;
 
 #[ObservedBy([UserObserver::class])]
@@ -108,6 +109,47 @@ class User extends Authenticatable
     public function contents(): HasMany
     {
         return $this->hasMany(Content::class, 'id', 'author_id');
+    }
+
+    /**
+     * The function `studentProgress()` returns a relationship where a model has many studentProgress progress category.
+     * 
+     * @return HasMany The code snippet is a PHP function named `studentProgress` that returns a relationship
+     * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
+     * has a one-to-many relationship with the `Content` model.
+     */
+    public function studentProgress(): HasMany
+    {
+        return $this->hasMany(StudentProgress::class);
+    }
+
+    /**
+     * The `progressionByCategory` function retrieves the total progress percentage for each swim
+     * category based on student progress data.
+     * 
+     * @return This function returns the progression of students by swim category. It selects the swim
+     * category ID, name, and the total progress percentage achieved by students in each category. The
+     * results are grouped by swim category ID and then formatted into an array with keys for category
+     * ID, category name, and total progress.
+     */
+    public function progressionByCategory()
+    {   
+        return $this->studentProgress()
+            ->select(
+                'swim_category_id as category_id',
+                'swim_categories.name as category_name',
+                DB::raw('SUM(progress_percentage) as total_progress')
+            )
+            ->join('swim_categories', 'student_progress.swim_category_id', '=', 'swim_categories.id')
+            ->groupBy('swim_category_id')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'category_id' => $item->category_id,
+                    'category_name' => $item->category_name,
+                    'total_progress' => (int) $item->total_progress
+                ];
+        });
     }
 
     /**
