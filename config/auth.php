@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
     ],
 
     /*
@@ -111,5 +115,16 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Token access name
+    |--------------------------------------------------------------------------
+    |
+    | Token access name used by Passport to identify tokens
+    |
+    */
+
+    'token_access_name' => env('TOKEN_ACCESS_NAME', 'auth-token'),
 
 ];
