@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
+    AuthController,
     UserController,
     ContentController,
     StudentProgressController,
@@ -9,6 +10,10 @@ use App\Http\Controllers\{
 };
 
 Route::prefix('v1/')->group(function () {
+
+    Route::prefix('auth')->controller(AuthController::class)->group(function() {
+        Route::post('login', 'login');
+    });
 
     Route::prefix('users/')->controller(UserController::class)->group(function() {
         Route::post('', 'store');
