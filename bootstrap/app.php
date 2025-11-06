@@ -3,6 +3,11 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\{
+    PassportCookieAuth,
+    ApiAuthenticate
+};
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,8 +19,24 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'passport.cookie' => PassportCookieAuth::class,
+            'auth:api' => ApiAuthenticate::class
+        ]);
+        $middleware->group('api', [
+            PassportCookieAuth::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function(Throwable $e, $request) {
+
+            if ($e instanceof AuthenticationException) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+
+            if ($e instanceof AuthorizationException) {
+                return response()->json(['message' => 'Forbidden.'], 403);
+            }
+            
+            return response()->json(['error' => 'Server error'], 500);
+        });
     })->create();
