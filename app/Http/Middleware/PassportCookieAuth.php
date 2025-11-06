@@ -15,10 +15,12 @@ class PassportCookieAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($token = $request->cookie(config('auth.token_access_name'))) {
-            $request->headers()->set('Authorization', 'Bearer ' . $token);
-        }
+        $token = $request->cookie(config('auth.token_access_name'));
 
+        if ($token && !$request->headers->has('Authorization')) {
+            $request->headers->set('Authorization', 'Bearer ' . $token);
+        }
+        
         return $next($request);
     }
 }

@@ -43,6 +43,7 @@ return [
         'api' => [
             'driver' => 'passport',
             'provider' => 'users',
+            'hash' => false,
         ],
     ],
 
@@ -127,4 +128,14 @@ return [
 
     'token_access_name' => env('TOKEN_ACCESS_NAME', 'auth-token'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cookie secure env
+    |--------------------------------------------------------------------------
+    |
+    | Cookie secure env used to set the secure flag on cookies
+    |
+    */
+
+    'cookie_secure_env' => env('COOKIE_SECURE_ENV', false),
 ];
