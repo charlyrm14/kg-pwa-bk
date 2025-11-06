@@ -96,11 +96,11 @@ class UserController extends Controller
      * 
      * @return JsonResponse A JSON response indicating success or failure of user profile updated.
      */
-    public function updateProfileInfo(UpdateUserProfileRequest $request, string $uuid): JsonResponse
+    public function updateProfileInfo(UpdateUserProfileRequest $request): JsonResponse
     {
         try {
-
-            $user = User::getByUuid($uuid);
+            
+            $user = $request->user();
 
             if(!$user) {
                 return response()->json(['message' => 'User not found'], 404);

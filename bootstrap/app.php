@@ -28,8 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function(Throwable $e, $request) {
-
-            if ($e instanceof AuthenticationException) {
+                        
+            if ($e instanceof AuthenticationException ||
+                $e instanceof \Symfony\Component\Routing\Exception\RouteNotFoundException
+            ) {
                 return response()->json(['message' => 'Unauthenticated.'], 401);
             }
 
