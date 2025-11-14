@@ -25,6 +25,7 @@ Route::prefix('v1/')->group(function () {
     });
 
     Route::prefix('contents/')->controller(ContentController::class)->group(function() {
+        Route::get('', 'index')->middleware(['passport.cookie', 'auth:api']);
         Route::post('', 'store');
     });
 
