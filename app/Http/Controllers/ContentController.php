@@ -12,7 +12,8 @@ use App\Http\Requests\Content\{
 };
 use App\Http\Resources\Content\{
     IndexCollection,
-    NewContentResource
+    NewContentResource,
+    DetailContentResource
 };
 use App\Services\Content\ContentManager;
 use Illuminate\Http\JsonResponse;
@@ -92,6 +93,49 @@ class ContentController extends Controller
             
             return response()->json([
                 'message' => 'Error creating event',
+            ], 500);
+        }
+    }
+
+    /**
+     * This PHP function retrieves detailed information about a content item based on its slug, with
+     * access control and error handling.
+     * 
+     * @param string slug The `slug` parameter in the `detail` function is a string that represents a
+     * unique identifier for the content you want to retrieve details for. It is used to query the
+     * database for the specific content based on its slug value.
+     * @param Request request The `detail` function is responsible for retrieving the details of a
+     * content item based on its slug. Here's a breakdown of the function and its parameters:
+     * 
+     * @return JsonResponse A JSON response is being returned. If the content is found and the
+     * conditions are met, it will return a JSON response with the data of the content using the
+     * DetailContentResource. If the content is not found or the conditions are not met, it will return
+     * a JSON response with an appropriate error message and status code.
+     */
+    public function detail(string $slug, Request $request): JsonResponse
+    {
+        try {
+
+            $content = Content::with(['type', 'status', 'user', 'event'])->firstWhere('slug', $slug);
+
+            if(!$content) {
+                return response()->json(['message' => 'Resource not found'], 404);
+            }
+
+            if(!($request->user() && $request->user()->role_id === 1) && $content->content_status_id !== 5) {
+                return response()->json(['message' => 'Resource not found'], 404);
+            }
+
+            return response()->json([
+                'data' => new DetailContentResource($content)
+            ], 200);
+            
+        } catch (\Throwable $e) {
+
+            Log::error('Error to get content detail: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error to get content detail',
             ], 500);
         }
     }
