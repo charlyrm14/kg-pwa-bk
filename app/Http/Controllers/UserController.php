@@ -18,11 +18,13 @@ use Illuminate\Support\Facades\{
 };
 use App\Http\Resources\User\{
     NewUserResource,
+    UserDetailInfoResource,
     UpdateUserHobbiesResource,
     UpdateUserInfoResource,
     UpdateUserProfileResource
 };
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -51,6 +53,45 @@ class UserController extends Controller
                 'message' => 'Error creating user',
             ], 500);
         }
+    }
+
+    /**
+     * The function `userInfo` retrieves detailed information about a user and handles errors
+     * gracefully.
+     * 
+     * @param Request request The `userInfo` function takes a `Request` object as a parameter. This
+     * object contains the incoming HTTP request data, such as headers, parameters, and the request
+     * body. In this case, the function is using the `Request ` parameter to access the
+     * authenticated user making the request.
+     * 
+     * @return JsonResponse A JSON response is being returned. If the user is found, it will return the
+     * user's detailed information including their role, profile gender, and hobbies in the response
+     * data. If the user is not found, a 404 status code with a message 'User not found' will be
+     * returned. If an error occurs during the process, a 500 status code with a message 'Error getting
+     * user basic
+     */
+    public function userInfo(Request $request): JsonResponse
+    {
+        try {
+
+            $user = $request->user();
+
+            if(!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            return response()->json([
+                'data' => new UserDetailInfoResource($user->load(['role', 'profile.gender', 'hobbies']))  
+            ], 200);
+
+        } catch(\Throwable $e) {
+
+            Log::error('Error getting user basic info: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error getting user basic info',
+            ], 500);
+        }    
     }
 
     /**

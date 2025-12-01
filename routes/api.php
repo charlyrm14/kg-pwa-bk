@@ -18,6 +18,7 @@ Route::prefix('v1/')->group(function () {
 
     Route::prefix('users/')->controller(UserController::class)->group(function() {
         Route::post('', 'store');
+        Route::get('', 'userInfo')->middleware(['passport.cookie', 'auth:api']);
         Route::put('{uuid}', 'update');
         Route::put('profile/info', 'updateProfileInfo')->middleware(['passport.cookie', 'auth:api']);
         Route::put('{uuid}/hobbies', 'updateHobbies');
