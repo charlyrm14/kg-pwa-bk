@@ -6,7 +6,8 @@ use App\Http\Controllers\{
     UserController,
     ContentController,
     StudentProgressController,
-    SwimCategoryController
+    SwimCategoryController,
+    HobbyController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -39,5 +40,7 @@ Route::prefix('v1/')->group(function () {
         Route::post('', 'assignProgress');
         Route::get('{uuid}', 'dataProgress');
     });
+
+    Route::get('hobbies', HobbyController::class);
 
 });
