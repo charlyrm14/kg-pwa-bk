@@ -20,10 +20,11 @@ Route::prefix('v1/')->group(function () {
     Route::prefix('users/')->controller(UserController::class)->group(function() {
         Route::post('', 'store');
         Route::put('{uuid}', 'update');
+        Route::delete('{uuid}', 'delete');
+        Route::put('{uuid}/hobbies', 'updateHobbies');
         Route::put('profile/info', 'updateProfileInfo')->middleware(['passport.cookie', 'auth:api']);
         Route::get('profile/info', 'userInfo')->middleware(['passport.cookie', 'auth:api']);
-        Route::put('{uuid}/hobbies', 'updateHobbies');
-        Route::delete('{uuid}', 'delete');
+        Route::get('birthdays/current', 'getUsersByBirthdate');
     });
 
     Route::prefix('contents/')->controller(ContentController::class)->group(function() {
