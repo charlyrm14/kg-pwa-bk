@@ -16,6 +16,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Collection;
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements OAuthenticatable
@@ -166,5 +167,21 @@ class User extends Authenticatable implements OAuthenticatable
     public static function getByUuid(string $uuid): ?User
     {
         return static::firstWhere('uuid', $uuid);
+    }
+
+    /**
+     * The function `birthdayToday` retrieves users whose birthday is today along with their profiles.
+     * 
+     * @return Collection A collection of users whose birthday is today, along with their profile
+     * information.
+     */
+    public static function birthdayToday(): Collection
+    {
+        return static::whereHas('profile', function($query) {
+            $query->whereMonth('birthdate', now()->month)
+                ->whereDay('birthdate', now()->day);
+        })
+        ->with('profile')
+        ->get();
     }
 }

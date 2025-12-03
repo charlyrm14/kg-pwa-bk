@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hobby;
 use App\Http\Resources\Hobbies\IndexCollection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 
 class HobbyController extends Controller
 {
@@ -17,7 +18,7 @@ class HobbyController extends Controller
      * collection is empty, a JSON response with a message 'Not found' and a status code of 404 will be
      * returned. If an error occurs during the process, a JSON response with an
      */
-    public function __invoke()
+    public function __invoke(): JsonResponse
     {
         try {
             
