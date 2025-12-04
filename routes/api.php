@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     ContentController,
     StudentProgressController,
     SwimCategoryController,
+    ScheduleController,
     HobbyController
 };
 
@@ -37,10 +38,13 @@ Route::prefix('v1/')->group(function () {
         Route::get('', 'index');
     });
 
-    Route::prefix('student-progress/')->controller(StudentProgressController::class)->group(function() {
-        Route::post('', 'assignProgress');
-        Route::get('{uuid}', 'dataProgress');
+    Route::prefix('schedules/')->controller(ScheduleController::class)->group(function() {
+        Route::get('user', 'userSchedule')->middleware(['passport.cookie', 'auth:api']);;
     });
+
+    Route::prefix('student-progress/')->controller(StudentProgressController::class)->group(function() {
+    });
+
 
     Route::get('hobbies', HobbyController::class);
 

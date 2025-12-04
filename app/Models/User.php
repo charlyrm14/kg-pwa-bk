@@ -126,6 +126,18 @@ class User extends Authenticatable implements OAuthenticatable
     }
 
     /**
+     * The function `schedules()` returns a relationship where a model has many UserSchedule progress category.
+     * 
+     * @return HasMany The code snippet is a PHP function named `schedules` that returns a relationship
+     * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
+     * has a one-to-many relationship with the `UserSchedule` model.
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(UserSchedule::class);
+    }
+
+    /**
      * The `progressionByCategory` function retrieves the total progress percentage for each swim
      * category based on student progress data.
      * 
