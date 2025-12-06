@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserAttendance extends Model
 {
@@ -16,4 +17,27 @@ class UserAttendance extends Model
         'schedule_id',
         'attendance_status_id'
     ];
+
+    /**
+     * This PHP function returns the relationship between the current model and the AttendanceStatus
+     * model.
+     * 
+     * @return BelongsTo A BelongsTo relationship is being returned in this code snippet. It indicates
+     * that the current model has a belongsTo relationship with the AttendanceStatus model.
+     */
+    public function attendanceStatus (): BelongsTo
+    {
+        return $this->belongsTo(AttendanceStatus::class);
+    }
+
+    /**
+     * The userSchedule function returns the relationship between the current model and the
+     * UserSchedule model.
+     * 
+     * @return BelongsTo A BelongsTo relationship is being returned.
+     */
+    public function userSchedule(): BelongsTo
+    {
+        return $this->belongsTo(UserSchedule::class);
+    }
 }

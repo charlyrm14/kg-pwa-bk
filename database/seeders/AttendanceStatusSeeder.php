@@ -19,6 +19,7 @@ class AttendanceStatusSeeder extends Seeder
             ['id' => 3, 'name' => 'ABSENT_JUSTIFIED', 'description' => 'Ausencia justificada (ej. enfermedad, cita médica).'],
             ['id' => 4, 'name' => 'LATE', 'description' => 'El alumno llegó tarde.'],
             ['id' => 5, 'name' => 'EXCUSED', 'description' => 'Exento de asistir por parte del entrenador (ej. lesión, descanso).'],
+            ['id' => 6, 'name' => 'UNASSIGNED', 'description' => 'Día no asignado como asistencia.'],
         ];
 
         AttendanceStatus::upsert($statuses, ['id'], ['name', 'description']);

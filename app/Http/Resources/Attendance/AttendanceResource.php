@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Resources\Auth;
+namespace App\Http\Resources\Attendance;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Services\DateService;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
-class LoginUserResource extends JsonResource
+class AttendanceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,10 +22,11 @@ class LoginUserResource extends JsonResource
             'last_name' => $this->last_name,
             'mother_last_name' => $this->mother_last_name,
             'email' => $this->email,
-            'force_password_change' => $this->force_password_change,
             'uuid' => $this->uuid,
             'student_code' => $this->student_code,
-            'role' => $this->whenLoaded('role')->name ?? 'unknown',
+            'current_month' => Str::ucfirst(DateService::getCurrentMonth()),
+            'current_year' => (new Carbon())->year,
+            'attendances' => AttendanceResourceItem::collection($this->whenLoaded('attendancesCurrentMonth'))
         ];
     }
 }

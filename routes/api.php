@@ -8,7 +8,8 @@ use App\Http\Controllers\{
     StudentProgressController,
     SwimCategoryController,
     ScheduleController,
-    HobbyController
+    HobbyController,
+    AttendanceController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -45,7 +46,10 @@ Route::prefix('v1/')->group(function () {
     Route::prefix('student-progress/')->controller(StudentProgressController::class)->group(function() {
     });
 
-
     Route::get('hobbies', HobbyController::class);
+
+    Route::prefix('attendances/')->controller(AttendanceController::class)->group(function() {
+        Route::get('user', 'attendancesByUser')->middleware(['passport.cookie', 'auth:api']);;
+    });
 
 });

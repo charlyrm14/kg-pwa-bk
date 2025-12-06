@@ -126,7 +126,7 @@ class User extends Authenticatable implements OAuthenticatable
     }
 
     /**
-     * The function `schedules()` returns a relationship where a model has many UserSchedule progress category.
+     * The function `schedules()` returns a relationship where a model has many UserSchedule.
      * 
      * @return HasMany The code snippet is a PHP function named `schedules` that returns a relationship
      * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
@@ -135,6 +135,34 @@ class User extends Authenticatable implements OAuthenticatable
     public function schedules(): HasMany
     {
         return $this->hasMany(UserSchedule::class);
+    }
+
+    /**
+     * The function `attendances()` returns a relationship where a model has many UserAttendance.
+     * 
+     * @return HasMany The code snippet is a PHP function named `attendances` that returns a relationship
+     * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
+     * has a one-to-many relationship with the `UserAttendance` model.
+     */
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(UserAttendance::class);
+    }
+
+    /**
+     * This PHP function returns the user attendances for the current month.
+     * 
+     * @return HasMany The `attendancesCurrentMonth` function is returning a relationship of type
+     * `HasMany`. It retrieves all `UserAttendance` records associated with the current user where the
+     * `date` column matches the current month and year.
+     */
+    public function attendancesCurrentMonth(): HasMany
+    {
+        return $this->hasMany(UserAttendance::class)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->orderBy('created_at', 'DESC')
+            ->with(['userSchedule.day', 'attendanceStatus']);
     }
 
     /**
