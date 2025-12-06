@@ -27,4 +27,24 @@ class DateService {
 
         return (int) $format_birthdate->diffInYears(Carbon::today());
     }
+
+    /**
+     * The function getCurrentMonth returns the name of the current month in the specified language.
+     * 
+     * @param lang The `lang` parameter in the `getCurrentMonth` function is used to specify the
+     * language in which you want the month name to be returned. By default, it is set to 'es' which
+     * stands for Spanish. You can pass a different language code as an argument to get the month name
+     * in
+     * 
+     * @return string The function `getCurrentMonth` is returning the current month in the specified
+     * language. It uses the Carbon library to get the current date and then formats it to return the
+     * full name of the current month in the specified language.
+     */
+    public static function getCurrentMonth($lang = 'es'): string
+    {
+        $now = Carbon::now();
+        $now->locale($lang);
+
+        return $now->translatedFormat('F');
+    }
 }
