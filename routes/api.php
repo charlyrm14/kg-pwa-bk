@@ -9,7 +9,8 @@ use App\Http\Controllers\{
     SwimCategoryController,
     ScheduleController,
     HobbyController,
-    AttendanceController
+    AttendanceController,
+    ReportingController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -40,7 +41,7 @@ Route::prefix('v1/')->group(function () {
     });
 
     Route::prefix('schedules/')->controller(ScheduleController::class)->group(function() {
-        Route::get('user', 'userSchedule')->middleware(['passport.cookie', 'auth:api']);;
+        Route::get('user', 'userSchedule')->middleware(['passport.cookie', 'auth:api']);
     });
 
     Route::prefix('student-progress/')->controller(StudentProgressController::class)->group(function() {
@@ -49,7 +50,10 @@ Route::prefix('v1/')->group(function () {
     Route::get('hobbies', HobbyController::class);
 
     Route::prefix('attendances/')->controller(AttendanceController::class)->group(function() {
-        Route::get('user', 'attendancesByUser')->middleware(['passport.cookie', 'auth:api']);;
+        Route::get('user', 'attendancesByUser')->middleware(['passport.cookie', 'auth:api']);
     });
 
+    Route::prefix('reports/')->controller(ReportingController::class)->group(function() {
+        Route::post('', 'generate');
+    });
 });
