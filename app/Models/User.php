@@ -166,6 +166,30 @@ class User extends Authenticatable implements OAuthenticatable
     }
 
     /**
+     * This PHP function retrieves user attendances based on a specified year and month, ordering them
+     * by date and including related user schedule and attendance status information.
+     * 
+     * @param int year The `year` parameter represents the year for which you want to retrieve
+     * attendance records. It is an integer value that specifies the year (e.g., 2022).
+     * @param int month The `month` parameter in the `attendancesByDate` function represents the month
+     * for which you want to retrieve attendance records. It is an integer value that corresponds to
+     * the month of the year (1 for January, 2 for February, and so on up to 12 for December).
+     * 
+     * @return HasMany The `attendancesByDate` function returns a relationship query that retrieves
+     * user attendances based on the specified year and month. It filters the results by the
+     * `created_at` date field, orders them in descending order by `created_at`, and eager loads the
+     * related `userSchedule.day` and `attendanceStatus` models.
+     */
+    public function attendancesByDate(int $year, int $month): HasMany
+    {
+        return $this->hasMany(UserAttendance::class)
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->orderBy('created_at', 'DESC')
+            ->with(['userSchedule.day', 'attendanceStatus']);
+    }
+
+    /**
      * The `progressionByCategory` function retrieves the total progress percentage for each swim
      * category based on student progress data.
      * 
