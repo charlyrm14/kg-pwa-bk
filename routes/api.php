@@ -45,6 +45,8 @@ Route::prefix('v1/')->group(function () {
     });
 
     Route::prefix('student-progress/')->controller(StudentProgressController::class)->group(function() {
+        Route::post('', 'assignProgress');
+        Route::get('{uuid}', 'dataProgress');
     });
 
     Route::get('hobbies', HobbyController::class);
