@@ -46,7 +46,6 @@ class StudentProgressService
             'completed_level_date' => optional($completedLevelDate)->end_date,
             'category_skills' => $category ? $category->categorySkills->map(function($item) {
                 return [
-                    'percentage' => $item->percentage,
                     'skill' => $item->skill->description
                 ];
             }) : null
@@ -83,7 +82,6 @@ class StudentProgressService
             'category_description' => optional($nextCategory)->description,
             'category_skills' => $nextCategory->categorySkills->map(function($item) {
                 return [
-                    'percentage' => $item->percentage,
                     'skill' => $item->skill->description
                 ];
             })

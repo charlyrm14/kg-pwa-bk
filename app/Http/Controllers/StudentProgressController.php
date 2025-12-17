@@ -91,10 +91,6 @@ class StudentProgressController extends Controller
                 return response()->json(['message' => 'User not found'], 404);
             }
 
-            if ($user->role_id !== 3) {
-                return response()->json(['message' => 'Invalid username, only students are allowed'], 400);
-            }
-
             $this->studentService->validateAssignment($user->id, $request->swim_category_id);
             
             $newProgress = $this->studentService->registerProgress(

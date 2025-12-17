@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('swim_category_id')->constrained()->onDelete('cascade');
             $table->foreignId('skill_id')->constrained()->onDelete('cascade');
-            $table->integer('percentage');
             $table->timestamps();
         });
     }

@@ -14,8 +14,7 @@ class SwimCategorySkill extends Model
      */
     protected $fillable = [
         'swim_category_id',
-        'skill_id',
-        'percentage'
+        'skill_id'
     ];
 
     /**
