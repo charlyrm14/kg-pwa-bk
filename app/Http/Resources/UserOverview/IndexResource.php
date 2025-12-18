@@ -47,7 +47,7 @@ class IndexResource extends JsonResource
             ],
             'last_reminder' => [
                 'title' => 'Próximo pago',
-                'Subtitle' => 'Pago de mensualidad • $120.00'
+                'subtitle' => 'Pago de mensualidad • $120.00'
             ],
             'todays_birthdays' => $this->todays_birthdays->map(function($user) {
                 return [
