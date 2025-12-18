@@ -47,4 +47,37 @@ class DateService {
 
         return $now->translatedFormat('F');
     }
+
+    /**
+     * The function calculates the remaining time in hours or days from the current time to a given
+     * date.
+     * 
+     * @param date The `remainingTime` function calculates the remaining time between the current time
+     * and a given date. The function returns the remaining time in hours or days, depending on the
+     * difference between the current time and the provided date.
+     * 
+     * @return ?string The `remainingTime` function returns a string indicating the remaining time
+     * between the current time and the provided date. If the provided date is in the past, it returns
+     * '0 horas'. If the remaining time is 24 hours or more, it returns the number of days remaining
+     * followed by 'días'. Otherwise, it returns the number of hours remaining followed by 'horas'.
+     */
+    public static function remainingTime(?string $date): ?string
+    {
+        $remainingTime = null;
+
+        if (!$date) return null;
+
+        $now = Carbon::now();
+        $start = Carbon::parse($date);
+
+        if (!$start->isFuture()) {
+            return '0 horas';
+        }
+
+        $hoursDiff = $now->diffInHours($start);
+
+        return $hoursDiff >= 24
+            ? (int) ceil($hoursDiff / 24) . ' días'
+            : $hoursDiff . ' horas';
+    }
 }

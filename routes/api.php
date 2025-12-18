@@ -10,7 +10,8 @@ use App\Http\Controllers\{
     ScheduleController,
     HobbyController,
     AttendanceController,
-    ReportingController
+    ReportingController,
+    UserOverviewController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -58,4 +59,6 @@ Route::prefix('v1/')->group(function () {
     Route::prefix('reports/')->controller(ReportingController::class)->group(function() {
         Route::post('', 'generate');
     });
+
+    Route::get('overview/user', UserOverviewController::class)->middleware(['passport.cookie', 'auth:api']);
 });
