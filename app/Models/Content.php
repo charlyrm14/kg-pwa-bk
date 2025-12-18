@@ -65,4 +65,26 @@ class Content extends Model
     {
         return $this->hasOne(Event::class);
     }
+
+    /**
+     * This PHP function retrieves the latest published content of a specific type.
+     * 
+     * @param int contentTypeId The `contentTypeId` parameter in the `getLatestContentPublished`
+     * function is used to specify the type of content for which you want to retrieve the latest
+     * published content. In the provided code snippet, the default value for `contentTypeId` is set to
+     * `2` that means a content type event, but you can pass a different
+     * 
+     * @return ?Content The `getLatestContentPublished` function is returning the latest published
+     * content of a specific content type with the content status ID of 5 that means that the content is PUBLISHED. 
+     * It retrieves the content along with its related event and status information. 
+     * The return type is a nullable `Content` object, indicating that it may return a `Content` object 
+     * or `null` if no matching content is found.
+     */
+    public static function getLatestContentPublished(int $contentTypeId = 2): ?Content
+    {
+        return static::with(['event', 'status'])->where([
+            ['content_type_id', $contentTypeId],
+            ['content_status_id', 5]
+        ])->orderByDesc('id')->first();
+    }
 }
