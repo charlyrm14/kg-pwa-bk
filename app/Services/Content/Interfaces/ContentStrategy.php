@@ -13,15 +13,20 @@ interface ContentStrategy
      * 
      * @return
      * data: array {
-     *      name: string,
-     *      slug: string,
-     *      content: string,
-     *      content_type: string,
-     *      content_status_id: integer,
-     *      author_name: string,
-     *      published_at: ?string,
-     *      created_at: string,
+     *      name: string
+     *      slug: string
+     *      content: string
+     *      content_type: string
+     *      status: string
+     *      author: string
+     *      published_at: string
+     *      created_at: string
      *      updated_at: string
+     *      details: null | array {
+     *          location: string
+     *          start_date: string
+     *          end_date: string
+     *      }
      * }
      */
     public function create(array $data): ?Content;

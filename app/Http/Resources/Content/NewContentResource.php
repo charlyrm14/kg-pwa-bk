@@ -22,7 +22,7 @@ class NewContentResource extends JsonResource
             'content_type' => $this->whenLoaded('type', function() {
                 return $this->type->name;
             }),
-            'content_status_id' => $this->whenLoaded('status', function() {
+            'status' => $this->whenLoaded('status', function() {
                 return $this->status->name;
             }),
             'author' => $this->whenLoaded('user', function() {

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\{
-    Content
-};
+use App\Models\Content;
 use App\Http\Requests\Content\{
     StoreContentRequest
 };
@@ -48,7 +46,7 @@ class ContentController extends Controller
                 $query->where('content_status_id', 5);
             } 
 
-            $contents = $query->with(['type', 'status', 'user', 'event'])->paginate(15);
+            $contents = $query->with(['type', 'status', 'user', 'event'])->orderBy('id', 'DESC')->paginate(15);
 
             return response()->json([
                 'data' => new IndexCollection($contents)
@@ -74,13 +72,8 @@ class ContentController extends Controller
     public function store(StoreContentRequest $request): JsonResponse
     {
         try {
-            
-            $data = $request->validated() + [
-                'type' => 'events',
-                'content_type_id' => 2
-            ];
 
-            $content = $this->manager->handle($data);
+            $content = $this->manager->handle($request->validated());
 
             return response()->json([
                 'message' => 'Content created successfully',

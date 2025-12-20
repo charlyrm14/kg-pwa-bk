@@ -16,7 +16,7 @@ class IndexResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'title' => $this->name,
+            'name' => $this->name,
             'slug' => $this->slug,
             'content' => $this->content,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
