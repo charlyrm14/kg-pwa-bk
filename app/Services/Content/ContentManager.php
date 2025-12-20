@@ -18,15 +18,15 @@ class ContentManager {
 
     public function handle(array $data): ?Content
     {
-        $type = $data['type'] ?? null;
+        $contentTypeId = $data['content_type_id'] ?? null;
 
         /** @var ContentStrategy $strategy */
-        $strategy = match ($type) {
-            'news' => new NewsStrategy(),
-            'events' => new EventStrategy(),
-            'tips' => new TipsStrategy(),
-            'nutricion' => new NutritionStrategy(),
-            default => throw new InvalidArgumentException("Unsupported content type {$type}")
+        $strategy = match ($contentTypeId) {
+            1 => new NewsStrategy(),
+            2 => new EventStrategy(),
+            3 => new TipsStrategy(),
+            4 => new NutritionStrategy(),
+            default => throw new InvalidArgumentException("Unsupported content type {$contentTypeId}")
         };
 
         return $strategy->create($data);

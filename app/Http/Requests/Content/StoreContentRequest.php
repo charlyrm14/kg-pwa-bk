@@ -27,11 +27,30 @@ class StoreContentRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:8', 'max:100'],
             'content' => ['required', 'string', 'min:8', 'max:2000'],
+            'content_type_id' => ['required', 'integer', 'exists:content_types,id'],
             'content_status_id' => ['required', 'integer', 'exists:content_statuses,id'],
             'author_id' => ['required', 'integer', 'exists:users,id'],
-            'location' => ['required', 'string', 'min:8', 'max:200'],
-            'start_date' => ['required', 'string','date_format:Y-m-d H:i', Rule::date()->after(today())],
-            'end_date' => ['required', 'string','date_format:Y-m-d H:i', 'after:start_date']
+            'location' => [
+                'nullable',
+                'required_if:content_type_id,2', 
+                'string', 
+                'min:8', 
+                'max:200'
+            ],
+            'start_date' => [
+                'nullable',
+                'required_if:content_type_id,2', 
+                'string',
+                'date_format:Y-m-d H:i', 
+                Rule::date()->after(today())
+            ],
+            'end_date' => [
+                'nullable',
+                'required_if:content_type_id,2', 
+                'string',
+                'date_format:Y-m-d H:i', 
+                'after:start_date'
+            ]
         ];
     }
 
