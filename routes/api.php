@@ -25,7 +25,6 @@ Route::prefix('v1/')->group(function () {
         Route::post('', 'store');
         Route::put('{uuid}', 'update');
         Route::delete('{uuid}', 'delete');
-        Route::put('{uuid}/hobbies', 'updateHobbies');
         Route::put('profile/info', 'updateProfileInfo')->middleware(['passport.cookie', 'auth:api']);
         Route::get('profile/info', 'userInfo')->middleware(['passport.cookie', 'auth:api']);
         Route::get('birthdays/current', 'getUsersByBirthdate');
@@ -50,7 +49,10 @@ Route::prefix('v1/')->group(function () {
         Route::get('{uuid}', 'dataProgress');
     });
 
-    Route::get('hobbies', HobbyController::class);
+    Route::prefix('hobbies/')->controller(HobbyController::class)->group(function() {
+        Route::get('', 'index');
+        Route::put('me', 'syncHobbies')->middleware(['passport.cookie', 'auth:api']);
+    });
 
     Route::prefix('attendances/')->controller(AttendanceController::class)->group(function() {
         Route::get('user', 'attendancesByUser')->middleware(['passport.cookie', 'auth:api']);
