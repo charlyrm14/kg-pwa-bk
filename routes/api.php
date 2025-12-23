@@ -63,7 +63,7 @@ Route::prefix('v1/')->group(function () {
 
     Route::prefix('attendances/')->controller(AttendanceController::class)->group(function() {
         Route::get('today', 'todayAttendances');
-        Route::get('user', 'attendancesByUser')->middleware(['passport.cookie', 'auth:api']);
+        Route::get('history/{uuid?}', 'monthlyHistory')->middleware(['passport.cookie', 'auth:api']);
     });
 
     Route::prefix('reports/')->controller(ReportingController::class)->group(function() {

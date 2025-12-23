@@ -12,6 +12,8 @@ use App\Http\Resources\Attendance\{
     TodayAttendanceCollection,
     AttendanceResource
 };
+use App\Services\UserService;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AttendanceController extends Controller
 {
@@ -51,30 +53,31 @@ class AttendanceController extends Controller
      * This PHP function retrieves the attendance data for a user in the current month and returns it
      * as a JSON response.
      * 
-     * @param Request request The `attendancesByUser` function is designed to retrieve attendance data
+     * @param Request request The `monthlyHistory` function is designed to retrieve attendance data
      * for a specific user for the current month. Here's a breakdown of the code:
      * 
      * @return JsonResponse A JSON response is being returned. If the user is found, it will return the
      * user's attendances for the current month in JSON format with a status code of 200. If there is
      * an error, it will return a JSON response with an error message and a status code of 500.
      */
-    public function attendancesByUser(Request $request): JsonResponse
+    public function monthlyHistory(Request $request, ?string $uuid = null): JsonResponse
     {
         try {
 
-            $user = $request->user();
-
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-
+            $user = UserService::resolveUser($request, $uuid, 'viewMonthlyAttendances');
+            
             $user->load(['attendancesCurrentMonth']);
 
             return response()->json([
                 'data' => new AttendanceResource($user)
             ], 200);
 
-        } catch (\Throwable $e) {
+        } catch (HttpResponseException $e) {
+
+            Log::error("Error to get user attendances validation: " . $e->getMessage());
+            throw $e;
+
+        }  catch (\Throwable $e) {
 
             Log::error("Error to get user attendances: " . $e->getMessage());
 

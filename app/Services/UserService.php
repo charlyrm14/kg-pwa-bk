@@ -48,23 +48,17 @@ class UserService {
     }
 
     /**
-     * The function `resolveUser` retrieves a user based on a UUID or from the request object,
-     * performing authorization checks if necessary.
-     * 
-     * @param Request request The `` parameter is an instance of the `Illuminate\Http\Request`
-     * class in Laravel. It represents an HTTP request and contains information about the request such
-     * as input data, headers, and more.
-     * @param uuid The `uuid` parameter in the `resolveUser` function is a unique identifier for a
-     * user. If a `uuid` is provided as an argument when calling the function, it will attempt to find
-     * and return the user with that specific `uuid`. If no `uuid` is provided (or if
-     * 
-     * @return User The `resolveUser` function returns a `User` object. If a UUID is provided, it
-     * retrieves the user with that UUID from the database and checks if the current user has
-     * permission to view the progress of the retrieved user. If the permission check fails, an
-     * `AuthorizationException` is thrown. If no UUID is provided, it returns the current authenticated
-     * user from the request.
+     * Resolve target user based on authenticated user and optional UUID.
+     *
+     * - If UUID is null, returns authenticated user
+     * - If UUID is provided, validates authorization via policy ability
+     *
+     * @param Request $request
+     * @param string|null $uuid
+     * @param string $ability
+     * @return User
      */
-    public static function resolveUser(Request $request, ?string $uuid = null): User
+    public static function resolveUser(Request $request, ?string $uuid, string $ability): User
     {
         if (!$uuid) {
             return $request->user();
@@ -73,7 +67,7 @@ class UserService {
         // Usuario administrador solicita recurso
         $user = User::where('uuid', $uuid)->firstOrFail();
 
-        if ($request->user()->cannot('viewProgress', $user)) {
+        if ($request->user()->cannot($ability, $user)) {
             throw new HttpResponseException(
                 response()->json(['message' => "unauthorized"], 403)
             );
