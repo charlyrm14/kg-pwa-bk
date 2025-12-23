@@ -62,6 +62,7 @@ Route::prefix('v1/')->group(function () {
     Route::get('birthdays/today', BirthdayController::class);
 
     Route::prefix('attendances/')->controller(AttendanceController::class)->group(function() {
+        Route::get('today', 'todayAttendances');
         Route::get('user', 'attendancesByUser')->middleware(['passport.cookie', 'auth:api']);
     });
 
