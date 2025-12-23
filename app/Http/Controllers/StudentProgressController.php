@@ -46,7 +46,7 @@ class StudentProgressController extends Controller
     {
         try {
 
-            $user = UserService::resolveUser($request, $uuid);
+            $user = UserService::resolveUser($request, $uuid, 'viewProgress');
 
             $user->load('studentProgress');
 
