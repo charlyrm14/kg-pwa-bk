@@ -8,14 +8,11 @@ use App\Models\User;
 use App\Http\Requests\User\{
     StoreUserRequest,
     UpdateUserInfoRequest,
-    UpdateUserProfileRequest
 };
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\User\{
     NewUserResource,
-    UserDetailInfoResource,
     UpdateUserInfoResource,
-    UpdateUserProfileResource,
     BirthdayUsersCollection
 };
 use Illuminate\Http\JsonResponse;
@@ -48,45 +45,6 @@ class UserController extends Controller
                 'message' => 'Error creating user',
             ], 500);
         }
-    }
-
-    /**
-     * The function `userInfo` retrieves detailed information about a user and handles errors
-     * gracefully.
-     * 
-     * @param Request request The `userInfo` function takes a `Request` object as a parameter. This
-     * object contains the incoming HTTP request data, such as headers, parameters, and the request
-     * body. In this case, the function is using the `Request ` parameter to access the
-     * authenticated user making the request.
-     * 
-     * @return JsonResponse A JSON response is being returned. If the user is found, it will return the
-     * user's detailed information including their role, profile gender, and hobbies in the response
-     * data. If the user is not found, a 404 status code with a message 'User not found' will be
-     * returned. If an error occurs during the process, a 500 status code with a message 'Error getting
-     * user basic
-     */
-    public function userInfo(Request $request): JsonResponse
-    {
-        try {
-
-            $user = $request->user();
-
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-
-            return response()->json([
-                'data' => new UserDetailInfoResource($user->load(['role', 'profile.gender', 'hobbies']))  
-            ], 200);
-
-        } catch(\Throwable $e) {
-
-            Log::error('Error getting user basic info: ' . $e->getMessage());
-            
-            return response()->json([
-                'message' => 'Error getting user basic info',
-            ], 500);
-        }    
     }
 
     /**
@@ -125,48 +83,13 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     * 
-     * @param UpdateUserProfileRequest request The validated request object containing profile data.
-     * @param string uuid The UUID of the user whose profile is to be updated.
-     * 
-     * @return JsonResponse A JSON response indicating success or failure of user profile updated.
-     */
-    public function updateProfileInfo(UpdateUserProfileRequest $request): JsonResponse
-    {
-        try {
-            
-            $user = $request->user();
-
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-
-            $user->profile()->updateOrCreate([], $request->validated());
-
-            return response()->json([
-                'message' => 'User profile updated successfully',
-                'data' => new UpdateUserProfileResource($user->load('profile.gender'))
-            ], 201);
-
-        } catch(\Throwable $e) {
-
-            Log::error('Error updating user profile info: ' . $e->getMessage());
-            
-            return response()->json([
-                'message' => 'Error updating user profile info',
-            ], 500);
-        }
-    }
-
-    /**
      * Delete the specified user from storage
      * 
      * @param string uuid The UUID of the user whose hobbies are updated
      * 
      * @return JsonResponse a JSON response indicating success or failure of a user deleted
      */
-    public function delete(string $uuid): JsonResponse
+    public function destroy(string $uuid): JsonResponse
     {
         try {
 
