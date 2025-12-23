@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     SwimCategoryController,
     ScheduleController,
     HobbyController,
+    ProfileUserController,
     AttendanceController,
     ReportingController,
     UserOverviewController
@@ -24,9 +25,7 @@ Route::prefix('v1/')->group(function () {
     Route::prefix('users/')->controller(UserController::class)->group(function() {
         Route::post('', 'store');
         Route::put('{uuid}', 'update');
-        Route::delete('{uuid}', 'delete');
-        Route::put('profile/info', 'updateProfileInfo')->middleware(['passport.cookie', 'auth:api']);
-        Route::get('profile/info', 'userInfo')->middleware(['passport.cookie', 'auth:api']);
+        Route::delete('{uuid}', 'destroy');
         Route::get('birthdays/current', 'getUsersByBirthdate');
     });
 
@@ -53,6 +52,12 @@ Route::prefix('v1/')->group(function () {
         Route::get('', 'index');
         Route::put('me', 'syncHobbies')->middleware(['passport.cookie', 'auth:api']);
     });
+
+    Route::prefix('profile/')->controller(ProfileUserController::class)->middleware(['passport.cookie', 'auth:api'])->group(function() {
+        Route::get('', 'show');
+        Route::put('', 'update');
+    });
+
 
     Route::prefix('attendances/')->controller(AttendanceController::class)->group(function() {
         Route::get('user', 'attendancesByUser')->middleware(['passport.cookie', 'auth:api']);
