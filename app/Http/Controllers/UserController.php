@@ -11,6 +11,7 @@ use App\Http\Requests\User\{
 };
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\User\{
+    IndexCollection,
     NewUserResource,
     UpdateUserInfoResource,
 };
@@ -19,6 +20,39 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    /**
+     * The function retrieves a paginated list of users with their roles and returns it as a JSON
+     * response, handling errors appropriately.
+     * 
+     * @return JsonResponse The `index` function returns a JSON response. If the list of users is
+     * successfully retrieved, it returns a JSON response with a status code of 200 and the data in the
+     * response body is formatted using the `IndexCollection`. If the list of users is empty, it
+     * returns a JSON response with a status code of 404 and a message indicating that the resource was
+     * not found. If an error
+     */
+    public function index(): JsonResponse
+    {
+        try {
+            
+            $users = User::with('role')->orderBy('id', 'DESC')->paginate(15);
+
+            if($users->isEmpty()) {
+                return response()->json(['message' => 'Resource not found'], 404);
+            }
+
+            return response()->json(new IndexCollection($users), 200);
+
+        } catch (\Throwable $e) {
+            
+            Log::error('Error get user list: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error get user list',
+            ], 500);
+
+        }
+    }
+    
     /**
      * Store a newly created resource in storage.
      * 
