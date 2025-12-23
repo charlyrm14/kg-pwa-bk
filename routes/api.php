@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     ScheduleController,
     HobbyController,
     ProfileUserController,
+    BirthdayController,
     AttendanceController,
     ReportingController,
     UserOverviewController
@@ -26,7 +27,6 @@ Route::prefix('v1/')->group(function () {
         Route::post('', 'store');
         Route::put('{uuid}', 'update');
         Route::delete('{uuid}', 'destroy');
-        Route::get('birthdays/current', 'getUsersByBirthdate');
     });
 
     Route::prefix('contents/')->controller(ContentController::class)->group(function() {
@@ -58,6 +58,7 @@ Route::prefix('v1/')->group(function () {
         Route::put('', 'update');
     });
 
+    Route::get('birthdays/today', BirthdayController::class);
 
     Route::prefix('attendances/')->controller(AttendanceController::class)->group(function() {
         Route::get('user', 'attendancesByUser')->middleware(['passport.cookie', 'auth:api']);
