@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Carbon\Carbon;
+use App\Models\Day;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class DateService {
 
@@ -79,5 +82,31 @@ class DateService {
         return $hoursDiff >= 24
             ? (int) ceil($hoursDiff / 24) . ' días'
             : $hoursDiff . ' horas';
+    }
+
+    /**
+     * Get the ID of the current day based on the system date.
+     *
+     * This method resolves the current day name in Spanish (es_MX),
+     * converts it to uppercase (e.g. LUNES, MARTES),
+     * and retrieves the corresponding day ID from the `days` table.
+     *
+     * The result is cached to avoid querying the database multiple times
+     * during the same day.
+     *
+     * If no matching day is found, the method returns 0.
+     *
+     * @return int The ID of the current day, or 0 if not found.
+     */
+    public static function getCurrentDayName(): int
+    {
+        $today = Carbon::now()->locale('es_MX');
+        $dayName = Str::upper($today->dayName);
+
+        return Cache::remember(
+            "days:id:{$dayName}",
+            now()->addDay(), // cache por 24 horas
+            fn () => Day::where('name', $dayName)->value('id') ?? 0
+        );
     }
 }
