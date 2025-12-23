@@ -6,6 +6,9 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserService {
 
@@ -42,5 +45,40 @@ class UserService {
     public static function generateRandomPassword(int $length = 12): string
     {
         return Str::random($length);
+    }
+
+    /**
+     * The function `resolveUser` retrieves a user based on a UUID or from the request object,
+     * performing authorization checks if necessary.
+     * 
+     * @param Request request The `` parameter is an instance of the `Illuminate\Http\Request`
+     * class in Laravel. It represents an HTTP request and contains information about the request such
+     * as input data, headers, and more.
+     * @param uuid The `uuid` parameter in the `resolveUser` function is a unique identifier for a
+     * user. If a `uuid` is provided as an argument when calling the function, it will attempt to find
+     * and return the user with that specific `uuid`. If no `uuid` is provided (or if
+     * 
+     * @return User The `resolveUser` function returns a `User` object. If a UUID is provided, it
+     * retrieves the user with that UUID from the database and checks if the current user has
+     * permission to view the progress of the retrieved user. If the permission check fails, an
+     * `AuthorizationException` is thrown. If no UUID is provided, it returns the current authenticated
+     * user from the request.
+     */
+    public static function resolveUser(Request $request, ?string $uuid = null): User
+    {
+        if (!$uuid) {
+            return $request->user();
+        }
+
+        // Usuario administrador solicita recurso
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        if ($request->user()->cannot('viewProgress', $user)) {
+            throw new HttpResponseException(
+                response()->json(['message' => "unauthorized"], 403)
+            );
+        }
+
+        return $user;
     }
 }
