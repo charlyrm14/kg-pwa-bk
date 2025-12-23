@@ -17,7 +17,11 @@ use App\Models\{
 use Illuminate\Support\Facades\Log;
 use App\Services\Student\StudentProgressService;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\{
+    Request,
+    JsonResponse
+};
+use App\Services\UserService;
 
 class StudentProgressController extends Controller
 {
@@ -38,14 +42,11 @@ class StudentProgressController extends Controller
      * process, a JSON response with an error message 'Error to get progress user data' and status code
      * 500 is returned. Otherwise, a JSON response with the user's progress data in the 'data'
      */
-    public function dataProgress(string $uuid): JsonResponse
+    public function dataProgress(Request $request, ?string $uuid = null): JsonResponse
     {
         try {
-            $user = User::getByUuid($uuid);
 
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
+            $user = UserService::resolveUser($request, $uuid);
 
             $user->load('studentProgress');
 
@@ -61,7 +62,12 @@ class StudentProgressController extends Controller
                 'data' => new LogStudentProgressResource($user)
             ], 200);
 
-        } catch (\Throwable $e) {
+        } catch (HttpResponseException $e) {
+
+            Log::error("Error to get progress user data validation: " . $e->getMessage());
+            throw $e;
+
+        }  catch (\Throwable $e) {
 
             Log::error("Error to get progress user data: " . $e->getMessage());
             return response()->json(["error" => 'Error to get progress user data'], 500);

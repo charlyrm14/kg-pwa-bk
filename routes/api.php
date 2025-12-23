@@ -44,8 +44,8 @@ Route::prefix('v1/')->group(function () {
     });
 
     Route::prefix('student-progress/')->controller(StudentProgressController::class)->group(function() {
+        Route::get('{uuid?}', 'dataProgress')->middleware(['passport.cookie', 'auth:api']);
         Route::post('', 'assignProgress');
-        Route::get('{uuid}', 'dataProgress');
     });
 
     Route::prefix('hobbies/')->controller(HobbyController::class)->group(function() {
