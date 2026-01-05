@@ -8,6 +8,7 @@ use App\Http\Middleware\{
     ApiAuthenticate
 };
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -29,6 +30,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function(Throwable $e, $request) {
+            
+            if ($e instanceof NotFoundHttpException) {
+                return response()->json(['message' => 'Resource not found'], 404);
+            }
                         
             if ($e instanceof AuthenticationException ||
                 $e instanceof \Symfony\Component\Routing\Exception\RouteNotFoundException

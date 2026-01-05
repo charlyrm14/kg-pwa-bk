@@ -12,7 +12,7 @@ class AIService
     {
         $apiKey = config('app.openrouter_key');
         
-        $response = Http::withHeaders([
+        $response = Http::timeout(30)->withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $apiKey,
         ])->post('https://openrouter.ai/api/v1/chat/completions', [
@@ -20,7 +20,7 @@ class AIService
             'messages' => $prompt,
         ]);
 
-        if($response->failed() || !$response->successful()) {
+        if($response->failed()) {
             return null;
         }
 
