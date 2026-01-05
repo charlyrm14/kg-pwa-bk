@@ -60,4 +60,18 @@ class Chat extends Model
     {
         return $this->hasMany(ChatParticipant::class);
     }
+
+    /**
+     * The function `messages()` returns a collection of chat messages associated with the current
+     * instance.
+     * 
+     * @return HasMany A relationship method named `messages` is being returned, which defines a
+     * one-to-many relationship between the current model and the `ChatMessage` model. This method
+     * returns a `HasMany` relationship instance, indicating that the current model can have multiple
+     * `ChatMessage` records associated with it.
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(ChatMessage::class);
+    }
 }

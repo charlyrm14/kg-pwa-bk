@@ -248,4 +248,16 @@ class User extends Authenticatable implements OAuthenticatable
         ->with('profile')
         ->get();
     }
+
+    /**
+     * The function `ai` returns the user with the email specified in the configuration as an AI user.
+     * 
+     * @return self An instance of the class that contains this method.
+     */
+    public static function ai(): self
+    {
+        return cache()->rememberForever('ai_user', fn () =>
+            self::where('email', config('app.ai_email'))->firstOrFail()
+        );
+    }
 }

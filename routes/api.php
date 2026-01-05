@@ -14,7 +14,8 @@ use App\Http\Controllers\{
     AttendanceController,
     ReportingController,
     UserOverviewController,
-    ChatController
+    ChatController,
+    ChatMessageController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -73,7 +74,11 @@ Route::prefix('v1/')->group(function () {
 
     Route::get('overview/user', UserOverviewController::class)->middleware(['passport.cookie', 'auth:api']);
 
-    Route::prefix('chat/')->controller(ChatController::class)->group(function() {
-        Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
+    Route::prefix('chat/')->group(function() {
+        Route::post('', [ChatController::class, 'store'])->middleware(['passport.cookie', 'auth:api']);
+
+        Route::prefix('{chat:uuid}/messages')->controller(ChatMessageController::class)->group(function() {
+            Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
+        });
     });
 });
