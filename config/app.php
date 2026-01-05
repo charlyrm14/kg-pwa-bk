@@ -58,6 +58,8 @@ return [
 
     'openrouter_key' => env('OPENROUTER_KEY', 'api_key'),
 
+    'ai_email' => env('AI_EMAIL', 'aiassistant@kg-dreams.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

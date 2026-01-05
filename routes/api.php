@@ -13,7 +13,8 @@ use App\Http\Controllers\{
     BirthdayController,
     AttendanceController,
     ReportingController,
-    UserOverviewController
+    UserOverviewController,
+    ChatController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -71,4 +72,8 @@ Route::prefix('v1/')->group(function () {
     });
 
     Route::get('overview/user', UserOverviewController::class)->middleware(['passport.cookie', 'auth:api']);
+
+    Route::prefix('chat/')->controller(ChatController::class)->group(function() {
+        Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
+    });
 });
