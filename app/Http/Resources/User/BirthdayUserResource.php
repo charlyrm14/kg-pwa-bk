@@ -5,6 +5,7 @@ namespace App\Http\Resources\User;
 use Illuminate\Http\Request;
 use App\Services\DateService;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserOverview\IndexResource;
 
 class BirthdayUserResource extends JsonResource
 {
@@ -30,6 +31,7 @@ class BirthdayUserResource extends JsonResource
                     'gender' => optional($this->profile->gender)->name,
                 ];
             }),
+            'current_level' => 'NIVEL ' . $this->current_level
         ];
     }
 }
