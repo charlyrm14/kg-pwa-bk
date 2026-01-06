@@ -15,6 +15,9 @@ class CategorySkillResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->whenLoaded('skill', function() {
+                return $this->skill->id;
+            }),
             'skill' => $this->whenLoaded('skill', function() {
                 return $this->skill->description;
             })
