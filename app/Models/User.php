@@ -256,7 +256,7 @@ class User extends Authenticatable implements OAuthenticatable
             $query->whereMonth('birthdate', now()->month)
                 ->whereDay('birthdate', now()->day);
         })
-        ->with('profile')
+        ->with(['profile', 'studentProgress'])
         ->get();
     }
 
