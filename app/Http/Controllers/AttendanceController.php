@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\UserSchedule;
+use App\Models\{
+    User,
+    UserSchedule,
+    UserAttendance
+};
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\Attendance\{
     TodayAttendanceCollection,
-    AttendanceResource
+    AttendanceResource,
+    AssignAttendanceResource
 };
 use App\Services\UserService;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\Attendance\AssignAttendanceRequest;
 
 class AttendanceController extends Controller
 {
@@ -82,6 +88,63 @@ class AttendanceController extends Controller
             Log::error("Error to get user attendances: " . $e->getMessage());
 
             return response()->json(["error" => 'Error to get user attendances'], 500);
+        }
+    }
+
+    /**
+     * Assign or update today's attendance status for a specific user.
+     *
+     * This endpoint creates or updates the attendance record for the authenticated
+     * day schedule of the given user. If an attendance record already exists for
+     * the user and their schedule of the current day, it will be updated with the
+     * new attendance status. Otherwise, a new attendance record will be created.
+     *
+     * Business rules:
+     * - A user can only have one attendance record per schedule per day.
+     * - Attendance status is mutable and can be corrected by an administrator.
+     *
+     * @param  AssignAttendanceRequest  $request
+     *         Validated request containing the attendance_status_id.
+     *
+     * @param  User  $user
+     *         The user whose attendance is being assigned (route model binding).
+     *
+     * @return JsonResponse
+     *         Returns a JSON response with:
+     *         - 201: Attendance assigned or updated successfully.
+     *         - 404: User has no schedule assigned for the current day.
+     *         - 500: An unexpected server error occurred.
+     *
+     * @throws \Throwable
+     *         If any unexpected error occurs during the process.
+     */
+    public function assignAttendance(AssignAttendanceRequest $request, User $user): JsonResponse
+    {
+        try {
+
+            $schedule = $user->scheduleByDay()->first();
+
+            if(!$schedule) {
+                return response()->json(['message' => 'User has no schedules assigned'], 404);
+            }
+
+            $attendance = UserAttendance::updateOrCreate(
+                ['user_id' => $user->id, 'user_schedule_id' => $schedule->id,],
+                ['attendance_status_id' => $request->validated()['attendance_status_id']]
+            ); 
+
+            $attendance->load('attendanceStatus', 'userSchedule.day', 'user');
+            
+            return response()->json([
+                'message' => 'User attendance assigned successfully',
+                'data' => new AssignAttendanceResource($attendance)
+            ], 201);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to assign user attendance: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to assign user attendance'], 500);
         }
     }
 }
