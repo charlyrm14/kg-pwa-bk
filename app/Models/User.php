@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Collection;
+use App\Services\DateService;
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements OAuthenticatable
@@ -135,6 +136,16 @@ class User extends Authenticatable implements OAuthenticatable
     public function schedules(): HasMany
     {
         return $this->hasMany(UserSchedule::class);
+    }
+
+    /**
+     * The function "scheduleByDay" returns a HasOne relationship with the UserSchedule model in PHP.
+     * 
+     * @return HasOne A HasOne relationship is being returned, linking the current model to the UserSchedule
+     */
+    public function scheduleByDay(): HasOne
+    {
+        return $this->hasOne(UserSchedule::class)->where('day_id', DateService::getCurrentDayName());
     }
 
     /**

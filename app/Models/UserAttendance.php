@@ -14,7 +14,7 @@ class UserAttendance extends Model
      */
     protected $fillable = [
         'user_id',
-        'schedule_id',
+        'user_schedule_id',
         'attendance_status_id'
     ];
 
@@ -39,5 +39,16 @@ class UserAttendance extends Model
     public function userSchedule(): BelongsTo
     {
         return $this->belongsTo(UserSchedule::class);
+    }
+
+    /**
+     * The user function returns the relationship between the current model and the
+     * User model.
+     * 
+     * @return BelongsTo A BelongsTo relationship is being returned.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
