@@ -78,6 +78,7 @@ Route::prefix('v1/')->group(function () {
         Route::post('', [ChatController::class, 'store'])->middleware(['passport.cookie', 'auth:api']);
 
         Route::prefix('{chat:uuid}/messages')->controller(ChatMessageController::class)->group(function() {
+            Route::get('', 'index')->middleware(['passport.cookie', 'auth:api']);
             Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
         });
     });

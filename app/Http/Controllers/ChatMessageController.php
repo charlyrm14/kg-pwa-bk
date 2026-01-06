@@ -15,7 +15,11 @@ use Illuminate\Support\Facades\{
 };
 use App\Services\AI\PromptsChatBuilderService;
 use App\Services\API\AIService;
-use App\Http\Resources\Chat\ChatMessageResource;
+use App\Http\Resources\Chat\{
+    ChatMessageResource, 
+    ChatHistoryResource
+};
+use Illuminate\Http\JsonResponse;
 
 class ChatMessageController extends Controller
 {
@@ -23,6 +27,61 @@ class ChatMessageController extends Controller
         protected PromptsChatBuilderService $promptsChatBuilderService
     )
     {}
+
+    /**
+     * Retrieve the paginated message history for a specific chat.
+     *
+     * This endpoint returns the conversation history associated with the given
+     * chat UUID using cursor-based pagination. Messages are ordered by creation
+     * date in descending order (most recent first) and include the related user
+     * information for each message.
+     *
+     * Authentication is required. If the authenticated user cannot be resolved,
+     * a 404 response is returned.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *         The current HTTP request instance. Used to resolve the
+     *         authenticated user and pagination cursor.
+     *
+     * @param  \App\Models\Chat  $chat
+     *         The chat model resolved via implicit route model binding
+     *         using the chat UUID.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *         A JSON response containing the chat metadata and a cursor-paginated
+     *         list of messages wrapped in a ChatHistoryResource.
+    */
+    public function index(Request $request, Chat $chat): JsonResponse
+    {
+        try {
+
+            $user = $request->user();
+
+            if(!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $messages = $chat->messages()
+                ->with('user')
+                ->orderBy('created_at', 'desc')
+                ->cursorPaginate(10);
+
+            return response()->json([
+                'data' => new ChatHistoryResource($chat, $messages)
+            ], 200);
+
+        } catch(\Throwable $e) {
+
+            DB::rollBack();
+
+            Log::error('Error to get history chat: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error to get history chat',
+            ], 500);
+
+        }
+    }
 
     /**
      * The `store` function handles storing chat messages, generating AI responses, and managing
@@ -40,7 +99,7 @@ class ChatMessageController extends Controller
      * error occurs during the process, it returns a JSON response with an error message and an HTTP
      * status code of 500 (Internal Server Error).
      */
-    public function store(StoreChatMessageRequest $request, Chat $chat)
+    public function store(StoreChatMessageRequest $request, Chat $chat): JsonResponse
     {
         try {
 
