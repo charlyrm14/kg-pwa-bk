@@ -149,6 +149,20 @@ class User extends Authenticatable implements OAuthenticatable
     }
 
     /**
+     * The function `days()` returns a HasMany relationship for a user's days.
+     * 
+     * @return HasMany The `days()` function is returning a relationship method `HasMany` which
+     * defines a one-to-many relationship between the current model and the `Day` model. This
+     * means that a user can have multiple days associated with them.
+     */
+    public function days(): BelongsToMany
+    {
+        return $this->belongsToMany(Day::class, 'user_schedules')
+            ->withPivot(['entry_time', 'departure_time'])
+            ->withTimestamps();
+    }
+
+    /**
      * The function `attendances()` returns a relationship where a model has many UserAttendance.
      * 
      * @return HasMany The code snippet is a PHP function named `attendances` that returns a relationship

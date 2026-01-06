@@ -44,6 +44,7 @@ Route::prefix('v1/')->group(function () {
 
     Route::prefix('schedules/')->controller(ScheduleController::class)->group(function() {
         Route::get('user', 'userSchedule')->middleware(['passport.cookie', 'auth:api']);
+        Route::put('{user:uuid}', 'assignSchedule');
     });
 
     Route::prefix('student-progress/')->controller(StudentProgressController::class)->group(function() {
