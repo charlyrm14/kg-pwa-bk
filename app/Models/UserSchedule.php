@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class UserSchedule extends Model
 {
@@ -23,23 +24,35 @@ class UserSchedule extends Model
     ];
 
     /**
-     * The function `user()` returns a BelongsTo relationship with the Hobby model in PHP.
+     * The function `user()` returns a BelongsTo relationship with the User model in PHP.
      * 
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->where('role_id', 3);
     }
 
     /**
-     * The function `day()` returns a BelongsTo relationship with the Hobby model in PHP.
+     * The function `day()` returns a BelongsTo relationship with the Day model in PHP.
      * 
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function day(): BelongsTo
     {
         return $this->belongsTo(Day::class);
+    }
+
+    public function attendanceStatus(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            AttendanceStatus::class,
+            UserAttendance::class,
+            'user_schedule_id',      // FK en user_attendances
+            'id',                    // PK en attendance_statuses
+            'id',                    // PK en user_schedules
+            'attendance_status_id'   // FK en user_attendances
+        );
     }
 
     /**
@@ -59,7 +72,11 @@ class UserSchedule extends Model
      */
     public static function todayAttendances(): LengthAwarePaginator
     {
-        return static::with(['user.role', 'day'])->where([
+        return static::with([
+            'user.role', 
+            'day',
+            'attendanceStatus'
+        ])->where([
             'day_id' => DateService::getCurrentDayName()
         ])->paginate(15);
     }
