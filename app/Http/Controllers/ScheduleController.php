@@ -8,6 +8,7 @@ use App\Models\{
     User,
     UserSchedule
 };
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -31,15 +32,12 @@ class ScheduleController extends Controller
      * found, a 404 response with a message 'User not found' will be returned. If there is an error
      * during the process, a 500 response with an error message 'Error to get user schedule' will be
      */
-    public function userSchedule(Request $request): JsonResponse
+    public function userSchedule(Request $request, ?string $uuid = null): JsonResponse
     {
         try {
-            $user = $request->user();
 
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-
+            $user = UserService::resolveUser($request, $uuid, 'viewUserSchedule');
+            
             return response()->json([
                 'data' => new ShowUserScheduleResource($user->load('schedules.day'))
             ]);
