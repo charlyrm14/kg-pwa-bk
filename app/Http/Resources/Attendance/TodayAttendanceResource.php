@@ -35,6 +35,7 @@ class TodayAttendanceResource extends JsonResource
             'day_formatted_name' => Str::title($day->name),
             'entry_time' => $this->entry_time,
             'departure_time' => $this->departure_time,
+            'attendance_status' => $this->attendanceStatus?->name ?? null,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d'),
         ];
