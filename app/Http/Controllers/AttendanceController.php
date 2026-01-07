@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\{
+    AttendanceStatus,
     User,
     UserSchedule,
     UserAttendance
@@ -20,9 +21,47 @@ use App\Http\Resources\Attendance\{
 use App\Services\UserService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Requests\Attendance\AssignAttendanceRequest;
+use Illuminate\Support\Facades\Cache;
 
 class AttendanceController extends Controller
 {
+    /**
+     * Retrieve the list of attendance statuses.
+     *
+     * This endpoint returns a cached collection of attendance statuses used
+     * to assign or display user attendance records. The data is cached to
+     * improve performance since attendance statuses are static and rarely change.
+     *
+     * Cached fields:
+     * - id
+     * - name
+     * - description
+     *
+     * Cache key: attendance_statuses
+     *
+     * @return JsonResponse
+     *
+     */
+    public function attendanceStatuses(): JsonResponse
+    {
+        try {
+            
+            $statuses =  Cache::rememberForever('attendance_statuses', function () {
+                return AttendanceStatus::select('id', 'name', 'description')->get();
+            });
+
+            return response()->json([
+                'data' => $statuses
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to get attendances statuses: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to get attendances statuses'], 500);
+        }
+    }
+
     /**
      * Get today's attendances.
      *

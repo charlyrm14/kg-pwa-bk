@@ -65,6 +65,7 @@ Route::prefix('v1/')->group(function () {
     Route::get('birthdays/today', BirthdayController::class);
 
     Route::prefix('attendances/')->controller(AttendanceController::class)->group(function() {
+        Route::get('statuses', 'attendanceStatuses');
         Route::get('today', 'todayAttendances');
         Route::get('history/{uuid?}', 'monthlyHistory')->middleware(['passport.cookie', 'auth:api']);
         Route::put('assign/{user:uuid}', 'assignAttendance');
