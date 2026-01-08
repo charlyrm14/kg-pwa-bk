@@ -14,13 +14,13 @@ class DaySeeder extends Seeder
     public function run(): void
     {
         $days = [
-            ['id' => 1, 'name' => 'LUNES'],
-            ['id' => 2, 'name' => 'MARTES'],
-            ['id' => 3, 'name' => 'MIÉRCOLES'],
-            ['id' => 4, 'name' => 'JUEVES'],
-            ['id' => 5, 'name' => 'VIERNES'],
-            ['id' => 6, 'name' => 'SÁBADO'],
-            ['id' => 7, 'name' => 'DOMINGO'],
+            ['id' => 1, 'name' => 'Lunes'],
+            ['id' => 2, 'name' => 'Martes'],
+            ['id' => 3, 'name' => 'Miércoles'],
+            ['id' => 4, 'name' => 'Jueves'],
+            ['id' => 5, 'name' => 'Viernes'],
+            ['id' => 6, 'name' => 'Sábado'],
+            ['id' => 7, 'name' => 'Domingo'],
         ];
 
         Day::upsert($days, ['id'], ['name']);

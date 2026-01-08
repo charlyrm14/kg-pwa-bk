@@ -14,9 +14,9 @@ class ProgressStatusSeeder extends Seeder
     public function run(): void
     {
         $progress = [
-            ['id' => 1, 'name' => 'ACTIVE', 'slug' => 'ACTIVE', 'description' => 'Progreso activo y en curso'],
-            ['id' => 2, 'name' => 'COMPLETED', 'slug' => 'COMPLETED', 'description' => 'Progreso completado (100%).'],
-            ['id' => 3, 'name' => 'PAUSED', 'slug' => 'PAUSED', 'description' => 'Progreso temporalmente detenido.']
+            ['id' => 1, 'name' => 'Activa', 'slug' => 'activa', 'description' => 'Progreso activo y en curso'],
+            ['id' => 2, 'name' => 'Completada', 'slug' => 'completada', 'description' => 'Progreso completado (100%).'],
+            ['id' => 3, 'name' => 'Pausada', 'slug' => 'pausada', 'description' => 'Progreso temporalmente detenido.']
         ];
 
         ProgressStatus::upsert($progress, ['id'], ['name', 'slug', 'description']);

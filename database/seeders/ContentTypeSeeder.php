@@ -14,10 +14,10 @@ class ContentTypeSeeder extends Seeder
     public function run(): void
     {
         $contentType = [
-            ['id' => 1, 'name' => 'NEWS', 'slug' => 'NEWS'],
-            ['id' => 2, 'name' => 'EVENTS', 'slug' => 'EVENTS'],
-            ['id' => 3, 'name' => 'TIPS', 'slug' => 'TIPS'],
-            ['id' => 4, 'name' => 'NUTRITION', 'slug' => 'NUTRITION']
+            ['id' => 1, 'name' => 'Noticias', 'slug' => 'noticias'],
+            ['id' => 2, 'name' => 'Eventos', 'slug' => 'eventos'],
+            ['id' => 3, 'name' => 'Consejos', 'slug' => 'consejos'],
+            ['id' => 4, 'name' => 'Nutrición', 'slug' => 'nutricion']
         ];
         
         ContentType::upsert($contentType, ['id'], ['name', 'slug']);

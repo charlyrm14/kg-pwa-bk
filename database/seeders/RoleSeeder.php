@@ -14,9 +14,9 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            ['id' => 1, 'name' => 'ADMIN', 'slug' => 'ADMIN'],
-            ['id' => 2, 'name' => 'TEACHER', 'slug' => 'TEACHER'],
-            ['id' => 3, 'name' => 'STUDENT', 'slug' => 'STUDENT']
+            ['id' => 1, 'name' => 'Admin', 'slug' => 'admin'],
+            ['id' => 2, 'name' => 'Profesor', 'slug' => 'profesor'],
+            ['id' => 3, 'name' => 'Estudiante', 'slug' => 'estudiante']
         ];
 
         Role::upsert($roles, ['id'], ['name', 'slug']);

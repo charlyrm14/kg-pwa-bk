@@ -14,13 +14,13 @@ class ContentStatusSeeder extends Seeder
     public function run(): void
     {
         $contentStatus = [
-            ['id' => 1,'name' => 'DRAFT', 'slug' => 'DRAFT', 'description' => 'El contenido está siendo creado'],
-            ['id' => 2,'name' => 'PENDING REVIEW', 'slug' => 'PENDING-REVIEW', 'description' => 'El contenido está listo y el autor lo ha enviado para su aprobación'],
-            ['id' => 3,'name' => 'REJECTED', 'slug' => 'REJECTED', 'description' => 'El moderador revisó el contenido y determino que necesita correcciones'],
-            ['id' => 4,'name' => 'SCHEDULED', 'slug' => 'SCHEDULED', 'description' => 'Contenido con fecha de publicación futura'],
-            ['id' => 5,'name' => 'PUBLISHED', 'slug' => 'PUBLISHED', 'description' => 'El Contenido es visible para todos los usuarios en la aplicación'],
-            ['id' => 6,'name' => 'UNPUBLISHED', 'slug' => 'UNPUBLISHED', 'description' => 'El contenido fue publicado, pero fue retirado temporalmente'],
-            ['id' => 7,'name' => 'DELETED', 'slug' => 'DELETED', 'description' => 'Contenido eliminado'],
+            ['id' => 1,'name' => 'Borrador', 'slug' => 'borrador', 'description' => 'El contenido está siendo creado'],
+            ['id' => 2,'name' => 'Pendiente de revisión', 'slug' => 'pendiente-de-revision', 'description' => 'El contenido está listo y el autor lo ha enviado para su aprobación'],
+            ['id' => 3,'name' => 'Rechazado', 'slug' => 'rechazado', 'description' => 'El moderador revisó el contenido y determino que necesita correcciones'],
+            ['id' => 4,'name' => 'Programado', 'slug' => 'programado', 'description' => 'Contenido con fecha de publicación futura'],
+            ['id' => 5,'name' => 'Publicado', 'slug' => 'publicado', 'description' => 'El Contenido es visible para todos los usuarios en la aplicación'],
+            ['id' => 6,'name' => 'No publicado', 'slug' => 'no-publicado', 'description' => 'El contenido fue publicado, pero fue retirado temporalmente'],
+            ['id' => 7,'name' => 'Eliminado', 'slug' => 'eliminado', 'description' => 'Contenido eliminado'],
         ];
 
         ContentStatus::upsert($contentStatus, ['id'], ['name', 'slug', 'description']);

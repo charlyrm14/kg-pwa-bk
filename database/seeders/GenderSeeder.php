@@ -14,8 +14,8 @@ class GenderSeeder extends Seeder
     public function run(): void
     {
         $gender = [
-            ['id' => 1, 'name' => 'MASCULINO', 'slug' => 'MASCULINO'],
-            ['id' => 2, 'name' => 'FEMENINO', 'slug' => 'FEMENINO']
+            ['id' => 1, 'name' => 'Masculino', 'slug' => 'masculino'],
+            ['id' => 2, 'name' => 'Femenino', 'slug' => 'femenino']
         ];
 
         Gender::upsert($gender, ['id'], ['name', 'slug']);
