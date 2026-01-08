@@ -14,10 +14,10 @@ class ChatTypeSeeder extends Seeder
     public function run(): void
     {
         $chatTypes = [
-            ['id' => 1, 'name' => 'DIRECT', 'description' => 'Conversación uno a uno entre dos usuarios.'],
-            ['id' => 2, 'name' => 'GROUP', 'description' => 'Conversación entre tres o más usuarios.'],
-            ['id' => 3, 'name' => 'AI_ASSISTANT', 'description' => 'Conversación entre un usuario y la IA de la aplicación.'],
-            ['id' => 4, 'name' => 'SUPPORT', 'description' => 'Conversación entre un usuario y el equipo de soporte/administradores.'],
+            ['id' => 1, 'name' => 'Directo', 'description' => 'Conversación uno a uno entre dos usuarios.'],
+            ['id' => 2, 'name' => 'Grupo', 'description' => 'Conversación entre tres o más usuarios.'],
+            ['id' => 3, 'name' => 'Asistente IA', 'description' => 'Conversación entre un usuario y la IA de la aplicación.'],
+            ['id' => 4, 'name' => 'Soporte', 'description' => 'Conversación entre un usuario y el equipo de soporte/administradores.'],
         ];
 
         ChatType::upsert($chatTypes, ['id'], ['name', 'description']);

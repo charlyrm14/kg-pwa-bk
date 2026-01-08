@@ -16,7 +16,7 @@ class PaymentTypeSeeder extends Seeder
         $types = [
             [
                 'id' => 1, 
-                'name' => 'MONTHLY_STANDARD', 
+                'name' => 'Mensual básica', 
                 'description' => 'Membresía básica de natación con acceso ilimitado a las clases grupales durante 30 días.',
                 'base_amount' => 1500.00,
                 'is_recurring' => true,
@@ -24,7 +24,7 @@ class PaymentTypeSeeder extends Seeder
             ],
             [
                 'id' => 2, 
-                'name' => 'ANNUAL_PREMIUM', 
+                'name' => 'Anual', 
                 'description' => 'Membresía anual con un 10% de descuento y acceso prioritario a eventos y clínicas.',
                 'base_amount' => 1100.00,
                 'is_recurring' => true,
@@ -32,7 +32,7 @@ class PaymentTypeSeeder extends Seeder
             ],
             [
                 'id' => 3, 
-                'name' => 'SINGLE_CLASS', 
+                'name' => 'Visita', 
                 'description' => 'Pase de un día para una clase de prueba o un evento especial. No recurrente.',
                 'base_amount' => 250.00,
                 'is_recurring' => false,
@@ -40,7 +40,7 @@ class PaymentTypeSeeder extends Seeder
             ],
             [
                 'id' => 4, 
-                'name' => 'FAMILY_MONTHLY', 
+                'name' => 'Familiar', 
                 'description' => 'Membresía mensual con tarifa reducida para el segundo miembro de la familia y subsiguientes.', // Precio familiar con descuento
                 'base_amount' => 2300.00, 
                 'is_recurring' => true,

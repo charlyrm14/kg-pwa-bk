@@ -14,12 +14,12 @@ class AttendanceStatusSeeder extends Seeder
     public function run(): void
     {
         $statuses = [
-            ['id' => 1, 'name' => 'PRESENT', 'description' => 'El alumno o participante asistió a la sesión.'],
-            ['id' => 2, 'name' => 'ABSENT_UNJUSTIFIED', 'description' => 'Ausencia sin previo aviso ni justificación.'],
-            ['id' => 3, 'name' => 'ABSENT_JUSTIFIED', 'description' => 'Ausencia justificada (ej. enfermedad, cita médica).'],
-            ['id' => 4, 'name' => 'LATE', 'description' => 'El alumno llegó tarde.'],
-            ['id' => 5, 'name' => 'EXCUSED', 'description' => 'Exento de asistir por parte del entrenador (ej. lesión, descanso).'],
-            ['id' => 6, 'name' => 'UNASSIGNED', 'description' => 'Día no asignado como asistencia.'],
+            ['id' => 1, 'name' => 'Asistió', 'description' => 'El alumno o participante asistió a la sesión.'],
+            ['id' => 2, 'name' => 'Ausencia no justificada', 'description' => 'Ausencia sin previo aviso ni justificación.'],
+            ['id' => 3, 'name' => 'Ausencia justificada', 'description' => 'Ausencia justificada (ej. enfermedad, cita médica).'],
+            ['id' => 4, 'name' => 'Tarde', 'description' => 'El alumno llegó tarde.'],
+            ['id' => 5, 'name' => 'Exento', 'description' => 'Exento de asistir por parte del entrenador (ej. lesión, descanso).'],
+            ['id' => 6, 'name' => 'No asignado', 'description' => 'Día no asignado como asistencia.'],
         ];
 
         AttendanceStatus::upsert($statuses, ['id'], ['name', 'description']);

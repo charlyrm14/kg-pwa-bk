@@ -14,9 +14,9 @@ class SenderTypeSeeder extends Seeder
     public function run(): void
     {
         $senderTypes = [
-            ['id' => 1, 'name' => 'USER', 'description' => 'Mensaje enviado por un usuario humano (persona).'],
+            ['id' => 1, 'name' => 'Usuario', 'description' => 'Mensaje enviado por un usuario humano (persona).'],
             ['id' => 2, 'name' => 'AI', 'description' => 'Mensaje generado por el asistente de Inteligencia Artificial.'],
-            ['id' => 3, 'name' => 'SYSTEM', 'description' => 'Mensaje automático de notificación de la aplicación.'],
+            ['id' => 3, 'name' => 'Sistema', 'description' => 'Mensaje automático de notificación de la aplicación.'],
         ];
 
         SenderType::upsert($senderTypes, ['id'], ['name', 'description']);
