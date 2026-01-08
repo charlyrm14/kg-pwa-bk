@@ -1,61 +1,147 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+#  Plataforma de Gestión para Escuela de Natación - Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este repositorio contiene el backend de una plataforma orientada a la gestión de una escuela de natación.
+El objetivo principal es servir como proyecto de portafolio, pero también como una opción para ser utilizado en un entorno productivo.
 
-## About Laravel
+Actualmente, el backend está pensado para ejecutarse de manera local, mientras que el frontend puede consumir datos mock o conectarse a este backend en desarrollo.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# Objetivo del proyecto
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+El backend tiene como objetivo cubrir las siguientes necesidades:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Gestión de usuarios (administradores, maestros y alumnos)
+- Asignación de horarios y días de clase
+- Registro y control de asistencias
+- Historial de asistencias y reportes
+- Sistema de ranking (en desarrollo)
+- Registro de historial de pagos (sin pasarela de pagos, solo registro administrativo)
+- Gestión de contenidos (noticias, eventos, tips deportivos, tips nutricionales)
+- Integración con IA para generación de contenido y asistencia conversacional
+- Enfoque en arquitectura limpia, mantenible y escalable
 
-## Learning Laravel
+# Tecnologías utilizadas
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP: ^8.2
+- Framework: Laravel 12
+- Base de datos: MySQL 9.3.0
+- Autenticación: OAuth 2.0 con Laravel Passport
+- Sockets / Realtime: Pusher (en desarrollo)
+- Exportación de reportes: Maatwebsite Excel
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# Autenticación y seguridad
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Autenticación basada en OAuth 2.0 usando Laravel Passport
+- Uso de JWT almacenados en cookies para mayor seguridad en entornos web
+- Protección de rutas mediante middleware
+- Autorización de acciones mediante Policies, basadas en el rol del usuario
 
-## Laravel Sponsors
+# Uso de patrones de diseño
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Strategy Pattern
 
-### Premium Partners
+Utilizado principalmente para:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Generación de contenidos
+- Noticias
+- Eventos
+- Tips para mejorar técnica de natación
+- Tips nutricionales
+- Generación de reportes
+- Reportes de asistencias
+- Reportes por periodo (mensual, semanal, etc.)
 
-## Contributing
+Esto permite:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Cambiar o extender comportamientos sin modificar lógica existente
+- Centralizar la lógica según el tipo de contenido o reporte
 
-## Code of Conduct
+# Observer Pattern
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Utilizado para reaccionar a eventos, por ejemplo:
 
-## Security Vulnerabilities
+- Al crear un usuario con rol de estudiante
+- Generación automática de uuid
+- Generación de código de estudiante
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Al crear contenidos
 
-## License
+- Generación automática de slug
+- Mantener el controlador limpio y enfocado solo en su responsabilidad
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Integración con IA
+
+El backend integra una API gratuita de Meta-Llama a través de OpenRouter, utilizada para:
+
+- Generación de contenido (noticias, tips, eventos)
+- Asistente conversacional enfocado en: Natación, entrenamiento, comunidad escolar
+
+# Comandos por consola
+
+La generación de contenido mediante IA también puede ejecutarse a través de comandos Artisan, lo que permite:
+
+- Automatizar la creación de contenido
+- Evitar dependencia directa de endpoints HTTP
+- Facilitar pruebas y futuras tareas programadas
+
+# Chat y mensajería
+
+Implementación de un sistema de chat enfocado inicialmente en IA
+
+Arquitectura preparada para:
+
+- Chats directos
+- Chats grupales
+- Chats de soporte
+
+Uso de sockets (Pusher) aunque actualmente el flujo principal es request/response
+
+Separación clara entre HTTP y WebSockets
+
+# Reportes
+
+- Generación de reportes administrativos
+- Exportación a Excel
+- Arquitectura preparada para agregar nuevos tipos de reportes sin modificar los existentes
+
+# Tipado estricto y buenas prácticas
+
+- Uso de declare(strict_types=1) en servicios y clases clave
+- Requests personalizados para validación
+- Resources para estandarizar respuestas JSON
+- Transacciones para operaciones críticas
+- Manejo explícito de errores y logging
+
+# Estado actual del proyecto
+
+- El backend funciona de manera local
+- No está desplegado en un entorno público
+
+El frontend puede:
+
+- Consumir este backend en local o trabajar con datos mockeados
+
+Esta decisión es intencional para:
+
+- Mantener el proyecto accesible como portafolio
+
+# Repositorios relacionados
+
+Frontend: (Repositorio principal del proyecto frontend)
+
+Link:
+👉 https://github.com/charlyrm14/kg-pwa-fr
+
+# Nota final
+
+Este proyecto está en constante evolución.
+Muchas decisiones están pensadas desde un enfoque práctico y realista, buscando un balance entre:
+
+- Escalabilidad
+- Simplicidad
+- Tiempo de desarrollo
+
+# Autor
+
+Carlos I. Ramos Morales
+
+Desarrollador Full Stack
