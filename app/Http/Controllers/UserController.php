@@ -14,6 +14,7 @@ use App\Http\Resources\User\{
     IndexCollection,
     NewUserResource,
     UpdateUserInfoResource,
+    ShowUserResource
 };
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -83,6 +84,36 @@ class UserController extends Controller
     }
 
     /**
+     * The function `show` retrieves a user's data and related information, handling any errors that
+     * may occur.
+     * 
+     * @param User user The `show` function is a controller method that returns a JSON response with
+     * data about a specific user. Here's a breakdown of the parameters used in the function:
+     * 
+     * @return JsonResponse A JSON response is being returned. If the operation is successful, it will
+     * return a JSON response with the data of the user, including their role, schedules for each day,
+     * and attendances for the current month. If an error occurs during the process, it will return a
+     * JSON response with an error message indicating that there was an error getting the user.
+     */
+    public function show(User $user): JsonResponse
+    {
+        try {
+            
+            return response()->json([
+                'data' => new ShowUserResource($user->load('role', 'schedules.day', 'attendancesCurrentMonth'))
+            ], 200);
+
+        } catch(\Throwable $e) {
+
+            Log::error('Error to get user: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error to get user',
+            ], 500);
+        }
+    }
+
+    /**
      * Update the basic information from a specific user in storage
      * 
      * @param UpdateUserInfoRequest request The validated request object containing information data.
@@ -90,7 +121,7 @@ class UserController extends Controller
      * 
      * @return JsonResponse A JSON response indicating success or failure of user information updated.
      */
-    public function update(UpdateUserInfoRequest $request, string $uuid)
+    public function update(UpdateUserInfoRequest $request, string $uuid): JsonResponse
     {
         try {
 
