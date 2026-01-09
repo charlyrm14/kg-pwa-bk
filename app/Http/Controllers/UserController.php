@@ -40,7 +40,9 @@ class UserController extends Controller
                 return response()->json(['message' => 'Resource not found'], 404);
             }
 
-            return response()->json(new IndexCollection($users), 200);
+            return response()->json([
+                'data' => new IndexCollection($users)
+            ], 200);
 
         } catch (\Throwable $e) {
             
