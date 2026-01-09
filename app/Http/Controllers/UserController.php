@@ -31,11 +31,17 @@ class UserController extends Controller
      * returns a JSON response with a status code of 404 and a message indicating that the resource was
      * not found. If an error
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
+
+            $query = User::query();
+
+            if($request->filled('email')) {
+                $query->where('email', $request->email)->get();
+            }
             
-            $users = User::with('role')->orderBy('id', 'DESC')->paginate(15);
+            $users = $query->with('role')->orderBy('id', 'DESC')->paginate(15);
 
             if($users->isEmpty()) {
                 return response()->json(['message' => 'Resource not found'], 404);
