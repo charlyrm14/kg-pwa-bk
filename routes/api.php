@@ -15,7 +15,8 @@ use App\Http\Controllers\{
     ReportingController,
     UserOverviewController,
     ChatController,
-    ChatMessageController
+    ChatMessageController,
+    PaymentController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -86,4 +87,9 @@ Route::prefix('v1/')->group(function () {
             Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
         });
     });
+
+    Route::prefix('payments/')->controller(PaymentController::class)->group(function() {
+        Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
+    });
+
 });

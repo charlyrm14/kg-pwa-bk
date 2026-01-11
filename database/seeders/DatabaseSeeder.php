@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             PaymentTypeSeeder::class,
             PeriodTypeSeeder::class,
             UserSeeder::class,
+            PaymentReferenceSeeder::class
         ]);
     }
 }

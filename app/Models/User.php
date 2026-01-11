@@ -163,6 +163,18 @@ class User extends Authenticatable implements OAuthenticatable
     }
 
     /**
+     * The function `payments()` returns a relationship where a model has many Payments.
+     * 
+     * @return HasMany The code snippet is a PHP function named `payments` that returns a relationship
+     * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
+     * has a one-to-many relationship with the `Payments` model.
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    /**
      * The function `attendances()` returns a relationship where a model has many UserAttendance.
      * 
      * @return HasMany The code snippet is a PHP function named `attendances` that returns a relationship
