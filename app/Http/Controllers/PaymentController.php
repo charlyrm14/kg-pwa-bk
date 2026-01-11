@@ -12,6 +12,7 @@ use App\Models\{
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use App\DTOs\Payment\StorePaymentDTO;
 use App\Services\Payment\PaymentService;
 use App\Http\Requests\Payment\StorePaymentRequest;
 use App\Http\Resources\Payment\StorePaymentResource;
@@ -39,23 +40,28 @@ class PaymentController extends Controller
     public function store(StorePaymentRequest $request): JsonResponse
     {
         try {
+            
+            $dto = StorePaymentDTO::fromArray($request->validated(), $request->user()->id);
 
-            $data = $request->validated(); 
-
-            $user = User::whereUuid($data['user_uuid'])->first();
+            $user = User::whereUuid($dto->userUuid)->first();
 
             if(!$user) {
                 return response()->json(['message' => 'User not found'], 404);
             }
+
+            $coveredDate = $this->paymentService->calculateCoverageDate($dto->paymentTypeId, $dto->paymentDate);
             
-            $coveredDate = $this->paymentService->calculateCoverageDate($data['payment_type_id'], $data['payment_date']);
+            $payment = Payment::create([
+                'user_id' => $user->id,
+                'payment_type_id' => $dto->paymentTypeId,
+                'amount' => $dto->amount,
+                'payment_date' => $dto->paymentDate,
+                'covered_until_date' => $coveredDate,
+                'payment_reference_id' => $dto->paymentReferenceId,
+                'registered_by_user_id' => $dto->registeredByUserId,
+                'notes' => $dto->notes,
+            ]);
 
-            $data['user_id'] = $user->id;
-            $data['payment_date'] = !is_null($data['payment_date']) ? $data['payment_date'] : Carbon::now();
-            $data['covered_until_date'] = $coveredDate;
-            $data['registered_by_user_id'] = $request->user()->id;
-
-            $payment = Payment::create($data);
             $payment->load('user', 'type', 'reference');
             
             return response()->json([
