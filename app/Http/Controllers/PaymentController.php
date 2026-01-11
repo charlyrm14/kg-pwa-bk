@@ -15,13 +15,60 @@ use Illuminate\Support\Facades\Log;
 use App\DTOs\Payment\StorePaymentDTO;
 use App\Services\Payment\PaymentService;
 use App\Http\Requests\Payment\StorePaymentRequest;
-use App\Http\Resources\Payment\StorePaymentResource;
+use App\Http\Resources\Payment\{
+    IndexPaymentCollection,
+    StorePaymentResource,
+};
 
 class PaymentController extends Controller
 {
     public function __construct(
         protected PaymentService $paymentService
     ){}
+
+    
+    /**
+     * This PHP function retrieves a list of payments based on optional start and end dates, paginates
+     * the results, and returns a JSON response with the data.
+     * 
+     * @param Request request The `index` function is a controller method that retrieves a list of
+     * payments based on the provided request parameters. Here's a breakdown of the function:
+     * 
+     * @return JsonResponse A JSON response is being returned. If the payments are found, it will
+     * return a JSON response with the data in the 'data' key, which is formatted using the
+     * IndexPaymentCollection. If no payments are found, it will return a JSON response with a message
+     * indicating that the resources were not found. If an error occurs during the process, it will
+     * return a JSON response with an error message.
+     */
+    public function index(Request $request): JsonResponse
+    {
+        try {
+
+            $query = Payment::query();
+
+            if($request->filled(['start_date', 'end_date'])) {
+                $query->whereBetween('payment_date', [ $request->start_date, $request->end_date]);
+            }
+
+            $payments = $query->with('user', 'type', 'reference')
+                ->orderByDesc('id')
+                ->cursorPaginate(15);
+
+            if($payments->isEmpty()) {
+                return response()->json(['message' => 'Resources not found'], 404);
+            }
+            
+            return response()->json([
+                'data' => new IndexPaymentCollection($payments)
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to get payments list: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to get payments list'], 500);
+        }
+    }
 
     /**
      * The `store` function in PHP handles the validation and creation of a payment record, associating
