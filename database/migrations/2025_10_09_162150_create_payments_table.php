@@ -18,10 +18,11 @@ return new class extends Migration
             $table->decimal('amount', 8, 2);
             $table->timestamp('payment_date');
             $table->date('covered_until_date')->nullable();
-            $table->string('payment_reference', 50);
+            $table->foreignId('payment_reference_id')->constrained('payment_references')->onDelete('cascade');
             $table->foreignId('registered_by_user_id')->constrained('users')->onDelete('cascade');
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class PaymentType extends Model
+class PaymentReference extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -14,10 +14,7 @@ class PaymentType extends Model
      */
     protected $fillable = [
         'name',
-        'description',
-        'base_amount',
-        'is_recurring',
-        'coverage_days'
+        'description'
     ];
 
     /**
