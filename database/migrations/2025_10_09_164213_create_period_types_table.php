@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('period_types', function (Blueprint $table) {
             $table->id();
             $table->string('name', 120);
-            $table->string('description');
+            $table->string('slug')->unique();
+            $table->string('description')->nullable();
+            $table->integer('duration_days')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

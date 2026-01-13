@@ -21,6 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('mediaable_id')->nullable();
             $table->string('mediaable_type', 120)->nullable();
             $table->timestamps();
+
+            $table->index(['mediaable_id', 'mediaable_type']);
         });
     }
 

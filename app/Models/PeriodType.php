@@ -16,6 +16,8 @@ class PeriodType extends Model
      */
     protected $fillable = [
         'name',
-        'description'
+        'slug',
+        'description',
+        'duration_days'
     ];
 }
