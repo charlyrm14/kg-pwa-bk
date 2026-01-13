@@ -88,10 +88,14 @@ Route::prefix('v1/')->group(function () {
         });
     });
 
-    Route::prefix('payments/')->controller(PaymentController::class)->group(function() {
-        Route::get('', 'index')->middleware(['passport.cookie', 'auth:api']);
-        Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
-        Route::delete('{payment:id}', 'destroy')->middleware(['passport.cookie', 'auth:api']);
+    Route::prefix('payments/')
+        ->controller(PaymentController::class)
+        ->middleware(['passport.cookie', 'auth:api'])
+        ->group(function() {
+            Route::get('', 'index');
+            Route::post('', 'store');
+            Route::put('{payment:id}', 'update');
+            Route::delete('{payment:id}', 'destroy');
     });
 
 });
