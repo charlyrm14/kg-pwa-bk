@@ -12,12 +12,19 @@ use App\Models\{
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use App\DTOs\Payment\StorePaymentDTO;
+use App\DTOs\Payment\{
+    StorePaymentDTO,
+    UpdatePaymentDTO
+};
 use App\Services\Payment\PaymentService;
-use App\Http\Requests\Payment\StorePaymentRequest;
+use App\Http\Requests\Payment\{
+    StorePaymentRequest,
+    UpdatePaymentRequest
+};
 use App\Http\Resources\Payment\{
     IndexPaymentCollection,
     StorePaymentResource,
+    UpdatePaymentResource
 };
 
 class PaymentController extends Controller
@@ -121,6 +128,61 @@ class PaymentController extends Controller
             Log::error("Error to register payment: " . $e->getMessage());
 
             return response()->json(["error" => 'Error to register payment'], 500);
+        }
+    }
+
+    /**
+     * This PHP function updates a payment record based on the provided request data and returns a JSON
+     * response with the updated payment details.
+     * 
+     * @param UpdatePaymentRequest request The `update` function you provided seems to handle updating
+     * payment information based on the `UpdatePaymentRequest` data and a `Payment` model instance. It
+     * validates the request data, retrieves the user associated with the payment, calculates the
+     * coverage date, updates the payment information, and then returns a JSON response
+     * @param Payment payment The `update` function you provided is responsible for updating a payment
+     * record based on the data provided in the `UpdatePaymentRequest` and the existing `Payment` model
+     * instance.
+     * 
+     * @return JsonResponse A JSON response is being returned. If the update operation is successful, a
+     * JSON response with a success message and the updated payment data in the "data" field is
+     * returned with a status code of 200. If an error occurs during the update process, a JSON
+     * response with an error message is returned with a status code of 500.
+     */
+    public function update(UpdatePaymentRequest $request, Payment $payment): JsonResponse
+    {
+        try {
+            
+            $dto = UpdatePaymentDTO::fromArray($request->validated());
+
+            $user = User::whereUuid($dto->userUuid)->first();
+
+            if(!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $coveredDate = $this->paymentService->calculateCoverageDate($dto->paymentTypeId, $dto->paymentDate);
+
+            $payment->update([
+                'payment_type_id' => $dto->paymentTypeId,
+                'amount' => $dto->amount,
+                'payment_date' => $dto->paymentDate,
+                'covered_until_date' => $coveredDate,
+                'payment_reference_id' => $dto->paymentReferenceId,
+                'notes' => $dto->notes,
+            ]);
+
+            $payment->load('user', 'type', 'reference');
+
+            return response()->json([
+                'message' => 'Payment register successfully',
+                'data' => new UpdatePaymentResource($payment)
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to update payment: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to update payment'], 500);
         }
     }
 
