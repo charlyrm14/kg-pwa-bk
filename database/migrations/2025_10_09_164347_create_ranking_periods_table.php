@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('ranking_periods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('period_type_id')->constrained()->onDelete('cascade');
             $table->date('start_date');
             $table->date('end_date');
-            $table->integer('total_points');
-            $table->date('calculated_at');
+            $table->timestamp('calculated_at')->nullable();
+            $table->string('status', 120);
             $table->timestamps();
+
+            $table->unique(['period_type_id', 'start_date', 'end_date']);
         });
     }
 
