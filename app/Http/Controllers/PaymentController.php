@@ -123,4 +123,38 @@ class PaymentController extends Controller
             return response()->json(["error" => 'Error to register payment'], 500);
         }
     }
+
+    /**
+     * This PHP function deletes a payment record and returns a JSON response indicating success or
+     * failure.
+     * 
+     * @param Request request The `Request ` parameter in the `destroy` function represents the
+     * HTTP request being made to the server. It contains all the data sent by the client in the
+     * request.
+     * @param Payment payment The `destroy` function you provided is a method that deletes a payment
+     * record from the database. The `` parameter is an instance of the `Payment` model that
+     * represents the payment record to be deleted.
+     * 
+     * @return JsonResponse A JSON response is being returned. If the payment is deleted successfully,
+     * a JSON response with a success message is returned with status code 200. If there is an error
+     * during the deletion process, a JSON response with an error message is returned with status code
+     * 500.
+     */
+    public function destroy(Request $request, Payment $payment): JsonResponse
+    {
+        try {
+            
+            $payment->delete();
+
+            return response()->json([
+                'message' => 'Payment delete successfully'
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to delete payment: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to delete payment'], 500);
+        }
+    }
 }
