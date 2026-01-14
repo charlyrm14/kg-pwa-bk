@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->string('trigger_type', 120);
-            $table->unsignedBigInteger('trigger_id')->nullable();
+            $table->string('trigger_id')->nullable();
             $table->integer('points_awarded');
             $table->integer('max_points_per_period')->nullable();
             $table->boolean('is_active')->default(true);
