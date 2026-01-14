@@ -17,6 +17,7 @@ class RankingRule extends Model
         'trigger_type',
         'trigger_id',
         'points_awarded',
+        'max_points_per_period',
         'is_active'
     ];
 }

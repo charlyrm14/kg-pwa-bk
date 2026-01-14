@@ -51,6 +51,6 @@ class PeriodTypeSeeder extends Seeder
             ],
         ];
 
-        PeriodType::upsert($periodTypes, ['id'], ['name', 'description']);
+        PeriodType::upsert($periodTypes, ['slug'], ['name', 'description']);
     }
 }
