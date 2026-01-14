@@ -36,7 +36,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PaymentReferenceSeeder::class,
             PeriodTypeSeeder::class,
-            RankingRuleSeeder::class
+            RankingRuleSeeder::class,
+            RankingPeriodSeeder::class
         ]);
     }
 }

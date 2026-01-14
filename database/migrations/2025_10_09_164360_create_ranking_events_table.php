@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('event_date');
             $table->json('metadata')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['user_id', 'event_date']);
         });
