@@ -16,7 +16,8 @@ use App\Http\Controllers\{
     UserOverviewController,
     ChatController,
     ChatMessageController,
-    PaymentController
+    PaymentController,
+    RankingEventController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -98,4 +99,10 @@ Route::prefix('v1/')->group(function () {
             Route::delete('{payment:id}', 'destroy');
     });
 
+    Route::prefix('rankings/')->group(function() { 
+
+        Route::prefix('events/')->controller(RankingEventController::class)->group(function() { 
+            Route::post('', 'store'); 
+        }); 
+    });
 });
