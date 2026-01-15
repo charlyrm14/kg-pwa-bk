@@ -17,8 +17,9 @@ use App\Http\Controllers\{
     ChatController,
     ChatMessageController,
     PaymentController,
-    RankingEventController,
-    RankingPeriodController
+    RankingController,
+    RankingPeriodController,
+    RankingEventController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -101,6 +102,10 @@ Route::prefix('v1/')->group(function () {
     });
 
     Route::prefix('rankings/')->group(function() { 
+
+        Route::prefix('')->controller(RankingController::class)->group(function() { 
+            Route::get('', 'index');
+        }); 
 
         Route::prefix('periods/')->controller(RankingPeriodController::class)->group(function() { 
             Route::post('{period:id}/calculate', 'calculate');
