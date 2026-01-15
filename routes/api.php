@@ -103,7 +103,8 @@ Route::prefix('v1/')->group(function () {
     Route::prefix('rankings/')->group(function() { 
 
         Route::prefix('periods/')->controller(RankingPeriodController::class)->group(function() { 
-            Route::post('{period:id}/calculate', 'calculate'); 
+            Route::post('{period:id}/calculate', 'calculate');
+            Route::post('{period:id}/publish', 'publish'); 
         }); 
 
         Route::prefix('events/')->controller(RankingEventController::class)->group(function() { 
