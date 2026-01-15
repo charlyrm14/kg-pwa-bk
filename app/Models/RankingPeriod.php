@@ -12,11 +12,10 @@ class RankingPeriod extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'user_id',
         'period_type_id',
         'start_date',
         'end_date',
-        'total_points',
-        'calculated_at'
+        'calculated_at',
+        'status'
     ];
 }
