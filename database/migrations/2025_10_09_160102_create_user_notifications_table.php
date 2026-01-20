@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('notification_id')->constrained()->onDelete('cascade');
             $table->boolean('is_read')->default(false);
-            $table->timestamp('read_at');
+            $table->timestamp('read_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
+            $table->string('channel')->nullable();
             $table->timestamps();
         });
     }

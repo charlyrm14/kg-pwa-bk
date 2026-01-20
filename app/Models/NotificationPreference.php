@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserNotification extends Model
+class NotificationPreference extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -13,10 +13,8 @@ class UserNotification extends Model
      */
     protected $fillable = [
         'user_id',
-        'notification_id',
-        'is_read',
-        'read_at',
-        'delivered_at',
-        'channel'
+        'notification_type_id',
+        'channel',
+        'enabled'
     ];
 }

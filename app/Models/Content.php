@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Observers\ContentObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ContentObserver::class])]
 class Content extends Model
 {
     use SoftDeletes;
@@ -23,7 +26,8 @@ class Content extends Model
         'content_type_id',
         'content_status_id',
         'author_id',
-        'published_at'
+        'published_at',
+        'scheduled_at'
     ];
 
     /**

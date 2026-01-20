@@ -16,6 +16,7 @@ class NotificationType extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'description'
     ];
 }
