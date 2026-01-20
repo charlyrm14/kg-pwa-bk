@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('notification_preferences', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('body');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('notification_type_id')->constrained()->onDelete('cascade');
-            $table->json('data')->nullable();
-            $table->string('action_url');
-            $table->boolean('is_broadcast')->nullable();
-            $table->foreignId('created_by_user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->string('channel');
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('notification_preferences');
     }
 };

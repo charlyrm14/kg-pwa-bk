@@ -15,8 +15,9 @@ class Notification extends Model
         'title',
         'body',
         'notification_type_id',
-        'target_user_id',
+        'data',
+        'action_url',
         'is_broadcast',
-        'action_url'
+        'created_by_user_id'
     ];
 }

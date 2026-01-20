@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('notification_types', function (Blueprint $table) {
             $table->id();
             $table->string('name', 120);
+            $table->string('slug')->unique();
             $table->string('description');
             $table->timestamps();
             $table->softDeletes();
