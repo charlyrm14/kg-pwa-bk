@@ -43,26 +43,32 @@ class ContentNotificationService
             User::query()
                 ->select('id')
                 ->chunkById(100, function ($users) use ($notification) {
+
+                    $rows = $users->map(fn ($user) => [
+                        'user_id' => $user->id,
+                        'notification_id' => $notification->id,
+                        'is_read' => false,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                    DB::table('user_notifications')->insert($rows->toArray());
                     
-                    foreach($users as $user) {
+                    // $payload = new NotificationDTO(
+                    //     notification: $notification,
+                    //     userId: $user->id
+                    // );
 
-                        DB::table('user_notifications')->insert([
-                            'user_id' => $user->id,
-                            'notification_id' => $notification->id,
-                            'is_read' => false,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
-
-                        $payload = new NotificationDTO(
-                            notification: $notification,
-                            userId: $user->id
-                        );
-
-                        $this->dispatcher->dispatch($payload);
-                    }
+                    // $this->dispatcher->dispatch($payload);
 
                 });
+            
+            $payload = new NotificationDTO(
+                notification: $notification,
+                userId: 1
+            );
+
+            $this->dispatcher->dispatch($payload);
         });
     }
 

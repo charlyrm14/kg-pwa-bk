@@ -11,10 +11,12 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\DTOs\Notifications\NotificationDTO;
+use Illuminate\Broadcasting\InteractsWithSockets;
+
 
 class NotificationBroadcasted implements ShouldBroadcast
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
         private readonly NotificationDTO $payload
@@ -23,11 +25,12 @@ class NotificationBroadcasted implements ShouldBroadcast
     /**
      * Get the channel the event should broadcast on.
      */
-    public function broadcastOn(): Channel
+    public function broadcastOn(): array //: Channel
     {
-        return new PrivateChannel(
-            'users.' . $this->payload->userId
-        );
+        // return new PrivateChannel(
+        //     'users.' . $this->payload->userId
+        // );
+        return ['notifications'];
     }
 
     /**
