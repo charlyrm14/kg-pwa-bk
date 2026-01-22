@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\UserNotification;
 use Illuminate\Http\JsonResponse;
@@ -48,6 +49,55 @@ class NotificationController extends Controller
             Log::error("Error to get notifications: " . $e->getMessage());
 
             return response()->json(["error" => 'Error to get notifications'], 500);
+        }
+    }
+
+    /**
+     * This PHP function marks a user notification as read and handles error logging.
+     * 
+     * @param Request request The `Request` parameter in the `markAsRead` function represents the HTTP
+     * request that is being made to mark a notification as read. It contains all the data and
+     * information sent by the client to the server.
+     * @param UserNotification userNotification  is an instance of the
+     * UserNotification model, representing a notification for a specific user. The function markAsRead
+     * takes a Request object and a UserNotification object as parameters. The purpose of this function
+     * is to mark a notification as read for the authenticated user.
+     * 
+     * @return a JSON response with a success message 'Notification mark as read' and a status code of
+     * 200 if the notification is successfully marked as read. If there is a forbidden access due to
+     * the user ID not matching, it returns a JSON response with a message 'Forbidden' and a status
+     * code of 403. If the notification is already marked as read, it returns a JSON response
+     */
+    public function markAsRead(Request $request, UserNotification $userNotification)
+    {
+        try {
+
+            if($request->user()->id !== $userNotification->user_id) {
+                return response()->json(['message' => 'Forbidden'], 403);
+            }
+
+            if($userNotification->is_read) {
+                return response()->json(['message' => 'Notification is already marked as read'], 422);
+            }
+
+            $userNotification->is_read = true;
+            $userNotification->read_at = now();
+            $userNotification->save();
+            
+            return response()->json([
+                'message' => 'Notification mark as read',
+                'data' => [
+                    'id' => $userNotification->id,
+                    'is_read' => (boolean) $userNotification->is_read,
+                    'read_at' => Carbon::parse($userNotification->read_at)->format('Y-m-d H:i')
+                ]
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to mark notification as read: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to mark notification as read'], 500);
         }
     }
 }

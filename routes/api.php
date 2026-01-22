@@ -119,6 +119,7 @@ Route::prefix('v1/')->group(function () {
     });
 
     Route::prefix('notifications/')->controller(NotificationController::class)->group(function() {
-        Route::get('', 'index')->middleware(['passport.cookie', 'auth:api']);;
+        Route::get('', 'index')->middleware(['passport.cookie', 'auth:api']);
+        Route::patch('{userNotification}', 'markAsRead')->middleware(['passport.cookie', 'auth:api']);
     });
 });
