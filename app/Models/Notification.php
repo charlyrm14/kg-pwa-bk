@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Notification extends Model
 {
@@ -20,4 +21,15 @@ class Notification extends Model
         'is_broadcast',
         'created_by_user_id'
     ];
+
+    /**
+     * The function "type" returns a BelongsTo relationship with the NotificationType model in PHP.
+     * 
+     * @return BelongsTo The `type()` function is returning a BelongsTo relationship with the
+     * `NotificationType` model.
+     */
+    public function notificationType(): BelongsTo
+    {
+        return $this->belongsTo(NotificationType::class);
+    }
 }

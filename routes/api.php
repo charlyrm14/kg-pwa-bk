@@ -19,7 +19,8 @@ use App\Http\Controllers\{
     PaymentController,
     RankingController,
     RankingPeriodController,
-    RankingEventController
+    RankingEventController,
+    NotificationController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -115,5 +116,9 @@ Route::prefix('v1/')->group(function () {
         Route::prefix('events/')->controller(RankingEventController::class)->group(function() { 
             Route::post('', 'store'); 
         }); 
+    });
+
+    Route::prefix('notifications/')->controller(NotificationController::class)->group(function() {
+        Route::get('', 'index')->middleware(['passport.cookie', 'auth:api']);;
     });
 });
