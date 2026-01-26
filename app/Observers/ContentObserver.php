@@ -24,11 +24,7 @@ class ContentObserver
      */
     public function updated(Content $content): void
     {
-        if(!$content->wasChanged('content_status_id')) {
-            return;
-        }
-
-        if($content->status && $content->status->slug === self::PUBLISHED) {
+        if($content->wasChanged('content_status_id') && $content->status?->slug === self::PUBLISHED) {
             ContentPublishedEvent::dispatch($content);
         }
     }

@@ -10,10 +10,12 @@ use App\Models\{
     NotificationType,
     Notification
 };
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Domain\Notifications\Services\NotificationDispatcher;
+use Illuminate\Support\Facades\DB;
 use App\DTOs\Notifications\NotificationDTO;
+use App\Domain\Notifications\Services\NotificationDispatcher;
+use App\Domain\Notifications\Channels\Push\PushNotificationChannel;
+use App\Domain\Notifications\Enums\NotificationChannelType;
 
 class ContentNotificationService
 {
@@ -54,21 +56,11 @@ class ContentNotificationService
 
                     DB::table('user_notifications')->insert($rows->toArray());
                     
-                    // $payload = new NotificationDTO(
-                    //     notification: $notification,
-                    //     userId: $user->id
-                    // );
-
-                    // $this->dispatcher->dispatch($payload);
-
+                    foreach ($users as $user) {
+                        $user->notify(new PushNotificationChannel($notification));
+                    }
+                    
                 });
-            
-            $payload = new NotificationDTO(
-                notification: $notification,
-                userId: 1
-            );
-
-            $this->dispatcher->dispatch($payload);
         });
     }
 

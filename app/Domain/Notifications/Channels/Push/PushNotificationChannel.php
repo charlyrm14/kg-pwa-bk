@@ -4,13 +4,35 @@ declare(strict_types=1);
 
 namespace App\Domain\Notifications\Channels\Push;
 
-use App\Domain\Notifications\Channels\Contracts\NotificationChannel;
+use Illuminate\Support\Str;
+use Illuminate\Notifications\Notification;
 use App\DTOs\Notifications\NotificationDTO;
+use NotificationChannels\WebPush\WebPushMessage;
+use NotificationChannels\WebPush\WebPushChannel;
+use App\Models\Notification as NotificationModel;
 
-class PushNotificationChannel implements NotificationChannel
+class PushNotificationChannel extends Notification
 {
-    public function send(NotificationDTO $payload): void
+    private const ICON_PATH = '/assets/media/notification.png';
+
+    public function __construct(
+        private readonly NotificationModel $notification
+    ) {}
+
+    public function via($notifiable): array
     {
-        $payload;
+        return [WebPushChannel::class];
+    }
+
+    public function toWebPush($notifiable, $notification): WebPushMessage
+    {
+        return (new WebPushMessage)
+            ->title($this->notification->title)
+            ->body($this->notification->body)
+            ->icon(asset(self::ICON_PATH))
+            ->data([
+                'notification_id' => $this->notification->id,
+                'url' => $this->notification->action_url,
+            ]);
     }
 }
