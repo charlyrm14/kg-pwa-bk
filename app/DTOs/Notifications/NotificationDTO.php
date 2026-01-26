@@ -10,6 +10,7 @@ final class NotificationDTO
 {
     public function __construct(
         public readonly Notification $notification,
-        public readonly int $userId
+        public readonly int $userId,
+        public readonly array $channels // NotificationChannelType[]
     ){}
 } 

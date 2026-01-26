@@ -18,6 +18,7 @@ use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Collection;
 use App\Services\DateService;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements OAuthenticatable
@@ -25,7 +26,7 @@ class User extends Authenticatable implements OAuthenticatable
     public $plainPassword;
     
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
+    use HasFactory, Notifiable, SoftDeletes, HasApiTokens, HasPushSubscriptions;
 
     /**
      * The attributes that are mass assignable.

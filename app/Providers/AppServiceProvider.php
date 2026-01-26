@@ -3,13 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Content;
-use App\Observers\SlugObserver;
 use Carbon\CarbonInterval;
-use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
-use App\Domain\Notifications\Channels\Push\PushNotificationChannel;
-use App\Domain\Notifications\Channels\Socket\SocketNotificationChannel;
+use App\Observers\SlugObserver;
+use Illuminate\Support\ServiceProvider;
 use App\Domain\Notifications\Services\NotificationDispatcher;
+use App\Domain\Notifications\Channels\Push\PushNotificationChannel;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,10 +18,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(NotificationDispatcher::class, function($app) {
+        $this->app->singleton(NotificationDispatcher::class, function() {
             return new NotificationDispatcher([
-                $app->make(PushNotificationChannel::class),
-                $app->make(SocketNotificationChannel::class)
+                app(PushNotificationChannel::class),
             ]);
         });
     }
