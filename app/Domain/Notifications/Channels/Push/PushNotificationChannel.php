@@ -32,7 +32,7 @@ class PushNotificationChannel extends Notification
             ->icon(asset(self::ICON_PATH))
             ->data([
                 'notification_id' => $this->notification->id,
-                'url' => $this->notification->action_url,
+                'url' => config('app.frontend_url') . '/' . $this->notification->action_url,
             ]);
     }
 }
