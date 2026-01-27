@@ -20,7 +20,8 @@ use App\Http\Controllers\{
     RankingController,
     RankingPeriodController,
     RankingEventController,
-    NotificationController
+    NotificationController,
+    PushNotificationController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -121,5 +122,9 @@ Route::prefix('v1/')->group(function () {
     Route::prefix('notifications/')->controller(NotificationController::class)->group(function() {
         Route::get('', 'index')->middleware(['passport.cookie', 'auth:api']);
         Route::patch('{userNotification}', 'markAsRead')->middleware(['passport.cookie', 'auth:api']);
+    });
+
+    Route::prefix('push/')->controller(PushNotificationController::class)->group(function() {
+        Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
     });
 });

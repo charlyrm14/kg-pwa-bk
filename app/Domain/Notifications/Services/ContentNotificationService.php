@@ -56,11 +56,19 @@ class ContentNotificationService
 
                     DB::table('user_notifications')->insert($rows->toArray());
                     
-                    foreach ($users as $user) {
-                        $user->notify(new PushNotificationChannel($notification));
-                    }
+                    // foreach ($users as $user) {
+                    //     $user->notify(new PushNotificationChannel($notification));
+                    // }
                     
                 });
+
+            $user = User::find(1);
+
+            if ($user) {
+                $user->notify(
+                    new PushNotificationChannel($notification)
+                );
+            }
         });
     }
 
