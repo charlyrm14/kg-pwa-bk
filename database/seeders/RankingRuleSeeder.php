@@ -108,7 +108,7 @@ class RankingRuleSeeder extends Seeder
 
         RankingRule::upsert(
             $rankingRules,
-            ['trigger_type', 'trigger_id'],
+            ['id'],
             [
                 'name', 
                 'description', 

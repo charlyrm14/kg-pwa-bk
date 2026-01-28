@@ -23,7 +23,7 @@ El backend tiene como objetivo cubrir las siguientes necesidades:
 
 - PHP: ^8.2
 - Framework: Laravel 12
-- Base de datos: MySQL 9.3.0
+- Base de datos: PostgreSQL 14.20
 - Autenticación: OAuth 2.0 con Laravel Passport
 - Sockets / Realtime: Pusher (en desarrollo)
 - Exportación de reportes: Maatwebsite Excel
