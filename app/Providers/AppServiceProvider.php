@@ -9,7 +9,8 @@ use App\Observers\SlugObserver;
 use Illuminate\Support\ServiceProvider;
 use App\Domain\Notifications\Services\NotificationDispatcher;
 use App\Domain\Notifications\Channels\Push\PushNotificationChannel;
-
+use App\Domain\Media\Contracts\FileStorageInterface;
+use App\Domain\Media\Storage\LocalFileStorageService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
                 app(PushNotificationChannel::class),
             ]);
         });
+
+        $this->app->bind(
+            FileStorageInterface::class,
+            LocalFileStorageService::class
+        );
     }
 
     /**

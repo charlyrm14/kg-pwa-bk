@@ -21,7 +21,8 @@ use App\Http\Controllers\{
     RankingPeriodController,
     RankingEventController,
     NotificationController,
-    PushNotificationController
+    PushNotificationController,
+    MediaController
 };
 
 Route::prefix('v1/')->group(function () {
@@ -125,6 +126,10 @@ Route::prefix('v1/')->group(function () {
     });
 
     Route::prefix('push/')->controller(PushNotificationController::class)->group(function() {
+        Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
+    });
+
+    Route::prefix('media/')->controller(MediaController::class)->group(function() {
         Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
     });
 });
