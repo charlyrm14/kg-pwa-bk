@@ -18,11 +18,9 @@ return new class extends Migration
             $table->string('mime_type', 100);
             $table->string('disk', 50);
             $table->boolean('is_protected')->default(false);
-            $table->unsignedBigInteger('mediaable_id')->nullable();
-            $table->string('mediaable_type', 120)->nullable();
+            $table->nullableMorphs('mediaable');
+            $table->foreignId('uploaded_by_user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
-
-            $table->index(['mediaable_id', 'mediaable_type']);
         });
     }
 
