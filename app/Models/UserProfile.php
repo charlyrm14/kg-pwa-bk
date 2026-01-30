@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class UserProfile extends Model
 {
@@ -41,5 +42,35 @@ class UserProfile extends Model
     public function gender(): BelongsTo
     {
         return $this->belongsTo(Gender::class);
+    }
+
+    /**
+     * The `avatar` function returns a polymorphic relationship for the `Media` model associated with a
+     * specific model.
+     *
+     * @return MorphOne A MorphOne relationship is being returned. This relationship allows the model
+     * to have multiple image media associated with it through polymorphic relations. The avatar method
+     * returns a MorphOne relationship with the Media model, specifying 'mediaable' as the morphable
+     * type.
+     */
+    public function avatar(): MorphOne
+    {
+        return $this->morphOne(Media::class, 'mediaable')
+            ->where('context', 'avatar')
+            ->latestOfMany();
+    }
+
+    /**
+     * The `file` function returns a polymorphic relationship for the `Media` model associated with a
+     * specific model.
+     *
+     * @return MorphOne A MorphOne relationship is being returned. This relationship allows the model
+     * to have multiple image media associated with it through polymorphic relations. The file method
+     * returns a MorphOne relationship with the Media model, specifying 'mediaable' as the morphable
+     * type.
+     */
+    public function media(): MorphOne
+    {
+        return $this->morphOne(Media::class, 'mediaable');
     }
 }

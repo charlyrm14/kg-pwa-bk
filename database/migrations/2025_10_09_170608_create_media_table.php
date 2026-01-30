@@ -19,8 +19,15 @@ return new class extends Migration
             $table->string('disk', 50);
             $table->boolean('is_protected')->default(false);
             $table->nullableMorphs('mediaable');
-            $table->foreignId('uploaded_by_user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->string('context', 50)->nullable();
+            $table->foreignId('uploaded_by_user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->timestamps();
+
+            $table->index([
+                'mediaable_type',
+                'mediaable_id',
+                'context'
+            ]);
         });
     }
 

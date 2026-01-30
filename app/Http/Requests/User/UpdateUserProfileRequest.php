@@ -28,7 +28,9 @@ class UpdateUserProfileRequest extends FormRequest
             'birthdate' => ['nullable', 'date_format:Y-m-d'],
             'phone_number' => ['nullable', 'integer', 'digits:10'],
             'address' => ['nullable', 'string', 'min:8', 'max:255'],
-            'gender_id' => ['nullable', 'integer', 'exists:genders,id']
+            'gender_id' => ['nullable', 'integer', 'exists:genders,id'],
+            'profile_image' => ['nullable', 'array', 'size:1'],
+            'profile_image.*' => ['nullable', 'integer', 'exists:media,id']
         ];
     }
 
