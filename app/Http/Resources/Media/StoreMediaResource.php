@@ -16,6 +16,7 @@ class StoreMediaResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id, 
             'uuid' => $this->uuid,
             'path' => $this->path,
             'mime_type' => $this->mime_type,

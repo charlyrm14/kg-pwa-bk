@@ -74,18 +74,19 @@ class ImageStrategy implements MediaStrategyInterface
             
             $image = Image::read($dto->file)->cover($width, $height);
 
-            $extension = $dto->file->extension();
-            $variantPath = "{$basePath}/{$name}.{$extension}";
+            $extension = $dto->file->getClientOriginalExtension();
+            $fileName = (string) Str::uuid() . '.' . $extension;
+            $variantPath = "{$basePath}/{$fileName}";
 
             $this->storage->putContent(
                 $dto->disk,
                 $variantPath,
-                (string) $image->toJpeg()
+                (string) $image->encode()
             );
 
             $variants[] = [
                 'variant' => $name,
-                'path' => "{$basePath}/{$name}.jpg",
+                'path' => "{$basePath}/{$fileName}",
                 'width' => $width,
                 'height' => $height,
                 'is_main' => $name === 'medium'

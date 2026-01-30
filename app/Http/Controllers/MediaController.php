@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Media;
 use RuntimeException;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Domain\Media\MediaManager;
 use App\DTOs\Media\MediaUploadDTO;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Media\StoreMediaRequest;
 use App\Http\Resources\Media\StoreMediaResource;
+use App\Domain\Media\Services\MediaDeleteService;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class MediaController extends Controller
 {
     public function __construct(
-        private MediaManager $manager
+        private MediaManager $manager,
+        private MediaDeleteService $mediaDeleteService
     ){}
 
     /**
@@ -57,6 +61,45 @@ class MediaController extends Controller
             Log::error("Store file error: " . $e->getMessage());
             
             return response()->json(["error" => 'Failed to upload file. Please try again later'], 500);
+        }
+    }
+
+    /**
+     * Delete a media file and all its related variants.
+     *
+     * This endpoint validates that the media is allowed to be deleted
+     * (not protected and owned by the authenticated user),
+     * removes physical files from storage, cleans up empty directories,
+     * and deletes database records inside a transaction.
+     *
+     * @param Request $request Incoming HTTP request.
+     * @param Media   $media   Media model resolved by route-model binding.
+     *
+     * @return JsonResponse JSON response indicating success or failure.
+     *
+     * @throws HttpResponseException When business validation fails
+     *                               (e.g. protected file or unauthorized user).
+     */
+    public function destroy(Request $request, Media $media): JsonResponse
+    {
+        try {
+
+            $this->mediaDeleteService->delete($media);
+            
+            return response()->json([
+                'message' => 'File successfully deleted'
+            ], 200);
+
+        } catch (HttpResponseException $e) {
+
+            Log::error("Error deleting file validation: " . $e->getMessage());
+            throw $e;
+
+        } catch (\Throwable $e) {
+            
+            Log::error("Error deleting file: " . $e->getMessage());
+            
+            return response()->json(["error" => 'Error deleting file. Please try again later'], 500);
         }
     }
 }
