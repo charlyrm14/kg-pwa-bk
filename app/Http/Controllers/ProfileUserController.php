@@ -6,15 +6,20 @@ use Illuminate\Http\{
     Request,
     JsonResponse
 };
-use App\Http\Resources\User\{
-    UserDetailInfoResource,
-    UpdateUserProfileResource
-};
 use Illuminate\Support\Facades\Log;
+use App\Domain\Media\Services\MediaAttachService;
+use App\Http\Resources\User\UserDetailInfoResource;
 use App\Http\Requests\User\UpdateUserProfileRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Resources\Profile\UpdateUserProfileResource;
 
 class ProfileUserController extends Controller
 {
+    private const AVATAR_CONTEXT = 'avatar';
+
+    public function __construct(
+        private MediaAttachService $mediaAttachService
+    ){}
     /**
      * The function retrieves and returns detailed information about a user, including their role,
      * profile gender, and hobbies, in a JSON response.
@@ -68,16 +73,28 @@ class ProfileUserController extends Controller
             
             $user = $request->user();
 
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-
             $user->profile()->updateOrCreate([], $request->validated());
+
+            $this->mediaAttachService->attach(
+                $user->profile, 
+                $request->validated()['profile_image'] ?? [], 
+                self::AVATAR_CONTEXT
+            );
+
+            $user->load([
+                'profile.gender',
+                'profile.avatar',
+            ]);
 
             return response()->json([
                 'message' => 'User profile updated successfully',
-                'data' => new UpdateUserProfileResource($user->load('profile.gender'))
-            ], 201);
+                'data' => new UpdateUserProfileResource($user)
+            ], 200);
+
+        } catch (HttpResponseException $e) {
+
+            Log::error("Error to user profile validation: " . $e->getMessage());
+            throw $e;
 
         } catch(\Throwable $e) {
 

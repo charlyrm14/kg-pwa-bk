@@ -65,9 +65,12 @@ Route::prefix('v1/')->group(function () {
         Route::put('me', 'syncHobbies')->middleware(['passport.cookie', 'auth:api']);
     });
 
-    Route::prefix('profile/')->controller(ProfileUserController::class)->middleware(['passport.cookie', 'auth:api'])->group(function() {
-        Route::get('', 'show');
-        Route::put('', 'update');
+    Route::prefix('profile/')
+        ->controller(ProfileUserController::class)
+        ->middleware(['passport.cookie', 'auth:api'])
+        ->group(function() {
+            Route::get('', 'show');
+            Route::put('', 'update');
     });
 
     Route::get('birthdays/today', BirthdayController::class);
