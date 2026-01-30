@@ -131,5 +131,6 @@ Route::prefix('v1/')->group(function () {
 
     Route::prefix('media/')->controller(MediaController::class)->group(function() {
         Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
+        Route::delete('{media}', 'destroy')->middleware(['passport.cookie', 'auth:api']);
     });
 });
