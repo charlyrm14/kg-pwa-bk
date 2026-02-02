@@ -8,7 +8,7 @@ use Illuminate\Http\{
 };
 use Illuminate\Support\Facades\Log;
 use App\Domain\Media\Services\MediaAttachService;
-use App\Http\Resources\User\UserDetailInfoResource;
+use App\Http\Resources\Profile\UserDetailInfoResource;
 use App\Http\Requests\User\UpdateUserProfileRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Resources\Profile\UpdateUserProfileResource;
@@ -39,8 +39,10 @@ class ProfileUserController extends Controller
                 return response()->json(['message' => 'User not found'], 404);
             }
 
+            $user->load(['role', 'profile.gender', 'hobbies', 'profile.avatar']);
+
             return response()->json([
-                'data' => new UserDetailInfoResource($user->load(['role', 'profile.gender', 'hobbies']))  
+                'data' => new UserDetailInfoResource($user)  
             ], 200);
 
         } catch(\Throwable $e) {

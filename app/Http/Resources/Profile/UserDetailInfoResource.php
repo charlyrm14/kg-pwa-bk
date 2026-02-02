@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Profile;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -43,6 +43,27 @@ class UserDetailInfoResource extends JsonResource
                         'name' => $hobby->name,
                     ];
                 });
+            }),
+            'profile_image' => $this->whenLoaded('profile', function () {
+
+                if (!$this->profile->relationLoaded('avatar')) {
+                    return null;
+                }
+
+                $avatar = $this->profile->avatar;
+
+                if (!$avatar) {
+                    return null;
+                }
+
+                return [
+                    'id' => $avatar->id,
+                    'uuid' => $avatar->uuid,
+                    'path' => $avatar->path,
+                    'mime_type' => $avatar->mime_type,
+                    'context' => $avatar->context,
+                    'created_at' => Carbon::parse($avatar->created_at)->format('Y-m-d'),
+                ];
             }),
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
             'updated_at' => Carbon::parse($this->created_at)->format('Y-m-d')

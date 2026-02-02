@@ -25,14 +25,24 @@ class UpdateUserProfileResource extends JsonResource
             'student_code' => $this->student_code,
             'profile' => new UserProfileResource($this->profile),
             'profile_image' => $this->whenLoaded('profile', function () {
-                if (!$this->profile->relationLoaded('avatar'));
+                
+                if (!$this->profile->relationLoaded('avatar')) {
+                    return null;
+                }
+
+                $avatar = $this->profile->avatar;
+
+                if (!$avatar) {
+                    return null;
+                }
+
                 return [
-                    'id' => $this->profile->avatar->id,
-                    'uuid' => $this->profile->avatar->uuid,
-                    'path' => $this->profile->avatar->path,
-                    'mime_type' => $this->profile->avatar->mime_type,
-                    'context' => $this->profile->avatar->context,
-                    'created_at' => Carbon::parse($this->profile->avatar->created_at)->format('Y-m-d'),
+                    'id' => $avatar->id,
+                    'uuid' => $avatar->uuid,
+                    'path' => $avatar->path,
+                    'mime_type' => $avatar->mime_type,
+                    'context' => $avatar->context,
+                    'created_at' => Carbon::parse($avatar->created_at)->format('Y-m-d'),
                 ];
             }),
         ];
