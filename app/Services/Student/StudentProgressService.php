@@ -32,13 +32,17 @@ class StudentProgressService
         
         $category = SwimCategory::with('categorySkills.skill')->firstWhere('id', $currentLevelId);
 
-        $totalProgressCurrentLevel = $user->studentProgress->where('swim_category_id', $currentLevelId)->sum('progress_percentage');
+        $totalProgressCurrentLevel = $user->studentProgress
+            ->where('swim_category_id', $currentLevelId)
+            ->sum('progress_percentage');
 
+        
         $completedLevelDate = $user->studentProgress
             ->where('swim_category_id', $currentLevelId)
             ->whereNotNull('end_date')->first();
-
+        
         return [
+            'category_slug' => optional($category)->slug,
             'category_name' => optional($category)->name,
             'category_description' => optional($category)->description,
             'total_progress' => $totalProgressCurrentLevel,
@@ -78,6 +82,7 @@ class StudentProgressService
         $nextCategory->load('categorySkills.skill');
 
         return [
+            'category_slug' => optional($nextCategory)->slug,
             'category_name' => optional($nextCategory)->name,
             'category_description' => optional($nextCategory)->description,
             'category_skills' => $nextCategory->categorySkills->map(function($item) {

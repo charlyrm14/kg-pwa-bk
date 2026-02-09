@@ -230,27 +230,29 @@ class User extends Authenticatable implements OAuthenticatable
     /**
      * The `progressionByCategory` function retrieves the total progress percentage for each swim
      * category based on student progress data.
-     * 
+     *
      * @return This function returns the progression of students by swim category. It selects the swim
      * category ID, name, and the total progress percentage achieved by students in each category. The
      * results are grouped by swim category ID and then formatted into an array with keys for category
      * ID, category name, and total progress.
      */
     public function progressionByCategory()
-    {   
+    {
         return $this->studentProgress()
             ->select(
                 'swim_category_id as category_id',
                 'swim_categories.name as category_name',
+                'swim_categories.slug as category_slug',
                 DB::raw('SUM(progress_percentage) as total_progress')
             )
             ->join('swim_categories', 'student_progress.swim_category_id', '=', 'swim_categories.id')
-            ->groupBy('swim_category_id')
+            ->groupBy('swim_category_id', 'category_name', 'category_slug')
             ->get()
             ->map(function ($item) {
                 return [
                     'category_id' => $item->category_id,
                     'category_name' => $item->category_name,
+                    'category_slug' => $item->category_slug,
                     'total_progress' => (int) $item->total_progress
                 ];
         });

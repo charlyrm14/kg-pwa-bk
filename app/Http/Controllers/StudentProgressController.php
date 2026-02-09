@@ -53,7 +53,7 @@ class StudentProgressController extends Controller
             $currentLevel = $this->studentService->currentLevelData($user);
             $nextLevel = $this->studentService->nextLevelData($user);
             $progression = $user->progressionByCategory();
-            
+
             $user->current_level = $currentLevel;
             $user->next_level = $nextLevel;
             $user->progression_history = $progression;
