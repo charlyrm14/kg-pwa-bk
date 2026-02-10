@@ -40,10 +40,14 @@ Route::prefix('v1/')->group(function () {
         Route::delete('{uuid}', 'destroy');
     });
 
-    Route::prefix('contents/')->controller(ContentController::class)->group(function() {
-        Route::get('', 'index')->middleware(['passport.cookie', 'auth:api']);
-        Route::post('', 'store')->middleware(['passport.cookie', 'auth:api']);
-        Route::get('{slug}', 'detail')->middleware(['passport.cookie', 'auth:api']);
+    Route::prefix('contents/')
+        ->controller(ContentController::class)
+        ->middleware(['passport.cookie', 'auth:api'])
+        ->group(function() {
+            Route::get('', 'index');
+            Route::post('', 'store');
+            Route::get('{slug}', 'show');
+            Route::delete('{content:slug}', 'destroy');
     });
 
     Route::prefix('swim-categories/')->controller(SwimCategoryController::class)->group(function() {
