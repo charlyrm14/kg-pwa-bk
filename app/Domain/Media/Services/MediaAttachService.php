@@ -41,7 +41,7 @@ class MediaAttachService
     {
         if(empty($mediaIds)){
             return null;
-        };
+        }
 
         if (!method_exists($model, 'media')) {
             throw new HttpResponseException(

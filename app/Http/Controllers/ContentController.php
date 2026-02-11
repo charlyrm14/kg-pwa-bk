@@ -17,20 +17,25 @@ use App\Services\Content\ContentManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Domain\Media\Services\MediaAttachService;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ContentController extends Controller
 {
+    private const CONTENT_CONTEXT = 'content_cover';
+
     public function __construct(
-        protected ContentManager $manager
+        protected ContentManager $manager,
+        private MediaAttachService $mediaAttachService
     ){}
 
     /**
      * The index function retrieves a list of content based on certain conditions and returns it as a
      * JSON response.
-     * 
+     *
      * @param Request request The `index` function is a controller method that retrieves a list of
      * content based on certain conditions. Here's an explanation of the code:
-     * 
+     *
      * @return JsonResponse A JSON response is being returned with a data key containing the result of
      * the IndexCollection transformation of the contents fetched from the database. If successful, the
      * response will have a status code of 200. If an error occurs during the process, a JSON response
@@ -44,7 +49,7 @@ class ContentController extends Controller
 
             if(!($request->user() && $request->user()->role_id === 1)) {
                 $query->where('content_status_id', 5);
-            } 
+            }
 
             $contents = $query->with(['type', 'status', 'user', 'event'])->orderBy('id', 'DESC')->paginate(15);
 
@@ -65,7 +70,7 @@ class ContentController extends Controller
 
     /**
      * Store a newly event created resource in storage.
-     * 
+     *
      * @param StoreContentRequest request The validated request object containing content data.
      * @return JsonResponse A JSON response indicating success or failure of user creation.
      */
@@ -75,10 +80,21 @@ class ContentController extends Controller
 
             $content = $this->manager->handle($request->validated());
 
+            $this->mediaAttachService->attach(
+                $content,
+                $request->validated()['cover_image'] ?? [],
+                self::CONTENT_CONTEXT
+            );
+
             return response()->json([
                 'message' => 'Content created successfully',
-                'data' => new NewContentResource($content->load('type', 'status', 'user', 'event'))
+                'data' => new NewContentResource($content->load('type', 'status', 'user', 'event', 'cover'))
             ], 201);
+
+        } catch (HttpResponseException $e) {
+
+            Log::error("Error to create content validation: " . $e->getMessage());
+            throw $e;
 
         } catch(\Throwable $e) {
 
@@ -93,13 +109,13 @@ class ContentController extends Controller
     /**
      * This PHP function retrieves detailed information about a content item based on its slug, with
      * access control and error handling.
-     * 
+     *
      * @param string slug The `slug` parameter in the `show` function is a string that represents a
      * unique identifier for the content you want to retrieve details for. It is used to query the
      * database for the specific content based on its slug value.
      * @param Request request The `show` function is responsible for retrieving the details of a
      * content item based on its slug. Here's a breakdown of the function and its parameters:
-     * 
+     *
      * @return JsonResponse A JSON response is being returned. If the content is found and the
      * conditions are met, it will return a JSON response with the data of the content using the
      * DetailContentResource. If the content is not found or the conditions are not met, it will return
@@ -136,14 +152,14 @@ class ContentController extends Controller
     /**
      * The function destroys a content record by setting its status to 7, saving it, deleting it, and
      * returning a success or error message in JSON format.
-     * 
+     *
      * @param Request request The `destroy` function you provided is used to soft delete a `Content`
      * model by updating its `content_status_id` to 7 and then deleting it. If an error occurs during
      * this process, it will be logged, and an appropriate response will be returned.
      * @param Content content The `destroy` function you provided is used to soft delete a `Content`
      * model by updating its `content_status_id` to 7 and then deleting it. If an error occurs during
      * this process, it will be logged, and an error response will be returned.
-     * 
+     *
      * @return a JSON response with a success message "Content deleted successfully" and a status code
      * of 200 if the content deletion is successful. If an error occurs during the deletion process, it
      * will log the error message and return a JSON response with an error message "Error to delete
