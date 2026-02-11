@@ -25,7 +25,7 @@ class UserProfile extends Model
 
     /**
      * The user function returns the relationship between the current object and a User model.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function user(): BelongsTo
@@ -35,7 +35,7 @@ class UserProfile extends Model
 
     /**
      * The function "gender" returns a BelongsTo relationship with the Gender model in PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned, linking the current model to the
      * Gender model.
      */

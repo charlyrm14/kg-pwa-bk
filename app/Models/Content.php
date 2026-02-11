@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 #[ObservedBy([ContentObserver::class])]
 class Content extends Model
@@ -32,7 +33,7 @@ class Content extends Model
 
     /**
      * The function "type" returns a BelongsTo relationship with the Content Type model in PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned, linking the current model to the Content Type
      */
     public function type(): BelongsTo
@@ -42,7 +43,7 @@ class Content extends Model
 
     /**
      * The function "status" returns a BelongsTo relationship with the Content Status model in PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned, linking the current model to the Content Status
      */
     public function status(): BelongsTo
@@ -52,7 +53,7 @@ class Content extends Model
 
     /**
      * The function "user" returns a BelongsTo relationship with the User model in PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned, linking the current model to the User
      */
     public function user(): BelongsTo
@@ -62,7 +63,7 @@ class Content extends Model
 
     /**
      * The function "event" returns a HasOne relationship with the Event model in PHP.
-     * 
+     *
      * @return HasOne A HasOne relationship is being returned, linking the current model to the Event
      */
     public function event(): HasOne
@@ -71,17 +72,47 @@ class Content extends Model
     }
 
     /**
+     * The `cover` function returns a polymorphic relationship for the `Media` model associated with a
+     * specific model.
+     *
+     * @return MorphOne A MorphOne relationship is being returned. This relationship allows the model
+     * to have multiple image media associated with it through polymorphic relations. The cover method
+     * returns a MorphOne relationship with the Media model, specifying 'mediaable' as the morphable
+     * type.
+     */
+    public function cover(): MorphOne
+    {
+        return $this->morphOne(Media::class, 'mediaable')
+            ->where('context', 'content_cover')
+            ->latestOfMany();
+    }
+
+    /**
+     * The `file` function returns a polymorphic relationship for the `Media` model associated with a
+     * specific model.
+     *
+     * @return MorphOne A MorphOne relationship is being returned. This relationship allows the model
+     * to have multiple image media associated with it through polymorphic relations. The file method
+     * returns a MorphOne relationship with the Media model, specifying 'mediaable' as the morphable
+     * type.
+     */
+    public function media(): MorphOne
+    {
+        return $this->morphOne(Media::class, 'mediaable');
+    }
+
+    /**
      * This PHP function retrieves the latest published content of a specific type.
-     * 
+     *
      * @param int contentTypeId The `contentTypeId` parameter in the `getLatestContentPublished`
      * function is used to specify the type of content for which you want to retrieve the latest
      * published content. In the provided code snippet, the default value for `contentTypeId` is set to
      * `2` that means a content type event, but you can pass a different
-     * 
+     *
      * @return ?Content The `getLatestContentPublished` function is returning the latest published
-     * content of a specific content type with the content status ID of 5 that means that the content is PUBLISHED. 
-     * It retrieves the content along with its related event and status information. 
-     * The return type is a nullable `Content` object, indicating that it may return a `Content` object 
+     * content of a specific content type with the content status ID of 5 that means that the content is PUBLISHED.
+     * It retrieves the content along with its related event and status information.
+     * The return type is a nullable `Content` object, indicating that it may return a `Content` object
      * or `null` if no matching content is found.
      */
     public static function getLatestContentPublished(int $contentTypeId = 2): ?Content

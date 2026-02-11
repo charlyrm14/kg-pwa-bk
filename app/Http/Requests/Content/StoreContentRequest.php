@@ -32,25 +32,27 @@ class StoreContentRequest extends FormRequest
             'author_id' => ['required', 'integer', 'exists:users,id'],
             'location' => [
                 'nullable',
-                'required_if:content_type_id,2', 
-                'string', 
-                'min:8', 
+                'required_if:content_type_id,2',
+                'string',
+                'min:8',
                 'max:200'
             ],
             'start_date' => [
                 'nullable',
-                'required_if:content_type_id,2', 
+                'required_if:content_type_id,2',
                 'string',
-                'date_format:Y-m-d H:i', 
+                'date_format:Y-m-d H:i',
                 Rule::date()->after(today())
             ],
             'end_date' => [
                 'nullable',
-                'required_if:content_type_id,2', 
+                'required_if:content_type_id,2',
                 'string',
-                'date_format:Y-m-d H:i', 
+                'date_format:Y-m-d H:i',
                 'after:start_date'
-            ]
+            ],
+            'cover_image' => ['nullable', 'array', 'size:1'],
+            'cover_image.*' => ['nullable', 'integer', 'exists:media,id']
         ];
     }
 
