@@ -83,6 +83,7 @@ class Content extends Model
     public function cover(): MorphOne
     {
         return $this->morphOne(Media::class, 'mediaable')
+            ->with('variants')
             ->where('context', 'content_cover')
             ->latestOfMany();
     }

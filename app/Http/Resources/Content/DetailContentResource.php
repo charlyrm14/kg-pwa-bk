@@ -32,6 +32,16 @@ class DetailContentResource extends JsonResource
                     'end_date' => Carbon::parse($this->event->end_date)->format('Y-m-d'),
                     'end_hour' => Carbon::parse($this->event->end_date)->format('H:i')
                 ];
+            }),
+            'cover_image' => $this->whenLoaded('cover', function() {
+                return [
+                    'id' => $this->cover->id,
+                    'uuid' => $this->cover->uuid,
+                    'path' => $this->cover->path,
+                    'mime_type' => $this->cover->mime_type,
+                    'context' => $this->cover->context,
+                    'created_at' => Carbon::parse($this->cover->created_at)->format('Y-m-d'),
+                ];
             })
         ];
     }

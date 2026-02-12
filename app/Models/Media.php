@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Media extends Model
 {
@@ -48,5 +49,18 @@ class Media extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(MediaVariant::class);
+    }
+
+    /**
+     * The variantThumbnail function returns a single MediaVariant instance where the variant is
+     * 'thumbnail'.
+     * 
+     * @return HasOne A relationship method `variantThumbnail()` is being returned, which defines a
+     * one-to-one relationship with the `MediaVariant` model where the `variant` column is equal to
+     * 'thumbnail'.
+     */
+    public function variantThumbnail(): HasOne
+    {
+        return $this->hasOne(MediaVariant::class)->where('variant', 'thumbnail');
     }
 }

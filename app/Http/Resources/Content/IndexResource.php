@@ -32,6 +32,18 @@ class IndexResource extends JsonResource
                     'end_date' => Carbon::parse($this->event->end_date)->format('Y-m-d'),
                     'end_hour' => Carbon::parse($this->event->end_date)->format('H:i')
                 ];
+            }),
+            'thumbnail' => $this->whenLoaded('cover', function() {
+                return [
+                    'id' => $this->cover->variantThumbnail->id,
+                    'path' => $this->cover->variantThumbnail->path,
+                    'variant' => $this->cover->variantThumbnail->variant,
+                    'is_main' => $this->cover->variantThumbnail->is_main,
+                    'width' => $this->cover->variantThumbnail->width,
+                    'height' => $this->cover->variantThumbnail->height,
+                    'media_id' => $this->cover->variantThumbnail->media_id,
+                    'created_at' => Carbon::parse($this->cover->variantThumbnail->created_at)->format('Y-m-d'),
+                ];
             })
         ];
     }
