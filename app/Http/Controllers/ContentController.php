@@ -51,7 +51,7 @@ class ContentController extends Controller
                 $query->where('content_status_id', 5);
             }
 
-            $contents = $query->with(['type', 'status', 'user', 'event'])->orderBy('id', 'DESC')->paginate(15);
+            $contents = $query->with(['type', 'status', 'user', 'event', 'cover'])->orderBy('id', 'DESC')->paginate(15);
 
             return response()->json([
                 'data' => new IndexCollection($contents)
@@ -125,7 +125,7 @@ class ContentController extends Controller
     {
         try {
 
-            $content = Content::with(['type', 'status', 'user', 'event'])->firstWhere('slug', $slug);
+            $content = Content::with(['type', 'status', 'user', 'event', 'cover'])->firstWhere('slug', $slug);
 
             if(!$content) {
                 return response()->json(['message' => 'Resource not found'], 404);

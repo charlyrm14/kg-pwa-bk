@@ -111,20 +111,20 @@ Route::prefix('v1/')->group(function () {
             Route::delete('{payment:id}', 'destroy');
     });
 
-    Route::prefix('rankings/')->group(function() { 
+    Route::prefix('rankings/')->group(function() {
 
-        Route::prefix('')->controller(RankingController::class)->group(function() { 
+        Route::prefix('')->controller(RankingController::class)->group(function() {
             Route::get('', 'index');
-        }); 
+        });
 
-        Route::prefix('periods/')->controller(RankingPeriodController::class)->group(function() { 
+        Route::prefix('periods/')->controller(RankingPeriodController::class)->group(function() {
             Route::post('{period:id}/calculate', 'calculate');
-            Route::post('{period:id}/publish', 'publish'); 
-        }); 
+            Route::post('{period:id}/publish', 'publish');
+        });
 
-        Route::prefix('events/')->controller(RankingEventController::class)->group(function() { 
-            Route::post('', 'store'); 
-        }); 
+        Route::prefix('events/')->controller(RankingEventController::class)->group(function() {
+            Route::post('', 'store');
+        });
     });
 
     Route::prefix('notifications/')->controller(NotificationController::class)->group(function() {
