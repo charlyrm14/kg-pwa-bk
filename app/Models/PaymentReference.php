@@ -14,6 +14,7 @@ class PaymentReference extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'description'
     ];
 
