@@ -22,7 +22,8 @@ class StorePaymentResource extends JsonResource
             'payment_reference' => $this->whenLoaded('reference')->name ?? null,
             'payment_type' => $this->whenLoaded('type')->name,
             'notes' => $this->notes,
-            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d')
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
+            'created_at_formatted' => $this->created_at->diffForHumans()
         ];
     }
 }

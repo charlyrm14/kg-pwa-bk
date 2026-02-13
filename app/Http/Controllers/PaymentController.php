@@ -147,19 +147,16 @@ class PaymentController extends Controller
     public function update(UpdatePaymentRequest $request, Payment $payment): JsonResponse
     {
         try {
-            
+
             $dto = UpdatePaymentDTO::fromArray($request->validated());
-
+            
             $user = User::whereUuid($dto->userUuid)->first();
-
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
 
             $coveredDate = $this->paymentService->calculateCoverageDate($dto->paymentTypeId, $dto->paymentDate);
 
             $payment->update([
-                'payment_type_id' => $dto->paymentTypeId,
+                'user_id' => $dto->userUuid ? $user->id : null,
+                'payment_type_id' =>  $dto->paymentTypeId,
                 'amount' => $dto->amount,
                 'payment_date' => $dto->paymentDate,
                 'covered_until_date' => $coveredDate,
@@ -167,7 +164,7 @@ class PaymentController extends Controller
                 'notes' => $dto->notes,
             ]);
 
-            $payment->load('user', 'type', 'reference');
+            $payment->load('type', 'reference');
 
             return response()->json([
                 'message' => 'Payment register successfully',
