@@ -24,6 +24,7 @@ use App\Http\Requests\Payment\{
 use App\Http\Resources\Payment\{
     IndexPaymentCollection,
     StorePaymentResource,
+    ShowPaymentResource,
     UpdatePaymentResource
 };
 
@@ -124,6 +125,44 @@ class PaymentController extends Controller
             Log::error("Error to register payment: " . $e->getMessage());
 
             return response()->json(["error" => 'Error to register payment'], 500);
+        }
+    }
+
+    /**
+     * The function `show` retrieves payment details for a specific payment, with access restricted to
+     * users with a specific role.
+     *
+     * @param Request request The `show` function takes two parameters: `` of type `Request`
+     * and `` of type `Payment`.
+     * @param Payment payment The `show` function you provided is responsible for displaying the
+     * details of a payment. It first checks if the user making the request has a role_id of 1
+     * (assuming role_id 1 is an admin role). If not, it returns a 403 Forbidden response.
+     *
+     * @return JsonResponse A JSON response is being returned. If the user's role is not 1, a
+     * 'Forbidden' message with a status code of 403 is returned. If there are no errors, the payment
+     * details along with related user, type, and reference information are returned in a JSON response
+     * with a status code of 200. If there is an error during the process, an error message is logged
+     * and
+     */
+    public function show(Request $request, Payment $payment): JsonResponse
+    {
+        try {
+
+            if($request->user()->role_id !== 1) {
+                return response()->json(['message' => 'Forbidden'], 403);
+            }
+
+            $payment->load(['user', 'type', 'reference']);
+            
+            return response()->json([
+                'data' => new ShowPaymentResource($payment)
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to get payment detail: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to get payment detail'], 500);
         }
     }
 

@@ -107,6 +107,7 @@ Route::prefix('v1/')->group(function () {
         ->group(function() {
             Route::get('', 'index');
             Route::post('', 'store');
+            Route::get('{payment:id}', 'show');
             Route::put('{payment:id}', 'update');
             Route::delete('{payment:id}', 'destroy');
     });
