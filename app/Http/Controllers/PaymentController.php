@@ -16,7 +16,7 @@ use App\DTOs\Payment\{
     StorePaymentDTO,
     UpdatePaymentDTO
 };
-use App\Services\Payment\PaymentService;
+use App\Domain\Payments\Services\PaymentService;
 use App\Http\Requests\Payment\{
     StorePaymentRequest,
     UpdatePaymentRequest
@@ -37,10 +37,10 @@ class PaymentController extends Controller
     /**
      * This PHP function retrieves a list of payments based on optional start and end dates, paginates
      * the results, and returns a JSON response with the data.
-     * 
+     *
      * @param Request request The `index` function is a controller method that retrieves a list of
      * payments based on the provided request parameters. Here's a breakdown of the function:
-     * 
+     *
      * @return JsonResponse A JSON response is being returned. If the payments are found, it will
      * return a JSON response with the data in the 'data' key, which is formatted using the
      * IndexPaymentCollection. If no payments are found, it will return a JSON response with a message
@@ -80,11 +80,11 @@ class PaymentController extends Controller
     /**
      * The `store` function in PHP handles the validation and creation of a payment record, associating
      * it with a user and calculating payment coverage.
-     * 
+     *
      * @param StorePaymentRequest request The `store` function is responsible for storing a payment
      * record based on the data provided in the `StorePaymentRequest` object. Here's a breakdown of the
      * process:
-     * 
+     *
      * @return JsonResponse A JSON response is being returned. If the payment is successfully
      * registered, a JSON response with a success message and the newly created payment data in the
      * "data" key is returned with a status code of 201 (Created). If there is an error during the
@@ -99,14 +99,10 @@ class PaymentController extends Controller
 
             $user = User::whereUuid($dto->userUuid)->first();
 
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-
             $coveredDate = $this->paymentService->calculateCoverageDate($dto->paymentTypeId, $dto->paymentDate);
-            
+
             $payment = Payment::create([
-                'user_id' => $user->id,
+                'user_id' => $dto->userUuid ? $user->id : null,
                 'payment_type_id' => $dto->paymentTypeId,
                 'amount' => $dto->amount,
                 'payment_date' => $dto->paymentDate,
@@ -116,7 +112,7 @@ class PaymentController extends Controller
                 'notes' => $dto->notes,
             ]);
 
-            $payment->load('user', 'type', 'reference');
+            $payment->load('type', 'reference');
             
             return response()->json([
                 'message' => 'Payment register successfully',
@@ -134,7 +130,7 @@ class PaymentController extends Controller
     /**
      * This PHP function updates a payment record based on the provided request data and returns a JSON
      * response with the updated payment details.
-     * 
+     *
      * @param UpdatePaymentRequest request The `update` function you provided seems to handle updating
      * payment information based on the `UpdatePaymentRequest` data and a `Payment` model instance. It
      * validates the request data, retrieves the user associated with the payment, calculates the
@@ -142,7 +138,7 @@ class PaymentController extends Controller
      * @param Payment payment The `update` function you provided is responsible for updating a payment
      * record based on the data provided in the `UpdatePaymentRequest` and the existing `Payment` model
      * instance.
-     * 
+     *
      * @return JsonResponse A JSON response is being returned. If the update operation is successful, a
      * JSON response with a success message and the updated payment data in the "data" field is
      * returned with a status code of 200. If an error occurs during the update process, a JSON
@@ -189,14 +185,14 @@ class PaymentController extends Controller
     /**
      * This PHP function deletes a payment record and returns a JSON response indicating success or
      * failure.
-     * 
+     *
      * @param Request request The `Request ` parameter in the `destroy` function represents the
      * HTTP request being made to the server. It contains all the data sent by the client in the
      * request.
      * @param Payment payment The `destroy` function you provided is a method that deletes a payment
      * record from the database. The `` parameter is an instance of the `Payment` model that
      * represents the payment record to be deleted.
-     * 
+     *
      * @return JsonResponse A JSON response is being returned. If the payment is deleted successfully,
      * a JSON response with a success message is returned with status code 200. If there is an error
      * during the deletion process, a JSON response with an error message is returned with status code

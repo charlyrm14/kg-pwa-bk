@@ -6,8 +6,7 @@ namespace App\Enums\Payment;
 
 enum PaymentType: int
 {
-    case MONTHLY = 1;
-    case ANNUAL  = 2;
-    case VISIT   = 3;
-    case FAMILY  = 4;
+    case VISIT = 1;
+    case MONTHLY = 2;
+    case ANNUAL = 3;
 }

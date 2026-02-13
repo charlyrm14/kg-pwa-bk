@@ -24,7 +24,7 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_uuid' => ['required', 'uuid', 'exists:users,uuid'],
+            'user_uuid' => ['nullable', 'uuid', 'exists:users,uuid'],
             'payment_type_id' => ['required', 'integer', 'exists:payment_types,id'],
             'amount' => ['required', 'numeric', 'min:1', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
             'payment_date' => ['required', 'date_format:Y-m-d'],
