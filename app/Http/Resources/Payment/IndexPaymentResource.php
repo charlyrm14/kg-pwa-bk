@@ -29,25 +29,19 @@ class IndexPaymentResource extends JsonResource
                     'name' => $this->user->name,
                     'last_name' => $this->user->last_name,
                     'mother_last_name' => $this->user->mother_last_name,
-                    'email' => $this->user->email,
-                    'uuid' => $this->user->uuid,
-                    'student_code' => $this->user->student_code,
+                    'email' => $this->user->email
                 ];
             }),
             'type' => $this->whenLoaded('type', function() {
                 return [
-                    'id' => $this->type->id,
                     'name' => $this->type->name,
-                    'description' => $this->type->description,
-                    'base_amount' => $this->type->base_amount,
-                    'coverage_days' => $this->type->coverage_days
+                    'slug' => $this->type->slug
                 ];
             }),
             'reference' => $this->whenLoaded('reference', function() {
                 return [
-                    'id' => $this->reference->id,
                     'name' => $this->reference->name,
-                    'description' => $this->reference->description,
+                    'slug' => $this->reference->slug,
                 ];
             })
         ];

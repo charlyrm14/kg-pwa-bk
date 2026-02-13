@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('payment_references', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 120);
+            $table->string('slug', 240);
             $table->string('description');
             $table->timestamps();
             $table->softDeletes();
