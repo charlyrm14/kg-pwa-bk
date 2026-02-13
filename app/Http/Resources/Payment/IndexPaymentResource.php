@@ -24,6 +24,7 @@ class IndexPaymentResource extends JsonResource
                 : null,
             'notes' => $this->notes,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
+            'created_at_formatted' => $this->created_at->diffForHumans(),
             'user' => $this->whenLoaded('user', function() {
                 return [
                     'name' => $this->user->name,
