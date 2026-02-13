@@ -14,6 +14,7 @@ class PaymentType extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'base_amount',
         'is_recurring',

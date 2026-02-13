@@ -15,39 +15,34 @@ class PaymentTypeSeeder extends Seeder
     {
         $types = [
             [
-                'id' => 1, 
-                'name' => 'Mensual básica', 
-                'description' => 'Membresía básica de natación con acceso ilimitado a las clases grupales durante 30 días.',
-                'base_amount' => 1500.00,
-                'is_recurring' => true,
-                'coverage_days' => 30,
-            ],
-            [
-                'id' => 2, 
-                'name' => 'Anual', 
-                'description' => 'Membresía anual con un 10% de descuento y acceso prioritario a eventos y clínicas.',
-                'base_amount' => 1100.00,
-                'is_recurring' => true,
-                'coverage_days' => 365,
-            ],
-            [
-                'id' => 3, 
-                'name' => 'Visita', 
-                'description' => 'Pase de un día para una clase de prueba o un evento especial. No recurrente.',
+                'id' => 1,
+                'name' => 'Visita',
+                'slug' => 'visita',
+                'description' => 'Pase de un día para una clase.',
                 'base_amount' => 250.00,
                 'is_recurring' => false,
                 'coverage_days' => 1,
             ],
             [
-                'id' => 4, 
-                'name' => 'Familiar', 
-                'description' => 'Membresía mensual con tarifa reducida para el segundo miembro de la familia y subsiguientes.', // Precio familiar con descuento
-                'base_amount' => 2300.00, 
+                'id' => 2,
+                'name' => 'Mensual básica',
+                'slug' => 'mensual-basica',
+                'description' => 'Membresía básica de natación.',
+                'base_amount' => 1500.00,
                 'is_recurring' => true,
                 'coverage_days' => 30,
             ],
+            [
+                'id' => 3,
+                'name' => 'Anual',
+                'slug' => 'anual',
+                'description' => 'Membresía anual de natación.',
+                'base_amount' => 1100.00,
+                'is_recurring' => true,
+                'coverage_days' => 365,
+            ]
         ];
 
-        PaymentType::upsert($types, ['id'], ['name', 'description', 'base_amount', 'is_recurring', 'coverage_days']);
+        PaymentType::upsert($types, ['id'], ['name', 'slug', 'description', 'base_amount', 'is_recurring', 'coverage_days']);
     }
 }

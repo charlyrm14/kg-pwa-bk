@@ -7,7 +7,7 @@ namespace App\DTOs\Payment;
 final class StorePaymentDTO 
 {
     public function __construct(
-        public readonly string $userUuid,
+        public readonly ?string $userUuid,
         public readonly int $paymentTypeId,
         public readonly float $amount,
         public readonly string $paymentDate,
@@ -19,7 +19,7 @@ final class StorePaymentDTO
     public static function fromArray(array $data, int $registeredByUserId): self
     {
         return new self(
-            userUuid: $data['user_uuid'],
+            userUuid: $data['user_uuid'] ?? null,
             paymentTypeId: (int) $data['payment_type_id'],
             amount: (float) $data['amount'],
             paymentDate: $data['payment_date'],
