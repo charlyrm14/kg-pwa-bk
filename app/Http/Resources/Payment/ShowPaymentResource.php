@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IndexPaymentResource extends JsonResource
+class ShowPaymentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,13 +17,14 @@ class IndexPaymentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'amount' => (float)$this->amount,
+            'amount' => $this->amount,
             'payment_date' => Carbon::parse($this->payment_date)->format('Y-m-d'),
-            'covered_until_date' => $this->covered_until_date
-                ? Carbon::parse($this->covered_until_date)->format('Y-m-d')
-                : null,
+            'covered_until_date' => $this->covered_until_date,
             'notes' => $this->notes,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
+            'created_at_formatted' => $this->created_at->diffForHumans(),
+            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d'),
+            'updated_at_formatted' => $this->updated_at->diffForHumans(),
             'user' => $this->whenLoaded('user', function() {
                 return [
                     'name' => $this->user->name,
@@ -35,13 +36,18 @@ class IndexPaymentResource extends JsonResource
             'type' => $this->whenLoaded('type', function() {
                 return [
                     'name' => $this->type->name,
-                    'slug' => $this->type->slug
+                    'slug' => $this->type->slug,
+                    'description' => $this->type->description,
+                    'base_amount' => $this->type->base_amount,
+                    'is_recurring' => $this->type->is_recurring,
+                    'coverage_days' => $this->type->coverage_days
                 ];
             }),
             'reference' => $this->whenLoaded('reference', function() {
                 return [
                     'name' => $this->reference->name,
                     'slug' => $this->reference->slug,
+                    'description' => $this->reference->description
                 ];
             })
         ];
