@@ -17,6 +17,7 @@ class IndexPaymentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'folio' => $this->folio,
             'amount' => (float)$this->amount,
             'payment_date' => Carbon::parse($this->payment_date)->format('Y-m-d'),
             'covered_until_date' => $this->covered_until_date
