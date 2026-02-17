@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Observers\PaymentObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([PaymentObserver::class])]
 class Payment extends Model
 {
     use SoftDeletes, HasFactory;
@@ -17,6 +20,7 @@ class Payment extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'folio',
         'user_id',
         'payment_type_id',
         'amount',
@@ -30,7 +34,7 @@ class Payment extends Model
     /**
      * The function "user" returns the relationship between the current object and the User model in
      * PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function user(): BelongsTo
@@ -41,7 +45,7 @@ class Payment extends Model
     /**
      * The function "type" returns the relationship between the current object and the PaymentType model in
      * PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function type(): BelongsTo
@@ -52,7 +56,7 @@ class Payment extends Model
     /**
      * The function "reference" returns the relationship between the current object and the PaymentReference model in
      * PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function reference(): BelongsTo

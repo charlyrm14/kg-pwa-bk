@@ -16,6 +16,7 @@ class StorePaymentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'folio' => $this->folio,
             'amount' => $this->amount,
             'payment_date' => $this->payment_date,
             'covered_until_date' => $this->covered_until_date ? Carbon::parse($this->covered_until_date)->format('Y-m-d') : null,
