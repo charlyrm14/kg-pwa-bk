@@ -31,11 +31,13 @@ class ShowPaymentResource extends JsonResource
                     'name' => $this->user->name,
                     'last_name' => $this->user->last_name,
                     'mother_last_name' => $this->user->mother_last_name,
-                    'email' => $this->user->email
+                    'email' => $this->user->email,
+                    'uuid' => $this->user->uuid,
                 ];
             }),
             'type' => $this->whenLoaded('type', function() {
                 return [
+                    'id' => $this->type->id,
                     'name' => $this->type->name,
                     'slug' => $this->type->slug,
                     'description' => $this->type->description,
@@ -46,6 +48,7 @@ class ShowPaymentResource extends JsonResource
             }),
             'reference' => $this->whenLoaded('reference', function() {
                 return [
+                    'id' => $this->reference->id,
                     'name' => $this->reference->name,
                     'slug' => $this->reference->slug,
                     'description' => $this->reference->description
