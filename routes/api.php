@@ -186,5 +186,6 @@ Route::prefix('v1/')->group(function () {
             Route::get('payments/distribution', 'paymentsDistribution');
             Route::get('attendances/summary', 'attendancesSummary');
             Route::get('users/composition', 'usersComposition');
+            Route::get('revenue/timeline', 'revenueTimeline');
     });
 });
