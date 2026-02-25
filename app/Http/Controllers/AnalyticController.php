@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\{
     Payment,
+    User,
     UserAttendance
 };
 use Illuminate\Http\Request;
@@ -16,8 +17,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Domain\Analytics\Services\DatePeriodService;
 use App\QueryFilter\Analytics\Attendances\AttendanceSummary;
 use App\QueryFilter\Analytics\Payments\PaymentDistribution;
-
-
+use App\QueryFilter\Analytics\Users\UserComposition;
 
 class AnalyticController extends Controller
 {
@@ -137,6 +137,54 @@ class AnalyticController extends Controller
             Log::error("Error to get attendances summary analitycs: " . $e->getMessage());
 
             return response()->json(["error" => 'Error to get attendances summary analitycs'], 500);
+        }
+    }
+
+    /**
+     * This PHP function retrieves user composition analytics data and returns it as a JSON response,
+     * handling errors and logging any exceptions.
+     *
+     * @param Request request The code snippet you provided is a Laravel controller method that fetches
+     * user data with some composition applied. It seems like the `UserComposition` class is
+     * responsible for applying some additional filters or modifications to the user query.
+     *
+     * @return JsonResponse The `usersComposition` function returns a JSON response. If the data
+     * retrieved from the query is empty, it returns a 404 status code with a message "Resource not
+     * found". If an error occurs during the process, it logs the error and returns a 500 status code
+     * with an error message "Error to get users composition analytics". Otherwise, it returns a 200
+     * status code with the retrieved data
+     */
+    public function usersComposition(): JsonResponse
+    {
+        try {
+
+            $cacheKey = "analytics:users:composition";
+
+            $data = Cache::remember($cacheKey, now()->addMinutes(5), function () {
+                $query = User::query();
+
+                $pipe = new UserComposition();
+                $pipe->apply($query);
+
+                return $query->get();
+            });
+
+            if($data->isEmpty()) {
+                return response()->json(['message' => 'Resource not found'], 404);
+            }
+            
+            return response()->json([
+                'data' => [
+                    'total' => $data->sum('total_users'),
+                    'detail' => $data
+                ]
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to get users compostion analitycs: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to get users compostion analitycs'], 500);
         }
     }
 }
