@@ -184,5 +184,6 @@ Route::prefix('v1/')->group(function () {
         ->middleware(['passport.cookie', 'auth:api'])
         ->group(function () {
             Route::get('payments/distribution', 'paymentsDistribution');
+            Route::get('attendances/summary', 'attendancesSummary');
     });
 });
