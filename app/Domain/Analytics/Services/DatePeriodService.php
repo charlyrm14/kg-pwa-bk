@@ -28,8 +28,8 @@ class DatePeriodService
             $date = Carbon::createFromFormat('Y-m', $request->month);
 
             return [
-                $date->startOfMonth()->startOfDay(),
-                $date->endOfMonth()->endOfDay(),
+                $date->copy()->startOfMonth()->startOfDay(),
+                $date->copy()->endOfMonth()->endOfDay(),
                 $request->month // cache key
             ];
         }
