@@ -40,4 +40,37 @@ class DatePeriodService
             now()->format('Y-m-d') // cache key
         ];
     }
+
+    
+    /**
+     * This PHP function resolves the start and end dates of an annual period based on the provided
+     * year in the request, or defaults to the current year if no year is provided.
+     *
+     * @param Request request The `resolveAnnualPeriod` function takes a `Request` object as a
+     * parameter. This function checks if the request contains a 'year' parameter. If the 'year'
+     * parameter is present, it creates a Carbon date object based on the provided year and returns an
+     * array with the start and end dates
+     *
+     * @return array An array containing the start and end dates of the annual period based on the
+     * input year provided in the request, or the current year if no year is provided. The dates are
+     * formatted as 'Y-m-d'.
+     */
+    public function resolveAnnualPeriod(Request $request): array
+    {
+        if($request->filled('year')) {
+            $date = Carbon::createFromFormat('Y', $request->year);
+            
+            return [
+                $date->copy()->startOfYear()->startOfDay(),
+                $date->copy()->endOfYear()->endOfDay(),
+                $request->year
+            ];
+        }
+
+        return [
+            now()->startOfYear()->startOfDay(),
+            now()->endOfMonth()->endOfDay(),
+            now()->format('Y')
+        ];
+    }
 }

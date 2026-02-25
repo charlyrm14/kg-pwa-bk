@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Log;
 use App\QueryFilter\Pipes\DateRange;
 use Illuminate\Support\Facades\Cache;
 use App\Domain\Analytics\Services\DatePeriodService;
+use App\Domain\Analytics\Services\RevenueGrowthCalculator;
 use App\QueryFilter\Analytics\Attendances\AttendanceSummary;
 use App\QueryFilter\Analytics\Payments\PaymentDistribution;
+use App\QueryFilter\Analytics\Payments\RevenueTimeline;
 use App\QueryFilter\Analytics\Users\UserComposition;
 
 class AnalyticController extends Controller
@@ -24,7 +26,8 @@ class AnalyticController extends Controller
     private const CACHE_TIME = 5;
 
     public function __construct(
-        private DatePeriodService $periodService
+        private DatePeriodService $periodService,
+        private RevenueGrowthCalculator $revenueCalculator
     ){}
 
     /**
@@ -107,7 +110,7 @@ class AnalyticController extends Controller
 
             $cacheKey = "analytics:attendances:summary:{$cacheKeyPeriod}";
 
-            $data = Cache::remember($cacheKey, now()->addMinutes(5), function () use ($from, $to) {
+            $data = Cache::remember($cacheKey, now()->addMinutes(self::CACHE_TIME), function () use ($from, $to) {
 
                 $query = UserAttendance::query();
 
@@ -160,7 +163,7 @@ class AnalyticController extends Controller
 
             $cacheKey = "analytics:users:composition";
 
-            $data = Cache::remember($cacheKey, now()->addMinutes(5), function () {
+            $data = Cache::remember($cacheKey, now()->addMinutes(self::CACHE_TIME), function () {
                 $query = User::query();
 
                 $pipe = new UserComposition();
@@ -185,6 +188,70 @@ class AnalyticController extends Controller
             Log::error("Error to get users compostion analitycs: " . $e->getMessage());
 
             return response()->json(["error" => 'Error to get users compostion analitycs'], 500);
+        }
+    }
+
+    /**
+     * The function `revenueTimeline` retrieves revenue data for a specific year, caching the results
+     * for 5 minutes and handling any errors that may occur.
+     *
+     * @param Request request The `revenueTimeline` function is responsible for generating revenue
+     * analytics data based on the provided request parameters. Let's break down the key components of
+     * this function:
+     *
+     * @return JsonResponse The `revenueTimeline` function returns a JSON response containing the
+     * revenue data for a specific year. The data includes the base month's revenue amount and the
+     * growth percentages for each month of the year. If an error occurs during the process, a JSON
+     * response with an error message is returned.
+     */
+    public function revenueTimeline(Request $request): JsonResponse
+    {
+        try {
+
+            [$from, $to, $year] = $this->periodService->resolveAnnualPeriod($request);
+
+            $cacheKey = "analytics:revenue:timeline:{$year}";
+
+            $data = Cache::remember($cacheKey, now()->addMinutes(self::CACHE_TIME), function () use ($from, $to, $year) {
+
+                $query = Payment::query();
+
+                $pipes = [
+                    new DateRange($from, $to, 'payments.payment_date'),
+                    new RevenueTimeline()
+                ];
+
+                foreach ($pipes as $pipe) {
+                    $query = $pipe->apply($query);
+                }
+
+                $payments = $query->get()->pluck('total', 'month');
+
+                $months = $this->revenueCalculator->fillMonths($year, $payments);
+                $baseAmount = $this->revenueCalculator->calculateBaseAmount($months);
+                $growth = $this->revenueCalculator->calculatePercentages($months, $baseAmount, $year);
+
+                return [
+                    'meta' => [
+                        'year' => $year
+                    ],
+                    'baseMonth' => [
+                        'month' => 'Ene' . ' ' . $year,
+                        'amount' => $baseAmount
+                    ],
+                    'growth' => $growth
+                ];
+            });
+
+            return response()->json([
+                'data' => $data
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error("Error to get revenue timeline analitycs: " . $e->getMessage());
+
+            return response()->json(["error" => 'Error to get revenue timeline analitycs'], 500);
         }
     }
 }
