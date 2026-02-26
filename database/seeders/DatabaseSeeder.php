@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,11 +18,6 @@ class DatabaseSeeder extends Seeder
             HobbySeeder::class,
             ContentTypeSeeder::class,
             ContentStatusSeeder::class,
-            SwimCategorySeeder::class,
-            SkillSeeder::class,
-            SwimCategorySeeder::class,
-            SwimCategorySkillSeeder::class,
-            ProgressStatusSeeder::class,
             ChatTypeSeeder::class,
             SenderTypeSeeder::class,
             AttendanceStatusSeeder::class,
@@ -37,7 +32,8 @@ class DatabaseSeeder extends Seeder
             PaymentReferenceSeeder::class,
             PeriodTypeSeeder::class,
             RankingRuleSeeder::class,
-            RankingPeriodSeeder::class
+            RankingPeriodSeeder::class,
+            SwimProgramSeeder::class
         ]);
     }
 }

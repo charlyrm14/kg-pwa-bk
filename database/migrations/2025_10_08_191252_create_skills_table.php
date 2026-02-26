@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('swim_category_id')->constrained()->onDelete('cascade');
             $table->string('description');
+            $table->unsignedInteger('skill_order')->default(1);
             $table->timestamps();
         });
     }

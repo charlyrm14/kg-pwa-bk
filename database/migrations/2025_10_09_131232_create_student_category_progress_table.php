@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('swim_category_skills', function (Blueprint $table) {
+        Schema::create('student_category_progress', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('student_program_id')->constrained()->onDelete('cascade');
             $table->foreignId('swim_category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('skill_id')->constrained()->onDelete('cascade');
+            $table->date('started_at');
+            $table->date('completed_at')->nullable();
             $table->timestamps();
+            $table->unique(['student_program_id', 'swim_category_id']);
         });
     }
 
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('swim_category_skills');
+        Schema::dropIfExists('student_category_progress');
     }
 };

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Skill extends Model
+class SwimProgram extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,8 +12,10 @@ class Skill extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'swim_category_id',
-        'description',
-        'skill_order'
+        'name',
+        'min_age',
+        'max_age',
+        'is_sequential',
+        'is_active'
     ];
 }
