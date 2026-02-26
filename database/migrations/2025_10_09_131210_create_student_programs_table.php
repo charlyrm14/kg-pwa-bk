@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_progress', function (Blueprint $table) {
+        Schema::create('student_programs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('swim_category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('progress_status_id')->constrained()->onDelete('cascade');
-            $table->tinyInteger('progress_percentage');
-            $table->date('start_date');
-            $table->date('end_date')->nullable();
+            $table->foreignId('swim_program_id')->constrained()->onDelete('cascade');
+            $table->date('started_at');
+            $table->date('ended_at')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->softDeletes();
+            $table->unique(['user_id', 'swim_program_id', 'is_active']);
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_progress');
+        Schema::dropIfExists('student_programs');
     }
 };

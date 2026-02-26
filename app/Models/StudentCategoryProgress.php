@@ -3,20 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProgressStatus extends Model
+class StudentCategoryProgress extends Model
 {
-    use SoftDeletes;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'slug',
-        'description'
+        'student_program_id',
+        'swim_category_id',
+        'started_at',
+        'completed_at'
     ];
 }

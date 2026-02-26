@@ -19,7 +19,9 @@ class SwimCategory extends Model
     protected $fillable = [
         'name',
         'slug',
-        'description'
+        'description',
+        'level_order',
+        'swim_program_id',
     ];
 
     /**
@@ -31,10 +33,10 @@ class SwimCategory extends Model
      * `HasMany` relationship, indicating that the current model has multiple `SwimCategorySkill`
      * models associated with it.
      */
-    public function categorySkills(): HasMany
-    {
-        return $this->hasMany(SwimCategorySkill::class);
-    }
+    // public function categorySkills(): HasMany
+    // {
+    //     return $this->hasMany(SwimCategorySkill::class);
+    // }
 
     /**
      * The function `nextSwimCategory` retrieves the next swim category based on the provided category

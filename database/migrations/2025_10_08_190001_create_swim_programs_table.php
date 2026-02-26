@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('progress_statuses', function (Blueprint $table) {
+        Schema::create('swim_programs', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
-            $table->string('slug', 100)->nullable()->unique();
-            $table->string('description')->nullable();
+            $table->string('name');
+            $table->unsignedTinyInteger('min_age')->nullable();
+            $table->unsignedTinyInteger('max_age')->nullable();
+            $table->boolean('is_sequential')->default(true);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('progress_statuses');
+        Schema::dropIfExists('swim_programs');
     }
 };
