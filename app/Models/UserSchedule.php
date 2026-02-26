@@ -25,7 +25,7 @@ class UserSchedule extends Model
 
     /**
      * The function `user()` returns a BelongsTo relationship with the User model in PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function user(): BelongsTo
@@ -35,7 +35,7 @@ class UserSchedule extends Model
 
     /**
      * The function `day()` returns a BelongsTo relationship with the Day model in PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function day(): BelongsTo
@@ -73,7 +73,7 @@ class UserSchedule extends Model
     public static function todayAttendances(): LengthAwarePaginator
     {
         return static::with([
-            'user.role', 
+            'user.role',
             'day',
             'attendanceStatus'
         ])->where([

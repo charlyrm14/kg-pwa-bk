@@ -24,7 +24,8 @@ class AssignAttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'attendance_status_id' => ['required', 'integer', 'exists:attendance_statuses,id']
+            'attendance_status_id' => ['required', 'integer', 'exists:attendance_statuses,id'],
+            'attendance_date' => ['nullable', 'date', 'date_format:Y-m-d', 'before_or_equal:today']
         ];
     }
 

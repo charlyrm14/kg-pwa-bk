@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DTOs\Payment;
 
-final class StorePaymentDTO 
+final class StorePaymentDTO
 {
     public function __construct(
         public readonly ?string $userUuid,

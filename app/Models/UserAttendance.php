@@ -15,7 +15,8 @@ class UserAttendance extends Model
     protected $fillable = [
         'user_id',
         'user_schedule_id',
-        'attendance_status_id'
+        'attendance_status_id',
+        'attendance_date'
     ];
 
     /**

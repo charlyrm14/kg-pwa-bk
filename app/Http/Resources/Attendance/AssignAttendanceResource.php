@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Attendance;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,20 +26,9 @@ class AssignAttendanceResource extends JsonResource
                     'student_code' => $this->user->student_code
                 ];
             }),
-            'attendance_status' => $this->whenLoaded('attendanceStatus', function() {
-                return [
-                    'id' => $this->attendanceStatus->id,
-                    'name' => $this->attendanceStatus->name,
-                    'description' => $this->attendanceStatus->description
-                ];
-            }),
-            'user_schedule' => $this->whenLoaded('userSchedule', function() {
-                return [
-                    'day_name' => $this->userSchedule->day->name,
-                    'entry_time' => $this->userSchedule->entry_time,
-                    'departure_time' => $this->userSchedule->departure_time
-                ];
-            }),
+            'attendance_date' => Carbon::parse($this->attendance_date)->format('Y-m-d'),
+            'attendance_status' => $this->whenLoaded('attendanceStatus')->name ?? null,
+            'user_schedule_day' => $this->whenLoaded('userSchedule')->day->name ?? null
         ];
     }
 }
