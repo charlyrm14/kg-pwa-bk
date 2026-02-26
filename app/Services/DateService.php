@@ -101,12 +101,8 @@ class DateService {
     public static function getCurrentDayName(): int
     {
         $today = Carbon::now()->locale('es_MX');
-        $dayName = Str::upper($today->dayName);
+        $dayName = Str::ucfirst($today->dayName);
 
-        return Cache::remember(
-            "days:id:{$dayName}",
-            now()->addDay(), // cache por 24 horas
-            fn () => Day::where('name', $dayName)->value('id') ?? 0
-        );
+        return Day::where('name', $dayName)->value('id') ?? 0;
     }
 }

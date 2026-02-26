@@ -16,7 +16,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_schedule_id')->constrained()->onDelete('cascade');
             $table->foreignId('attendance_status_id')->constrained()->onDelete('cascade');
+            $table->timestamp('attendance_date');
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->unique(['user_id', 'attendance_date', 'user_schedule_id']);
         });
     }
 

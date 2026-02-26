@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use DomainException;
+use App\Domain\Schedules\Services\ResolveUserScheduleService;
 use App\Models\{
     AttendanceStatus,
     User,
@@ -22,9 +24,14 @@ use App\Services\UserService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Requests\Attendance\AssignAttendanceRequest;
 use Illuminate\Support\Facades\Cache;
+use App\DTOs\Attendances\AssignAttendanceDTO;
 
 class AttendanceController extends Controller
 {
+    public function __construct(
+        private ResolveUserScheduleService $scheduleService
+    )
+    {}
     /**
      * Retrieve the list of attendance statuses.
      *
@@ -97,10 +104,10 @@ class AttendanceController extends Controller
     /**
      * This PHP function retrieves the attendance data for a user in the current month and returns it
      * as a JSON response.
-     * 
+     *
      * @param Request request The `monthlyHistory` function is designed to retrieve attendance data
      * for a specific user for the current month. Here's a breakdown of the code:
-     * 
+     *
      * @return JsonResponse A JSON response is being returned. If the user is found, it will return the
      * user's attendances for the current month in JSON format with a status code of 200. If there is
      * an error, it will return a JSON response with an error message and a status code of 500.
@@ -130,47 +137,36 @@ class AttendanceController extends Controller
         }
     }
 
+    
     /**
-     * Assign or update today's attendance status for a specific user.
+     * This PHP function assigns attendance for a user and handles any exceptions that may occur during
+     * the process.
      *
-     * This endpoint creates or updates the attendance record for the authenticated
-     * day schedule of the given user. If an attendance record already exists for
-     * the user and their schedule of the current day, it will be updated with the
-     * new attendance status. Otherwise, a new attendance record will be created.
+     * @param AssignAttendanceRequest request The `assignAttendance` function takes two parameters:
+     * @param User user The `assignAttendance` function you provided seems to handle assigning
+     * attendance for a user based on the given `AssignAttendanceRequest` and `User` parameters.
      *
-     * Business rules:
-     * - A user can only have one attendance record per schedule per day.
-     * - Attendance status is mutable and can be corrected by an administrator.
-     *
-     * @param  AssignAttendanceRequest  $request
-     *         Validated request containing the attendance_status_id.
-     *
-     * @param  User  $user
-     *         The user whose attendance is being assigned (route model binding).
-     *
-     * @return JsonResponse
-     *         Returns a JSON response with:
-     *         - 201: Attendance assigned or updated successfully.
-     *         - 404: User has no schedule assigned for the current day.
-     *         - 500: An unexpected server error occurred.
-     *
-     * @throws \Throwable
-     *         If any unexpected error occurs during the process.
+     * @return JsonResponse A `JsonResponse` is being returned. If the assignment of user attendance is
+     * successful, a JSON response with a success message and the assigned attendance data in the
+     * `AssignAttendanceResource` format is returned with a status code of 201 (Created). If a
+     * `DomainException` is caught during the process, a JSON response with the exception message and a
+     * status code of 422 (Unprocessable Entity
      */
     public function assignAttendance(AssignAttendanceRequest $request, User $user): JsonResponse
     {
         try {
 
-            $schedule = $user->scheduleByDay()->first();
-
-            if(!$schedule) {
-                return response()->json(['message' => 'User has no schedules assigned'], 404);
-            }
-
+            $dto = AssignAttendanceDTO::fromArray($request->validated());
+            
+            $schedule = $this->scheduleService->handle($user->id, $dto->attendanceDate);
+            
             $attendance = UserAttendance::updateOrCreate(
-                ['user_id' => $user->id, 'user_schedule_id' => $schedule->id,],
-                ['attendance_status_id' => $request->validated()['attendance_status_id']]
-            ); 
+                [
+                    'user_id' => $user->id,
+                    'user_schedule_id' => $schedule->id,
+                    'attendance_date' => $dto->attendanceDate ?? today()
+                ], [ 'attendance_status_id' => $dto->attendanceStatusId]
+            );
 
             $attendance->load('attendanceStatus', 'userSchedule.day', 'user');
             
@@ -178,6 +174,10 @@ class AttendanceController extends Controller
                 'message' => 'User attendance assigned successfully',
                 'data' => new AssignAttendanceResource($attendance)
             ], 201);
+
+        } catch (DomainException $e) {
+
+            return response()->json(['message' => $e->getMessage()], 422);
 
         } catch (\Throwable $e) {
 
