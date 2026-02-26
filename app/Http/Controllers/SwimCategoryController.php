@@ -6,30 +6,35 @@ namespace App\Http\Controllers;
 
 use App\Models\SwimCategory;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\SwimCategory\SwimCategoryCollection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\SwimCategories\IndexCollection;
 
 class SwimCategoryController extends Controller
 {
     /**
-     * Display a swim categories list with associated skills and returns a JSON response,
-     * 
-     * @return JsonResponse A JSON response is being returned. If the swim categories collection is
-     * empty, a 404 status code with a message 'Resources not found' is returned. If there is an error
-     * during the process, a 500 status code with a message 'Error list swim categories' is returned.
-     * Otherwise, a 200 status code with the swim categories collection data is returned.
+     * This PHP function retrieves swim categories from cache and returns them as a JSON response,
+     * handling errors appropriately.
+     *
+     * @return JsonResponse A `JsonResponse` is being returned. If the `` collection is
+     * empty, a JSON response with a message "Resource not found" and status code 404 is returned. If
+     * there is an error during the process, a JSON response with a message "Error list swim
+     * categories" and status code 500 is returned. Otherwise, a JSON response with the collection of
+     * swim categories in the `
      */
-    public function index(): JsonResponse
+    public function __invoke(): JsonResponse
     {
         try {
-            
-            $swimCategories = SwimCategory::with('categorySkills.skill')->get();
 
-            if($swimCategories->isEmpty()) {
-                return response()->json(['message' => 'Resources not found'], 404);
+            $categories = Cache::remember('categories', now()->addMinutes(10), function () {
+                return SwimCategory::with(['skills'])->orderBy('id', 'DESC')->get();
+            });
+
+            if($categories->isEmpty()) {
+                return response()->json(['Resource not found'], 404);
             }
-            
-            return response()->json(new SwimCategoryCollection($swimCategories), 200);
+                        
+            return response()->json(new IndexCollection($categories), 200);
 
         } catch(\Throwable $e) {
 

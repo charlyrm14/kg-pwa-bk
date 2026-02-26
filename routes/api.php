@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     UserController,
     ContentController,
     StudentProgressController,
+    SwimProgramController,
     SwimCategoryController,
     ScheduleController,
     HobbyController,
@@ -56,11 +57,8 @@ Route::prefix('v1/')->group(function () {
             Route::delete('{content:slug}', 'destroy');
     });
 
-    Route::prefix('swim-categories/')
-        ->controller(SwimCategoryController::class)
-        ->group(function() {
-            Route::get('', 'index');
-    });
+    Route::get('swim-programs/', SwimProgramController::class);
+    Route::get('swim-categories/', SwimCategoryController::class);
 
     Route::prefix('schedules/')
         ->controller(ScheduleController::class)
