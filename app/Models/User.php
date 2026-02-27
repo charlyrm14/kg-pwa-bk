@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -72,7 +71,7 @@ class User extends Authenticatable implements OAuthenticatable
     /**
      * The function "role" returns the relationship between the current object and the Role model in
      * PHP.
-     * 
+     *
      * @return BelongsTo A BelongsTo relationship is being returned.
      */
     public function role(): BelongsTo
@@ -82,7 +81,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function "userProfile" returns a HasOne relationship with the UserProfile model in PHP.
-     * 
+     *
      * @return HasOne A HasOne relationship is being returned, linking the current model to the UserProfile
      */
     public function profile(): HasOne
@@ -92,7 +91,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function `hobbies()` returns a HasMany relationship for a user's hobbies.
-     * 
+     *
      * @return HasMany The `hobbies()` function is returning a relationship method `HasMany` which
      * defines a one-to-many relationship between the current model and the `UserHobby` model. This
      * means that a user can have multiple hobbies associated with them.
@@ -105,7 +104,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function `contents()` returns a relationship where a model has many contents.
-     * 
+     *
      * @return HasMany The code snippet is a PHP function named `contents` that returns a relationship
      * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
      * has a one-to-many relationship with the `Content` model.
@@ -116,20 +115,20 @@ class User extends Authenticatable implements OAuthenticatable
     }
 
     /**
-     * The function `studentProgress()` returns a relationship where a model has many studentProgress progress category.
-     * 
-     * @return HasMany The code snippet is a PHP function named `studentProgress` that returns a relationship
+     * The function `studentPrograms()` returns a relationship where a model has many StudentProgram.
+     *
+     * @return HasMany The code snippet is a PHP function named `studentPrograms` that returns a relationship
      * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
-     * has a one-to-many relationship with the `Content` model.
+     * has a one-to-many relationship with the `StudentProgram` model.
      */
-    public function studentProgress(): HasMany
+    public function studentPrograms(): HasMany
     {
-        return $this->hasMany(StudentProgress::class);
+        return $this->hasMany(StudentProgram::class);
     }
 
     /**
      * The function `schedules()` returns a relationship where a model has many UserSchedule.
-     * 
+     *
      * @return HasMany The code snippet is a PHP function named `schedules` that returns a relationship
      * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
      * has a one-to-many relationship with the `UserSchedule` model.
@@ -141,7 +140,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function "scheduleByDay" returns a HasOne relationship with the UserSchedule model in PHP.
-     * 
+     *
      * @return HasOne A HasOne relationship is being returned, linking the current model to the UserSchedule
      */
     public function scheduleByDay(): HasOne
@@ -151,7 +150,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function `days()` returns a HasMany relationship for a user's days.
-     * 
+     *
      * @return HasMany The `days()` function is returning a relationship method `HasMany` which
      * defines a one-to-many relationship between the current model and the `Day` model. This
      * means that a user can have multiple days associated with them.
@@ -165,7 +164,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function `payments()` returns a relationship where a model has many Payments.
-     * 
+     *
      * @return HasMany The code snippet is a PHP function named `payments` that returns a relationship
      * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
      * has a one-to-many relationship with the `Payments` model.
@@ -177,7 +176,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function `attendances()` returns a relationship where a model has many UserAttendance.
-     * 
+     *
      * @return HasMany The code snippet is a PHP function named `attendances` that returns a relationship
      * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
      * has a one-to-many relationship with the `UserAttendance` model.
@@ -189,7 +188,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * This PHP function returns the user attendances for the current month.
-     * 
+     *
      * @return HasMany The `attendancesCurrentMonth` function is returning a relationship of type
      * `HasMany`. It retrieves all `UserAttendance` records associated with the current user where the
      * `date` column matches the current month and year.
@@ -206,13 +205,13 @@ class User extends Authenticatable implements OAuthenticatable
     /**
      * This PHP function retrieves user attendances based on a specified year and month, ordering them
      * by date and including related user schedule and attendance status information.
-     * 
+     *
      * @param int year The `year` parameter represents the year for which you want to retrieve
      * attendance records. It is an integer value that specifies the year (e.g., 2022).
      * @param int month The `month` parameter in the `attendancesByDate` function represents the month
      * for which you want to retrieve attendance records. It is an integer value that corresponds to
      * the month of the year (1 for January, 2 for February, and so on up to 12 for December).
-     * 
+     *
      * @return HasMany The `attendancesByDate` function returns a relationship query that retrieves
      * user attendances based on the specified year and month. It filters the results by the
      * `created_at` date field, orders them in descending order by `created_at`, and eager loads the
@@ -260,10 +259,10 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function "getByUuid" retrieves a User object based on a given UUID.
-     * 
+     *
      * @param string uuid The parameter "uuid" is a string that represents the unique identifier of a
      * user. It is used to search for and retrieve a specific user from the database.
-     * 
+     *
      * @return User|null The method `getByUuid` returns an instance of the `User` class if a user with
      * the specified UUID is found in the database. If no user is found with that UUID, it returns
      * `null`.
@@ -275,7 +274,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function `birthdayToday` retrieves users whose birthday is today along with their profiles.
-     * 
+     *
      * @return Collection A collection of users whose birthday is today, along with their profile
      * information.
      */
@@ -291,7 +290,7 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * The function `ai` returns the user with the email specified in the configuration as an AI user.
-     * 
+     *
      * @return self An instance of the class that contains this method.
      */
     public static function ai(): self

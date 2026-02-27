@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,6 +34,17 @@ class SwimCategory extends Model
     public function skills(): HasMany
     {
         return $this->hasMany(Skill::class);
+    }
+
+    /**
+     * The program function returns a BelongsTo relationship with the SwimProgram model in PHP.
+     *
+     * @return BelongsTo The `program()` function is returning a relationship method `belongsTo` which
+     * defines an inverse one-to-one or many relationship with the `SwimProgram` model.
+     */
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(SwimProgram::class, 'swim_program_id');
     }
 
     /**

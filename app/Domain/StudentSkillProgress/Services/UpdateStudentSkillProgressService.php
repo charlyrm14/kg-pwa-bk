@@ -100,7 +100,7 @@ class UpdateStudentSkillProgressService
         $average = round((float) $category->skills()->avg('progress_percentage'));
         
         $allCompleted = !$category->skills()->where('progress_percentage', '<', 100)->exists();
-
+        
         $category->update([
             'progress_percentage' => $average,
             'completed_at' => $allCompleted ? now() : null,
@@ -131,12 +131,12 @@ class UpdateStudentSkillProgressService
         }
 
         $studentProgram = $currentCategory->program;
-
+        
         $nextCategory = SwimCategory::where('swim_program_id', $studentProgram->swim_program_id)
-            ->where('order', '>', $currentCategory->swimCategory->order)
-            ->orderBy('order')
+            ->where('level_order', '>', $currentCategory->swimCategory->level_order)
+            ->orderBy('level_order')
             ->first();
-
+        
         if (! $nextCategory) {
             return; // Program finished
         }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StudentCategoryProgress extends Model
@@ -43,5 +44,21 @@ class StudentCategoryProgress extends Model
     public function program(): BelongsTo
     {
         return $this->belongsTo(StudentProgram::class, 'student_program_id');
+    }
+
+    /**
+     * The swimCategory function returns a BelongsTo relationship with the SwimCategory model in PHP.
+     *
+     * @return BelongsTo The `swimCategory()` function is returning a relationship method `belongsTo` which
+     * defines an inverse one-to-one or many relationship with the `SwimCategory` model.
+     */
+    public function swimCategory(): BelongsTo
+    {
+        return $this->belongsTo(SwimCategory::class);
+    }
+
+    public function swimCategories(): HasMany
+    {
+        return $this->hasMany(SwimCategory::class, 'swim_category_id', 'id');
     }
 }
