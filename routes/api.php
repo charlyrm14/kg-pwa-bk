@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     SwimProgramController,
     SwimCategoryController,
     StudentProgramController,
+    StudentSkillProgressController,
     ScheduleController,
     HobbyController,
     ProfileUserController,
@@ -64,6 +65,12 @@ Route::prefix('v1/')->group(function () {
         ->controller(StudentProgramController::class)
         ->group(function() {
             Route::post('', 'store');
+    });
+
+    Route::prefix('student-skill-progress/')
+        ->controller(StudentSkillProgressController::class)
+        ->group(function () {
+            Route::patch('{studentSkillProgress}', 'update');
     });
 
     Route::prefix('schedules/')
