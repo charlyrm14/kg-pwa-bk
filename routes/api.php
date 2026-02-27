@@ -5,9 +5,9 @@ use App\Http\Controllers\{
     AuthController,
     UserController,
     ContentController,
-    StudentProgressController,
     SwimProgramController,
     SwimCategoryController,
+    StudentProgramController,
     ScheduleController,
     HobbyController,
     ProfileUserController,
@@ -60,18 +60,17 @@ Route::prefix('v1/')->group(function () {
     Route::get('swim-programs/', SwimProgramController::class);
     Route::get('swim-categories/', SwimCategoryController::class);
 
+    Route::prefix('student-programs/')
+        ->controller(StudentProgramController::class)
+        ->group(function() {
+            Route::post('', 'store');
+    });
+
     Route::prefix('schedules/')
         ->controller(ScheduleController::class)
         ->group(function() {
             Route::get('{uuid?}', 'userSchedule')->middleware(['passport.cookie', 'auth:api']);
             Route::put('{user:uuid}', 'assignSchedule');
-    });
-
-    Route::prefix('student-progress/')
-        ->controller(StudentProgressController::class)
-        ->group(function() {
-            Route::get('{uuid?}', 'dataProgress')->middleware(['passport.cookie', 'auth:api']);
-            Route::post('', 'assignProgress');
     });
 
     Route::prefix('hobbies/')

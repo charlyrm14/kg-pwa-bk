@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_category_progress_id')->constrained('student_category_progress')->onDelete('cascade');
             $table->foreignId('skill_id')->constrained()->onDelete('cascade');
-            $table->boolean('is_completed')->default(false);
+            $table->unsignedTinyInteger('progress_percentage')->default(0);
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
             $table->unique(['student_category_progress_id', 'skill_id']);

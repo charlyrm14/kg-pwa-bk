@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_program_id')->constrained()->onDelete('cascade');
             $table->foreignId('swim_category_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('progress_percentage')->default(0);
             $table->date('started_at');
             $table->date('completed_at')->nullable();
             $table->timestamps();

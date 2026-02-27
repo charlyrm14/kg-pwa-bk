@@ -17,9 +17,8 @@ return new class extends Migration
             $table->foreignId('swim_program_id')->constrained()->onDelete('cascade');
             $table->date('started_at');
             $table->date('ended_at')->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->unique(['user_id', 'swim_program_id', 'is_active']);
+            $table->unique(['user_id', 'swim_program_id']);
         });
     }
 
