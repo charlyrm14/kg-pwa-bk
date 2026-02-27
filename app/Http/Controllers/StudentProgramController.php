@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use DomainException;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\DTOs\StudentPrograms\EnrollStudentDTO;
+use App\Domain\Users\Services\ResolverUserService;
 use App\Domain\StudentPrograms\Services\EnrollStudentService;
 use App\Http\Requests\StudentProgram\StoreStudentProgramRequest;
+use App\Http\Resources\StudentProgram\ShowStudentProgramResource;
 
 class StudentProgramController extends Controller
 {
@@ -78,6 +82,69 @@ class StudentProgramController extends Controller
             
             return response()->json([
                 'message' => 'Error to store student program',
+            ], 500);
+        }
+    }
+
+    /**
+     * Display the swimming program progress for a student.
+     *
+     * This endpoint allows retrieving the swimming progress associated with a user.
+     * The user can be resolved in two ways:
+     *
+     * - If a UUID is provided, the system resolves the target user and validates
+     *   authorization through the corresponding policy ability.
+     * - If no UUID is provided, the authenticated user is used.
+     *
+     * The response includes:
+     * - User basic information
+     * - Current level
+     * - Next level
+     * - Progression history
+     * - Program information
+     * - Skills progress
+     *
+     * Results are cached temporarily to reduce database queries.
+     *
+     * @param Request $request The current HTTP request instance.
+     * @param string|null $uuid Optional UUID used by administrators to fetch
+     *                          another student's progress.
+     *
+     * @return JsonResponse
+     */
+    public function show(Request $request, ?string $uuid = null): JsonResponse
+    {
+        try {
+
+            $user = ResolverUserService::resolve($request, $uuid, 'viewStudentProgram');
+
+            $cacheKey = "student_program_progress_{$user->id}";
+
+            $userProgram = Cache::remember($cacheKey, now()->addMinutes(5), function () use ($user) {
+                return $user->studentPrograms()
+                    ->with([
+                        'user',
+                        'categories.swimCategory',
+                        'categories.skills.skill',
+                        'program'
+                    ])
+                    ->first();
+            });
+            
+            if(!$userProgram) {
+                return response()->json(['message' => 'User without progress'], 404);
+            }
+                        
+            return response()->json([
+                'data' => new ShowStudentProgramResource($userProgram)
+            ], 200);
+            
+        } catch(\Throwable $e) {
+
+            Log::error('Error to get student program progress: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error to get student program progress',
             ], 500);
         }
     }

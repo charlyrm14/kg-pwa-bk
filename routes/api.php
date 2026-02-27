@@ -65,6 +65,7 @@ Route::prefix('v1/')->group(function () {
         ->controller(StudentProgramController::class)
         ->group(function() {
             Route::post('', 'store');
+            Route::get('{user:uuid?}', 'show')->middleware(['passport.cookie', 'auth:api']);
     });
 
     Route::prefix('student-skill-progress/')

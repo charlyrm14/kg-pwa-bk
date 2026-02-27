@@ -19,7 +19,7 @@ class Role extends Model
 
     /**
      * The function `users()` returns a relationship where a model has many users.
-     * 
+     *
      * @return HasMany The code snippet is a PHP function named `users` that returns a relationship
      * definition for a "HasMany" relationship in Laravel Eloquent. It specifies that the current model
      * has a one-to-many relationship with the `User` model.

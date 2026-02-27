@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Student;
+namespace App\Http\Resources\StudentProgram;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LogStudentProgressResource extends JsonResource
+class UserInfoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,9 +21,6 @@ class LogStudentProgressResource extends JsonResource
             'email' => $this->email,
             'uuid' => $this->uuid,
             'student_code' => $this->student_code,
-            'current_level' => $this->current_level,
-            'next_level' => $this->next_level,
-            'progression_history' => $this->progression_history
         ];
     }
 }
