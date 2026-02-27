@@ -42,6 +42,6 @@ class StudentCategoryProgress extends Model
      */
     public function program(): BelongsTo
     {
-        return $this->belongsTo(StudentProgram::class);
+        return $this->belongsTo(StudentProgram::class, 'student_program_id');
     }
 }
