@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Student;
+namespace App\Http\Requests\StudentProgram;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class ProgressRequest extends FormRequest
+class StoreStudentProgramRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class ProgressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_uuid' => ['required', 'string', 'exists:users,uuid'],
-            'swim_category_id' => ['required', 'integer', 'exists:swim_categories,id'],
-            'progress_percentage' => ['required', 'integer', 'min:1', 'max:100']
+            'user_uuid' => ['required', 'exists:users,uuid'],
+            'swim_program_id' => ['required', 'exists:swim_programs,id'],
+            'swim_category_id' => ['nullable', 'exists:swim_categories,id'],
         ];
     }
 
