@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
+use App\Http\Resources\StudentProgram\CurrentLevelResource;
 
 class ShowUserResource extends JsonResource
 {
@@ -16,6 +17,10 @@ class ShowUserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $categories = $this->studentPrograms->categories ?? null;
+
+        $currentLevel = $categories ? $categories->firstWhere('completed_at', null) : null;
+
         return [
             'name' => $this->name,
             'last_name' => $this->last_name,
@@ -57,6 +62,7 @@ class ShowUserResource extends JsonResource
                     ];
                 });
             }),
+            'progress' => $currentLevel ? new CurrentLevelResource($currentLevel) : null,
         ];
     }
 }
