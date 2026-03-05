@@ -31,6 +31,11 @@ class ShowUserResource extends JsonResource
             'role_id' => $this->role_id,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
             'role_name' => $this->whenLoaded('role')->name ?? null,
+            'profile' => $this->whenLoaded('profile', function() {
+                return [
+                    'birthdate' => $this->profile->birthdate ?? null
+                ];
+            }),
             'schedules' => $this->whenLoaded('schedules', function() {
                 return $this->schedules->map(function($schedule) {
                     return [
