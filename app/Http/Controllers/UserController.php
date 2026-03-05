@@ -107,6 +107,7 @@ class UserController extends Controller
 
             $data = $user->load(
                     'role',
+                    'profile',
                     'schedules.day',
                     'attendancesCurrentMonth'
                 );
