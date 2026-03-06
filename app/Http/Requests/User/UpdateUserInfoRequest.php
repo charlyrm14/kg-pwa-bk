@@ -25,17 +25,11 @@ class UpdateUserInfoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:3', 'max:120'],
-            'last_name' => ['required', 'string', 'min:3', 'max:120'],
-            'mother_last_name' => ['nullable', 'string', 'min:3', 'max:120'],
-            'password' => [
-                'required', 
-                'confirmed', 
-                Password::min(12)
-                    ->letters()
-                    ->numbers()
-                    ->symbols()
-                    ->mixedCase()]
+            'name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'min:3', 'max:30'],
+            'mother_last_name' => ['nullable', 'string', 'min:3','max:30'],
+            'role_id' => ['required', 'integer', 'exists:roles,id'],
+            'birthdate' => ['required', 'date_format:Y-m-d',]
         ];
     }
 
