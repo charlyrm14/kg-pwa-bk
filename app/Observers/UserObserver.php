@@ -34,7 +34,7 @@ class UserObserver
         $user->student_code = UserService::generateStudentCode($user->role_id, $user->id);
         $user->save();
 
-        Mail::to($user->email)->send(new UserCredentialsMail($user, $plainPassword));
+        //Mail::to($user->email)->send(new UserCredentialsMail($user, $plainPassword));
     }
 
     /**

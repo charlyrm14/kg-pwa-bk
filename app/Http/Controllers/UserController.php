@@ -9,6 +9,7 @@ use App\Http\Requests\User\{
     StoreUserRequest,
     UpdateUserInfoRequest,
 };
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\User\{
     IndexCollection,
@@ -72,14 +73,21 @@ class UserController extends Controller
     {
         try {
 
-            $user = User::create($request->validated());
-            
+            DB::beginTransaction();
+
+            $user = User::create($request->safe()->except('birthdate'));
+            $user->profile()->create($request->safe()->only('birthdate'));
+
+            DB::commit();
+
             return response()->json([
                 'message' => 'User created successfully',
                 'data' => new NewUserResource($user->load('role')),
             ], 201);
 
         } catch(\Throwable $e) {
+
+            DB::rollBack();
 
             Log::error('Error creating user: ' . $e->getMessage());
             
