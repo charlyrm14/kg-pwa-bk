@@ -146,17 +146,16 @@ class UserController extends Controller
      *
      * @return JsonResponse A JSON response indicating success or failure of user information updated.
      */
-    public function update(UpdateUserInfoRequest $request, string $uuid): JsonResponse
+    public function update(UpdateUserInfoRequest $request, User $user): JsonResponse
     {
         try {
 
-            $user = User::getByUuid($uuid);
+            DB::beginTransaction();
 
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
+            $user->update($request->safe()->except('birthdate'));
+            $user->profile()->update($request->safe()->only('birthdate'));
 
-            $user->update($request->validated());
+            DB::commit();
 
             return response()->json([
                 'message' => 'User information updated successfully',
@@ -164,6 +163,8 @@ class UserController extends Controller
             ], 200);
 
         } catch(\Throwable $e) {
+
+            DB::rollBack();
 
             Log::error('Error updating user basic info: ' . $e->getMessage());
             
