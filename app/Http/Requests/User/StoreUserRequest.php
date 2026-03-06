@@ -28,7 +28,8 @@ class StoreUserRequest extends FormRequest
             'last_name' => ['required', 'string', 'min:3', 'max:30'],
             'mother_last_name' => ['nullable', 'string', 'min:3','max:30'],
             'email' => ['required', 'email', 'max:50', 'unique:users,email'],
-            'role_id' => ['required', 'integer', 'exists:roles,id']
+            'role_id' => ['required', 'integer', 'exists:roles,id'],
+            'birthdate' => ['required', 'date_format:Y-m-d',]
         ];
     }
 
