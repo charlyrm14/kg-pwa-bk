@@ -52,6 +52,7 @@ class ShowUserResource extends JsonResource
                 return $this->attendancesCurrentMonth->map(function($attendance) {
                     $date = Carbon::parse($attendance->created_at)->locale('es');
                     return [
+                        'id' => $attendance->id,
                         'day_id' => $attendance->userSchedule->day->id,
                         'day_name' => $attendance->userSchedule->day->name,
                         'shorting_day' => Str::charAt($attendance->userSchedule->day->name, 0),
