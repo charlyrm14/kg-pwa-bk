@@ -3,9 +3,12 @@
 namespace App\Http\Resources\UserOverview;
 
 use Carbon\Carbon;
+use App\Models\SwimCategory;
 use Illuminate\Http\Request;
 use App\Services\DateService;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\StudentProgram\CurrentLevelResource;
+use App\Http\Resources\StudentProgram\NextLevelResource;
 
 class IndexResource extends JsonResource
 {
@@ -16,8 +19,16 @@ class IndexResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         $startDate = $this->last_event?->event?->start_date;
         $endDate   = $this->last_event?->event?->end_date;
+
+        $categories = $this->studentPrograms->categories ?? null;
+
+        $currentLevel = $categories ? $categories->firstWhere('completed_at', null) : null;
+        $nextLevel = $currentLevel
+            ? SwimCategory::where([['id', '>', $currentLevel->swim_category_id]])->first()
+            : null;
 
         return [
             'name' => $this->name,
@@ -27,12 +38,8 @@ class IndexResource extends JsonResource
             'uuid' => $this->uuid,
             'student_code' => $this->student_code,
             'role' => $this->whenLoaded('role')->name ?? 'unknown',
-            'current_level' => [
-                'category_name' => $this->current_level['category_name'] ?? '',
-                'total_progress' => $this->current_level['total_progress'] ?? '',
-                'total_progress_formatted' => $this->current_level['total_progress_formatted'],
-            ],
-            'next_level' => $this->next_level['category_name'] ?? '',
+            'current_level' => $currentLevel ? new CurrentLevelResource($currentLevel) : null,
+            'next_level' => $nextLevel ? new NextLevelResource($nextLevel) : null,
             'last_event' => [
                 'title' => $this->last_event?->name,
                 'slug' => $this->last_event?->slug,
