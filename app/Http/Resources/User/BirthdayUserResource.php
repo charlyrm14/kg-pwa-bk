@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User;
 
+use App\Http\Resources\StudentProgram\CurrentLevelResource;
 use Illuminate\Http\Request;
 use App\Services\DateService;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -16,6 +17,10 @@ class BirthdayUserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $categories = $this->currentLevel ? $this->currentLevel->categories : null;
+
+        $currentLevel = $categories ? $categories->firstWhere('completed_at', null) : null;
+
         return [
             'name' => $this->name,
             'last_name' => $this->last_name,
@@ -31,7 +36,7 @@ class BirthdayUserResource extends JsonResource
                     'gender' => optional($this->profile->gender)->name,
                 ];
             }),
-            'current_level' => 'NIVEL ' . $this->current_level
+            'current_level' => $currentLevel ? new CurrentLevelResource($currentLevel) : null
         ];
     }
 }
