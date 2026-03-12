@@ -153,7 +153,7 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $user->update($request->safe()->except('birthdate'));
-            $user->profile()->update($request->safe()->only('birthdate'));
+            $user->profile()->updateOrCreate(['user_id' => $user->id], $request->safe()->only('birthdate'));
 
             DB::commit();
 
