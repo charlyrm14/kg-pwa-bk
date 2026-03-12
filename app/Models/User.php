@@ -37,6 +37,7 @@ class User extends Authenticatable implements OAuthenticatable
         'last_name',
         'mother_last_name',
         'email',
+        'username',
         'email_verified_at',
         'password',
         'force_password_change',

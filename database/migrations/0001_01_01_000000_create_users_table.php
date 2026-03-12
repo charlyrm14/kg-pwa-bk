@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('mother_last_name')->nullable();
             $table->string('email')->unique();
+            $table->string('username', 30)->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('force_password_change')->default(true);
