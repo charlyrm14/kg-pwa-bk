@@ -90,10 +90,9 @@ Route::prefix('v1/')->group(function () {
 
     Route::prefix('profile/')
         ->controller(ProfileUserController::class)
-        ->middleware(['passport.cookie', 'auth:api'])
         ->group(function() {
-            Route::get('', 'show');
-            Route::put('', 'update');
+            Route::get('{user:uuid}', 'show');
+            Route::put('', 'update')->middleware(['passport.cookie', 'auth:api']);
     });
 
     Route::get('birthdays/today', BirthdayController::class);
