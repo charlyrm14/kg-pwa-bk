@@ -18,6 +18,7 @@ class ChatMessageResource extends JsonResource
         return [
             'user' => $this->whenLoaded('user')->name ?? null,
             'last_name' => $this->whenLoaded('user')->last_name ?? null,
+            'id' => $this->id,
             'message' => $this->message,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d'),
