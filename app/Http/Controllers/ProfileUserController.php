@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\{
     Request,
     JsonResponse
@@ -30,15 +31,9 @@ class ProfileUserController extends Controller
      * hobbies. If the user is not found or an error occurs, appropriate error responses will be
      * returned.
      */
-    public function show(Request $request): JsonResponse
+    public function show(User $user): JsonResponse
     {
         try {
-
-            $user = $request->user();
-
-            if(!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
 
             $user->load(['role', 'profile.gender', 'hobbies', 'profile.avatar']);
 

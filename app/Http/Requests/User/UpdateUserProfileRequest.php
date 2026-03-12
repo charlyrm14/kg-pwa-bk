@@ -25,7 +25,7 @@ class UpdateUserProfileRequest extends FormRequest
     {
         return [
             'about_me' => ['nullable', 'string', 'min:8', 'max:600'],
-            'birthdate' => ['nullable', 'date_format:Y-m-d'],
+            'birthdate' => ['required', 'date_format:Y-m-d'],
             'phone_number' => ['nullable', 'integer', 'digits:10'],
             'address' => ['nullable', 'string', 'min:8', 'max:255'],
             'gender_id' => ['nullable', 'integer', 'exists:genders,id'],
