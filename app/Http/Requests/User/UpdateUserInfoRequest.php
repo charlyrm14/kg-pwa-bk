@@ -38,7 +38,7 @@ class UpdateUserInfoRequest extends FormRequest
                 'alpha_dash',
                 Rule::unique('users','username')->ignore($user->id)
             ],
-            'role_id' => ['required', 'integer', 'exists:roles,id'],
+            'role_id' => ['nullable', 'integer', 'exists:roles,id'],
             'birthdate' => ['required', 'date_format:Y-m-d',]
         ];
     }
