@@ -20,6 +20,7 @@ class UserDetailInfoResource extends JsonResource
             'last_name' => $this->last_name,
             'mother_last_name' => $this->mother_last_name,
             'email' => $this->email,
+            'username' => $this->username,
             'uuid' => $this->uuid,
             'student_code' => $this->student_code,
             'profile' => $this->whenLoaded('profile', function() {
