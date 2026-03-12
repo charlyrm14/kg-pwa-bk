@@ -16,6 +16,7 @@ class MessagesResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'message' => $this->message,
             'sender_type' => $this->senderType->name ?? null,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
