@@ -38,7 +38,7 @@ class AuthController extends Controller
                 return response()->json(['message' => 'Invalid credentials'], 401);
             }
 
-            $user = Auth::user();
+            $user = $request->user();
             
             if($user->force_password_change === 1) {
                 return response()->json(['message' => 'Password change required'], 403);
@@ -50,21 +50,19 @@ class AuthController extends Controller
             $cookie = cookie(
                 name: config('auth.token_access_name'),
                 value: $token->accessToken,
-                minutes: 60 * 2,
+                minutes: 120,
                 path: '/',
                 domain: null,
-                secure: config('auth.cookie_secure_env'),
+                secure: false,
                 httpOnly: true,
-                sameSite: 'Strict'
+                sameSite: config('auth.cookie_same_site')
             );
             
-            return response()
-                ->json([
-                    'data' => [
-                        'user' => new LoginUserResource($user)
-                    ]
-                ], 200)
-                ->cookie($cookie);
+            return response()->json([
+                'data' => [
+                    'user' => new LoginUserResource($user)
+                ]
+            ], 200)->cookie($cookie);
 
         } catch (\Throwable $e) {
             Log::error("Login error: " . $e->getMessage());
@@ -85,6 +83,10 @@ class AuthController extends Controller
     {
         try {
             $user = Auth::user();
+
+            if (!$user) {
+                return response()->json(['message' => 'Unauthenticated'], 401);
+            }
 
             return response()->json([
                 'data' => [
