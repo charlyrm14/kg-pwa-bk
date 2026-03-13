@@ -115,19 +115,15 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $user = $request->user();
-
-        if (!$user) {
-            return response()->json(['message' => 'User not authenticated'], 401);
-        }
-
         try {
 
-            $token = $user->token();
+            $user = $request->user();
 
-            if ($token) {
-                $token->revoke();
+            if (!$user) {
+                return response()->json(['message' => 'User not authenticated'], 401);
             }
+
+            $user->token()->revoke();
 
             $cookie = cookie(
                 name: config('auth.token_access_name'),
@@ -137,7 +133,7 @@ class AuthController extends Controller
                 domain: null,
                 secure: config('auth.cookie_secure_env'),
                 httpOnly: true,
-                sameSite: 'Strict'
+                sameSite: config('auth.cookie_same_site')
             );
 
             return response()
