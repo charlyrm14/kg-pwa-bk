@@ -34,8 +34,9 @@ Route::prefix('v1/')->group(function () {
     Route::prefix('auth')
         ->controller(AuthController::class)
         ->group(function() {
-            Route::post('login', 'login');
-            Route::post('logout', 'logout')->middleware(['passport.cookie', 'auth:api']);
+            Route::post('/login', 'login');
+            Route::get('/me', 'me')->middleware(['passport.cookie', 'auth:api']);
+            Route::post('/logout', 'logout')->middleware(['passport.cookie', 'auth:api']);
     });
 
     Route::prefix('users/')
