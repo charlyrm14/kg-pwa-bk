@@ -138,4 +138,6 @@ return [
     */
 
     'cookie_secure_env' => env('COOKIE_SECURE_ENV', false),
+
+    'cookie_same_site' => env('COOKIE_SAME_SITE', 'lax'),
 ];
