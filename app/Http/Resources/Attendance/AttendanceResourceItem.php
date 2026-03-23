@@ -16,9 +16,9 @@ class AttendanceResourceItem extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $schedule = $this->whenLoaded('userSchedule');  
+        $schedule = $this->whenLoaded('userSchedule');
         $day = $schedule->day;
-        $attendance = $this->whenLoaded('attendanceStatus');   
+        $attendance = $this->whenLoaded('attendanceStatus');
         $date = Carbon::parse($this->created_at)->locale('es');
 
         return [
@@ -30,6 +30,7 @@ class AttendanceResourceItem extends JsonResource
             'entry_time' => $schedule->entry_time ?? '00:00',
             'departure_time' => $schedule->departure_time ?? '00:00',
             'type_attendance' => $attendance->name ?? 'UNKNOWN',
+            'attendance_id' => $attendance->id ?? null,
             'attendance_description' => $attendance->description ?? 'UNKNOWN',
             'attendance_month' => Str::ucfirst($date->translatedFormat('F'))
         ];
