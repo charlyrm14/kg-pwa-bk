@@ -6,12 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Content;
 use App\Http\Requests\Content\{
-    StoreContentRequest
+    StoreContentRequest,
+    UpdateContentRequest
 };
 use App\Http\Resources\Content\{
     IndexCollection,
     NewContentResource,
-    DetailContentResource
+    DetailContentResource,
+    UpdateContentResource
 };
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 use App\Services\Content\ContentManager;
 use App\Domain\Media\Services\MediaAttachService;
 use App\Domain\Contents\Services\DeleteContentService;
+use App\Domain\Contents\Services\UpdateContentService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ContentController extends Controller
@@ -28,6 +31,7 @@ class ContentController extends Controller
     public function __construct(
         protected ContentManager $manager,
         private MediaAttachService $mediaAttachService,
+        private UpdateContentService $updateContentService,
         private DeleteContentService $deleteContentService
     ){}
 
@@ -100,10 +104,10 @@ class ContentController extends Controller
 
         } catch(\Throwable $e) {
 
-            Log::error('Error creating event: ' . $e->getMessage());
+            Log::error('Error creating content: ' . $e->getMessage());
             
             return response()->json([
-                'message' => 'Error creating event',
+                'message' => 'Error creating content',
             ], 500);
         }
     }
@@ -123,15 +127,11 @@ class ContentController extends Controller
      * DetailContentResource. If the content is not found or the conditions are not met, it will return
      * a JSON response with an appropriate error message and status code.
      */
-    public function show(string $slug, Request $request): JsonResponse
+    public function show(Content $content, Request $request): JsonResponse
     {
         try {
 
-            $content = Content::with(['type', 'status', 'user', 'event', 'cover'])->firstWhere('slug', $slug);
-
-            if(!$content) {
-                return response()->json(['message' => 'Resource not found'], 404);
-            }
+            $content->load(['type', 'status', 'user', 'event', 'cover']);
 
             if(!($request->user() && $request->user()->role_id === 1) && $content->content_status_id !== 5) {
                 return response()->json(['message' => 'Resource not found'], 404);
@@ -152,6 +152,48 @@ class ContentController extends Controller
     }
 
     /**
+     * This PHP function updates content and its associated event, if applicable, and handles errors
+     * gracefully.
+     *
+     * @param UpdateContentRequest request The `UpdateContentRequest` is a custom request class that
+     * likely contains validation rules for updating content. It validates the incoming request data
+     * before the update operation is performed.
+     * @param Content content The `update` function you provided is responsible for updating content
+     * and its related event information. Here's a breakdown of the parameters used in the function:
+     *
+     * @return JsonResponse A JSON response is being returned. If the update is successful, a response
+     * with a success message and the updated content data is returned with a status code of 200. If
+     * there is an error during the update process, a response with an error message is returned with a
+     * status code of 500.
+     */
+    public function update(UpdateContentRequest $request, Content $content): JsonResponse
+    {
+        try {
+
+            $this->updateContentService->update($request, $content);
+
+            $this->mediaAttachService->attach(
+                $content,
+                $request->validated()['cover_image'] ?? [],
+                self::CONTENT_CONTEXT
+            );
+
+            return response()->json([
+                'message' => 'Content updated successfully',
+                'data' => new UpdateContentResource($content)
+            ], 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error('Error updating content: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Error updating content',
+            ], 500);
+        }
+    }
+
+    /**
      * The function destroys a content record by setting its status to 7, saving it, deleting it, and
      * returning a success or error message in JSON format.
      *
@@ -167,9 +209,13 @@ class ContentController extends Controller
      * will log the error message and return a JSON response with an error message "Error to delete
      * content" and a status code of 500.
      */
-    public function destroy(Request $request, Content $content)
+    public function destroy(Request $request, Content $content): JsonResponse
     {
         try {
+
+            if($request->user()->role_id !== 1) {
+                return response()->json(['message' => 'Forbidden'], 403);
+            }
 
             $content->load('media');
             

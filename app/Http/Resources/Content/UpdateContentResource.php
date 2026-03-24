@@ -3,11 +3,10 @@
 namespace App\Http\Resources\Content;
 
 use Carbon\Carbon;
-use App\Http\Resources\ContentType\EventResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class NewContentResource extends JsonResource
+class UpdateContentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

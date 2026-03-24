@@ -55,7 +55,8 @@ Route::prefix('v1/')->group(function () {
         ->group(function() {
             Route::get('', 'index');
             Route::post('', 'store');
-            Route::get('{slug}', 'show');
+            Route::get('{content:slug}', 'show');
+            Route::put('{content:slug}', 'update');
             Route::delete('{content:slug}', 'destroy');
     });
 
