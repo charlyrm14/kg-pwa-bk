@@ -14,7 +14,7 @@ use App\Domain\Media\Services\DirectoryDeleteService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class MediaDeleteService
-{   
+{
     public function __construct(
         private DirectoryDeleteService $deleteDirectoryService
     ){}
@@ -22,12 +22,12 @@ class MediaDeleteService
     /**
      * The `delete` function deletes a media file and its variants after checking for authorization and
      * protection.
-     * 
+     *
      * @param Media media The `delete` function you provided is responsible for deleting a media file
      * and its associated variants. Here's a breakdown of the parameters used in the function:
      */
     public function delete(Media $media): void
-    {   
+    {
         if($media->is_protected) {
             throw new HttpResponseException(
                 response()->json(['message' => 'Unauthorized file protected'], 403)

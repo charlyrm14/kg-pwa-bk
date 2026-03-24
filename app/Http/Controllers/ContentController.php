@@ -13,11 +13,12 @@ use App\Http\Resources\Content\{
     NewContentResource,
     DetailContentResource
 };
-use App\Services\Content\ContentManager;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
+use App\Services\Content\ContentManager;
 use App\Domain\Media\Services\MediaAttachService;
+use App\Domain\Contents\Services\DeleteContentService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ContentController extends Controller
@@ -26,7 +27,8 @@ class ContentController extends Controller
 
     public function __construct(
         protected ContentManager $manager,
-        private MediaAttachService $mediaAttachService
+        private MediaAttachService $mediaAttachService,
+        private DeleteContentService $deleteContentService
     ){}
 
     /**
@@ -169,10 +171,10 @@ class ContentController extends Controller
     {
         try {
 
-            $content->content_status_id = 7;
-            $content->save();
-            $content->delete();
+            $content->load('media');
             
+            $this->deleteContentService->delete($content);
+
             return response()->json(['message' => 'Content deleted successfully'], 200);
 
         } catch (\Throwable $e) {
