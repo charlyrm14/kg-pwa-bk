@@ -22,6 +22,7 @@ class DetailContentResource extends JsonResource
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d'),
             'author' => $this->whenLoaded('user')->name ?? 'unknown',
+            'author_id' => $this->whenLoaded('user')->id ?? 'unknown',
             'type' => $this->whenLoaded('type')->name ?? 'unknown',
             'status' => $this->whenLoaded('status')->name ?? 'unknown',
             'event' => $this->whenLoaded('event', function() {
